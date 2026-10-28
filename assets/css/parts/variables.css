@@ -1,0 +1,108 @@
+/**
+ * SafeLine — Design System Variables (v2)
+ * Modern, clean, professional taxi booking platform
+ */
+:root {
+    /* ── Brand Colors ── */
+    --color-primary: #63C51F;
+    --color-primary-hover: #55a819;
+    --color-primary-light: rgba(99, 197, 31, 0.08);
+    --color-primary-glow: rgba(99, 197, 31, 0.25);
+    /* #63C51F is only 2.2:1 on white - fine for fills and buttons, unreadable
+       as text. Use this darker tone wherever green sits on a light surface. */
+    --color-primary-text: #3B760D;
+    --color-secondary: #001832;
+    --color-secondary-hover: #002040;
+
+    /* ── Neutral Palette ── */
+    --color-white: #FFFFFF;
+    --color-bg: #F8F9FB;
+    --color-surface: #FFFFFF;
+    --color-border: #E5E9F0;
+    --color-border-light: #EEF1F6;
+    --color-text: #1A2233;
+    /* Requested: no muted/secondary gray body text anywhere on the site -
+       both tokens now resolve to the same near-black as regular text. Kept
+       as separate variables (not merged into one) so every existing
+       var(--color-text-secondary)/var(--color-text-muted) usage still works
+       unchanged. */
+    --color-text-secondary: #1A2233;
+    --color-text-muted: #1A2233;
+
+    /* ── Semantic Colors ── */
+    --color-success: #63C51F;
+    --color-warning: #C2410C;   /* burnt orange - no yellow in the SafeLine palette */
+    --color-danger: #C62828;
+    --color-info: #3B82F6;
+
+    /* ── Typography ── */
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-heading: 'Sora', 'Inter', system-ui, sans-serif;
+    --font-ui: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+    /* ── Font Sizes (fluid scale) ── */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+    --text-5xl: 3rem;
+
+    /* ── Font Weights ── */
+    --weight-regular: 400;
+    --weight-medium: 500;
+    --weight-semibold: 600;
+    --weight-bold: 700;
+    --weight-extrabold: 800;
+
+    /* ── Spacing Scale ── */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+    --space-20: 80px;
+
+    /* ── Border Radius ── */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-2xl: 24px;
+    --radius-full: 9999px;
+
+    /* ── Shadows ── */
+    --shadow-xs: 0 1px 2px rgba(0, 24, 50, 0.04);
+    --shadow-sm: 0 2px 8px rgba(0, 24, 50, 0.06);
+    --shadow-md: 0 4px 16px rgba(0, 24, 50, 0.08);
+    --shadow-lg: 0 8px 32px rgba(0, 24, 50, 0.10);
+    --shadow-xl: 0 16px 48px rgba(0, 24, 50, 0.14);
+    --shadow-card: 0 1px 3px rgba(0, 24, 50, 0.04), 0 4px 16px rgba(0, 24, 50, 0.06);
+    --shadow-card-hover: 0 4px 12px rgba(0, 24, 50, 0.08), 0 12px 40px rgba(0, 24, 50, 0.12);
+
+    /* ── Transitions ── */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: 150ms var(--ease-out);
+    --transition-base: 250ms var(--ease-out);
+    --transition-slow: 400ms var(--ease-out);
+
+    /* ── Layout ── */
+    --container-max: 1280px;
+    --header-height: 80px;
+    --section-gap: 100px;
+
+    /* ── Z-index Scale ── */
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-overlay: 300;
+    --z-modal: 400;
+}

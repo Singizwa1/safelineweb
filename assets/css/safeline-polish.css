@@ -1,0 +1,55 @@
+/* ==========================================================================
+   SafeLine — Transition Reset Layer
+   Neutralizes cityride.min.css defaults so safeline-theme.css starts clean
+   ========================================================================== */
+
+/* ---- Reserve hero space before owl-carousel initializes ---- */
+.main-slider-one {
+  min-height: 680px;
+}
+@media (max-width: 991px) {
+  .main-slider-one { min-height: 600px; }
+}
+@media (max-width: 767px) {
+  .main-slider-one { min-height: 520px; }
+}
+
+/* ---- Smooth anchor jumps ---- */
+html { scroll-behavior: smooth; }
+#enhanced-booking-form,
+.booking-form-section,
+#home { scroll-margin-top: 100px; }
+
+/* ---- Keyboard access to header dropdowns ---- */
+.main-menu .main-menu__list li:focus-within > ul {
+  opacity: 1;
+  visibility: visible;
+  transform: scaleY(1) translateZ(0px);
+}
+
+/* ---- Carousel dot touch targets ---- */
+.owl-dots .owl-dot { position: relative; }
+.owl-dots .owl-dot::before {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 28px; height: 28px;
+  transform: translate(-50%, -50%);
+}
+
+/* ---- Mobile nav current-page highlight ---- */
+.mobile-nav__content .main-menu__list > li.current > a,
+.mobile-nav__content .main-menu__list li ul li.current > a {
+  color: var(--color-primary, #63C51F);
+}
+
+/* ---- Small-screen form fixes ---- */
+@media (max-width: 767px) {
+  .booking-form-container { padding: 22px !important; }
+  .booking-form-header { margin-bottom: 20px !important; }
+  .form-group-enhanced { margin-bottom: 14px !important; }
+}
+@media (max-width: 575px) {
+  .booking-form-container { padding: 18px !important; }
+  .booking-form-header h2 { font-size: 26px !important; }
+}

@@ -1,0 +1,15 @@
+# Credentials - real values live on the server only, never in git.
+.env
+
+# Runtime logs - not secrets, just noise that doesn't belong in history.
+error_log
+storage/*.log
+
+# Accidental local artifacts, not part of the site.
+*.zip
+Screenshot*.png
+contact-preview*.png
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db

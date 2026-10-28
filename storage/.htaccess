@@ -1,0 +1,10 @@
+# storage/ holds booking fallback logs written by booking-notify.php when the
+# server has no working mail() transport. Those records contain customer names,
+# phone numbers and pickup addresses, so nothing in here may ever be served.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order Deny,Allow
+    Deny from all
+</IfModule>

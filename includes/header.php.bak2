@@ -1,0 +1,129 @@
+<?php include_once 'config.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo $brand_name; ?> - <?php echo $page_title ?? $site_tagline; ?></title>
+
+    <!-- Meta SEO -->
+    <meta name="description" content="<?php echo $meta_description ?? ''; ?>">
+    <link rel="icon" type="image/png" href="images/safelinelogo/safelinelogo.png?v=<?php echo $asset_version; ?>">
+    <link rel="apple-touch-icon" href="images/safelinelogo/safelinelogo.png?v=<?php echo $asset_version; ?>">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Vendor CSS -->
+    <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-select/bootstrap-select.min.css">
+    <link rel="stylesheet" href="assets/vendors/animate/animate.min.css">
+    <link rel="stylesheet" href="assets/vendors/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="assets/vendors/jquery-magnific-popup/jquery.magnific-popup.css">
+    <link rel="stylesheet" href="assets/vendors/cityride-icons/style.css">
+    <link rel="stylesheet" href="assets/vendors/owl-carousel/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/vendors/owl-carousel/css/owl.theme.default.min.css">
+
+    <!-- Design System & Styles -->
+    <link rel="stylesheet" href="assets/css/parts/variables.css?v=<?php echo $asset_version; ?>">
+    <link rel="stylesheet" href="assets/css/cityride.min.css?v=<?php echo $asset_version; ?>">
+    <link rel="stylesheet" href="assets/css/safeline-polish.css?v=<?php echo $asset_version; ?>">
+    <link rel="stylesheet" href="assets/css/safeline-theme.css?v=<?php echo $asset_version; ?>">
+</head>
+
+<body class="custom-cursor">
+
+    <div class="custom-cursor__cursor"></div>
+    <div class="custom-cursor__cursor-two"></div>
+
+    <div class="page-wrapper">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <div class="container-fluid">
+                <div class="topbar__inner">
+                    <ul class="list-unstyled topbar__info">
+                        <li>
+                            <span class="topbar__info__icon"><i class="icon-paper-plane"></i></span>
+                            <a href="mailto:<?php echo $contact_email; ?>"><?php echo $contact_email; ?></a>
+                        </li>
+                        <li>
+                            <span class="topbar__info__icon topbar__info__icon--location"><i class="icon-maps-and-flags"></i></span>
+                            <a href="<?php echo $contact_maps_url; ?>" target="_blank" rel="noopener"><?php echo $contact_address; ?></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- HEADER -->
+        <header class="main-header sticky-header sticky-header--normal">
+            <div class="container-fluid">
+                <div class="main-header__inner">
+
+                    <!-- Logo -->
+                    <div class="main-header__logo logo-retina">
+                        <a href="index.php">
+                            <img src="images/safelinelogo/safelinelogo.png" alt="<?php echo $brand_name; ?>" width="120" height="120">
+                        </a>
+                    </div>
+
+                    <!-- Navigation -->
+                    <nav class="main-header__nav main-menu">
+                        <ul class="main-menu__list">
+                            <?php foreach ($nav_items as $name => $item): ?>
+                                <?php
+                                    $is_dropdown = is_array($item);
+                                    $link        = $is_dropdown ? $item['url'] : $item;
+                                    $children    = $is_dropdown ? ($item['children'] ?? []) : [];
+                                    $has_children = !empty($children);
+                                    $is_current  = (($current_page ?? '') === pathinfo($link, PATHINFO_FILENAME))
+                                                || (($current_page ?? '') === 'index' && $link === 'index.php');
+                                    // Also mark active if any child is the current page
+                                    if ($has_children) {
+                                        foreach ($children as $c_link) {
+                                            if (($current_page ?? '') === pathinfo($c_link, PATHINFO_FILENAME)) {
+                                                $is_current = true;
+                                            }
+                                        }
+                                    }
+                                ?>
+                                <li class="<?php echo $is_current ? 'current' : ''; ?> <?php echo $has_children ? 'dropdown' : ''; ?>">
+                                    <a href="<?php echo $link; ?>"><?php echo $name; ?></a>
+                                    <?php if ($has_children): ?>
+                                        <ul>
+                                            <?php foreach ($children as $child_name => $child_link): ?>
+                                                <li class="<?php echo (($current_page ?? '') === pathinfo($child_link, PATHINFO_FILENAME)) ? 'current' : ''; ?>">
+                                                    <a href="<?php echo $child_link; ?>"><?php echo $child_name; ?></a>
+                                                </li>
+                                            <?php endforeach; ?>
+                                        </ul>
+                                    <?php endif; ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </nav>
+
+                    <!-- Mobile Toggle -->
+                    <div class="mobile-nav__btn mobile-nav__toggler">
+                        <span></span><span></span><span></span>
+                    </div>
+
+                    <!-- Right Actions -->
+                    <div class="main-header__right__inner">
+                        <div class="main-header__portal">
+                            <span class="main-header__portal__icon"><i class="icon-user"></i></span>
+                            <a href="https://mis.safeline.com/" class="main-header__portal__link">Client Portal</a>
+                        </div>
+                        <div class="main-header__btn-box">
+                            <a href="<?php echo ($current_page ?? '') === 'home' ? '#booking-modal' : $primary_cta_link; ?>" class="main-header__btn cityride-btn cityride-btn--primary" <?php echo ($current_page ?? '') === 'home' ? 'onclick="openBookingModal(); return false;"' : ''; ?>>
+                                <span><?php echo $primary_cta_text; ?></span>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
