@@ -168,17 +168,17 @@ include 'includes/header.php';
                 </div>
                 <ol class="sl-steps__list list-unstyled">
                     <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
+                        <span class="sl-step__icon"><i class="fas fa-car-side" aria-hidden="true"></i></span>
                         <span class="sl-step__title"><?php te('home_step1_title'); ?></span>
                         <span class="sl-step__text"><?php te('home_step1_text'); ?></span>
                     </li>
                     <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-tags" aria-hidden="true"></i></span>
+                        <span class="sl-step__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
                         <span class="sl-step__title"><?php te('home_step2_title'); ?></span>
                         <span class="sl-step__text"><?php te('home_step2_text'); ?></span>
                     </li>
                     <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
+                        <span class="sl-step__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
                         <span class="sl-step__title"><?php te('home_step3_title'); ?></span>
                         <span class="sl-step__text"><?php te('home_step3_text'); ?></span>
                     </li>

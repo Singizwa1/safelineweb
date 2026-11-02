@@ -85,10 +85,13 @@
     /* 2. Hero carousel ------------------------------------------------ */
     var hero = document.querySelector('.sl-hero');
     if (!hero) { return; }
-    var slides = hero.querySelectorAll('.sl-hero__slide');
-    var total = slides.length;
+    var copyBox = hero.querySelector('.sl-hero__copy');
+    // Restored whenever rotation moves off a slide that overrode it (see
+    // home-intercity.js's injectHeroSlides(), which appends a promo slide
+    // for a published trip after this script has already run).
+    var defaultCopyHtml = copyBox ? copyBox.innerHTML : '';
     var current = 0;
-    var DWELL = 7000;
+    var DWELL = 5000;
     var timer = null;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var focused = false, onScreen = true;
@@ -102,7 +105,17 @@
         hero.classList.toggle('is-held', held());
         schedule();
     }
+    // Re-queries every call instead of caching the list once - a slide
+    // appended later (the intercity promo slide) joins rotation on the
+    // very next advance instead of needing a page reload.
     function go(step) {
+        var slides = hero.querySelectorAll('.sl-hero__slide');
+        var total = slides.length;
+        // Only one published trip replaced every default slide (see
+        // home-intercity.js) - nothing to rotate to, and forcing is-prev +
+        // is-active onto the same lone slide would fire both transition
+        // animations on it at once.
+        if (total <= 1) { schedule(); return; }
         var next = (current + step + total) % total;
         hero.style.setProperty('--dir', step < 0 ? -1 : 1);
         slides.forEach(function (slide, n) {
@@ -111,6 +124,9 @@
             slide.classList.toggle('is-active', n === next);
         });
         current = next;
+        if (copyBox) {
+            copyBox.innerHTML = slides[next].getAttribute('data-copy-html') || defaultCopyHtml;
+        }
         schedule();
     }
 

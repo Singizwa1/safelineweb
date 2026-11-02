@@ -52,16 +52,20 @@
     }
 
  
+    /** Replaces the hero's default background-photo slides with one slide
+     * per published trip (assets/js/safeline-premium.js owns the rotation
+     * itself) - while any trip is published, the hero shows nothing but
+     * published trips, never a mix with the generic brand photos. Each
+     * slide carries its own data-copy-html, which safeline-premium.js
+     * swaps into the shared .sl-hero__copy box while that slide is active;
+     * the first one is applied immediately so the hero never shows a
+     * trip photo under the generic default copy, even for the instant
+     * before the first autoplay tick. */
     function injectHeroSlides(trips) {
-        if (typeof jQuery === 'undefined') return;
-        var $hero = jQuery('.main-slider-one__carousel');
-        if (!$hero.length) return;
-
-        var owl = $hero.data('owl.carousel');
-        var staticCount = owl ? owl.items().length : 0;
-        for (var i = staticCount - 1; i >= 0; i--) {
-            $hero.trigger('remove.owl.carousel', [i]);
-        }
+        var slidesBox = document.querySelector('.sl-hero__slides');
+        var copyBox = document.querySelector('.sl-hero__copy');
+        if (!slidesBox) return;
+        slidesBox.innerHTML = '';
 
         trips.forEach(function (trip, i) {
             var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
@@ -74,28 +78,44 @@
             // of implying a seat can be booked outright.
             var pending = trip.pending_seats || 0;
             var waitlistOnly = trip.seats_available === 0 && pending > 0;
-            var subTitle = waitlistOnly ? jsT('ic_badge_fully_booked') : jsT('ic_badge_available');
             var seatsLine = waitlistOnly
                 ? jsT(pending === 1 ? 'ic_fully_booked_pending_one' : 'ic_fully_booked_pending_many', { n: pending })
                 : jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
             var buttonClass = waitlistOnly ? 'intercity-waitlist-btn' : 'intercity-book-btn';
             var buttonLabel = waitlistOnly ? jsT('ic_btn_join_waitlist') : jsT('ic_btn_book_this_seat');
-            var slide =
-                '<div class="main-slider-one__item intercity-hero-slide" data-trip-id="' + trip.id + '">' +
-                '<div class="main-slider-one__bg" style="background-image: url(assets/images/backgrounds/main-slider-bg-1-1.jpg);"></div>' +
-                '<div class="container"><div class="row gutter-y-50"><div class="main-slider-one__col-content"><div class="main-slider-one__content">' +
-                '<div class="main-slider-one__top"><p class="main-slider-one__sub-title"><span class="main-slider-one__sub-title__icon"><i class="fas fa-route" aria-hidden="true"></i></span><span class="main-slider-one__sub-title__text">' + subTitle + '</span></p><span class="intercity-seats-chip">' + seatsLine + '</span></div>' +
-                '<h2 class="main-slider-one__title">' + trip.origin + ' &rarr; ' + trip.destination + '</h2>' +
-                '<p class="main-slider-one__text">' + jsT('ic_departs', { when: when }) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + '</p>' +
-                '<div class="main-slider-one__button">' +
-                '<button type="button" class="main-slider-one__btn cityride-btn cityride-btn--primary ' + buttonClass + '"><span>' + buttonLabel + '</span></button>' +
-                '<a href="#intercity" class="main-slider-one__btn cityride-btn cityride-btn--border"><span>' + jsT('ic_btn_see_all_trips') + '</span></a>' +
-                '</div></div></div>' +
-                '<div class="main-slider-one__col-aside"><div class="hero-lane" aria-hidden="true"><img class="hero-lane__car" src="assets/images/safeline-rav4-side.png" alt="" decoding="async"></div></div>' +
-                '</div></div></div>';
-            $hero.trigger('add.owl.carousel', [jQuery(slide).get(0), i]);
+            // Same spirit as the trip-card note (renderCard() below) and the
+            // website card this mirrors - informational only, no self-service
+            // submit, so the hero just points people at #intercity for it.
+            // On its own line (not inlined into the lead paragraph) for the
+            // same reason the card version is its own block, not a 4th
+            // meta bullet.
+            var parcelLine = trip.parcels_available > 0
+                ? '<br>' + jsT(trip.parcels_available === 1 ? 'ic_parcel_slots_one' : 'ic_parcel_slots_many', { n: trip.parcels_available })
+                : '';
+
+            var copyHtml =
+                '<h1 class="sl-hero__title">' + trip.origin + ' <em>&rarr; ' + trip.destination + '</em></h1>' +
+                '<p class="sl-hero__lead">' + jsT('ic_departs', { when: when }) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + ' &middot; ' + seatsLine + parcelLine + '</p>' +
+                '<div class="sl-hero__actions">' +
+                // data-trip-id lives on the button itself, not just the slide -
+                // this HTML ends up inside .sl-hero__copy (a sibling of the
+                // slide, not a descendant), so the click handler's
+                // closest('[data-trip-id]') needs it right here to find it.
+                '<button type="button" class="cityride-btn cityride-btn--primary sl-hero__btn ' + buttonClass + '" data-trip-id="' + trip.id + '"><span>' + buttonLabel + '</span></button>' +
+                '<a href="#intercity" class="sl-hero__link"><span>' + jsT('ic_btn_see_all_trips') + '</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>' +
+                '</div>';
+
+            var slide = document.createElement('div');
+            slide.className = 'sl-hero__slide intercity-hero-slide' + (i === 0 ? ' is-active is-first' : '');
+            slide.setAttribute('data-trip-id', trip.id);
+            slide.setAttribute('data-copy-html', copyHtml);
+            // Reuses an existing hero photo rather than a dedicated
+            // intercity image, so no new asset is needed for this slide.
+            slide.innerHTML = '<img src="assets/images/safeline-road-02.jpg" alt="" decoding="async" draggable="false" style="--focus: 50% 60%">';
+            slidesBox.appendChild(slide);
+
+            if (i === 0 && copyBox) copyBox.innerHTML = copyHtml;
         });
-        $hero.trigger('refresh.owl.carousel');
     }
 
     function renderCard(trip) {
@@ -114,6 +134,19 @@
         var buttonHtml = waitlistOnly
             ? '<button type="button" class="cityride-btn cityride-btn--primary intercity-waitlist-btn">' + jsT('ic_btn_join_waitlist') + '</button>'
             : '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' + jsT('ic_btn_book_seat') + '</button>';
+        // Parcel delivery lives on the same trip card, not a separate
+        // section - sending a parcel always rides on a published trip, so
+        // it only makes sense in context of that trip's own card. There's
+        // no self-service submit here (no public API for it, by design -
+        // registering a parcel always happens in person at the office), so
+        // this is informational only, same spirit as the pickup/dropoff
+        // meta lines above it.
+        var parcelLine = (trip.parcels_available > 0)
+            ? '<div class="intercity-trip-card__parcel"><i class="fas fa-box" aria-hidden="true"></i>' +
+              jsT(trip.parcels_available === 1 ? 'ic_parcel_slots_one' : 'ic_parcel_slots_many', { n: trip.parcels_available }) +
+              (trip.allowed_items ? ' &middot; ' + jsT('ic_parcel_allowed', { items: trip.allowed_items }) : '') +
+              '</div>'
+            : '';
         return '<div class="col-lg-4 col-md-6">' +
             '<div class="intercity-trip-card" data-trip-id="' + trip.id + '">' +
             '<span class="intercity-trip-card__badge">' + badgeText + '</span>' +
@@ -123,6 +156,7 @@
             '<li><i class="fas fa-flag-checkered"></i>' + jsT('ic_dropoff', { location: trip.dropoff_location }) + '</li>' +
             '<li><i class="fas fa-clock"></i>' + jsT('ic_departs', { when: when }) + '</li>' +
             '</ul>' +
+            parcelLine +
             '<div class="intercity-trip-card__footer">' +
             '<span class="intercity-trip-card__price">' + price + ' RWF<small>' + jsT('ic_per_seat_suffix') + '</small></span>' +
             buttonHtml +
