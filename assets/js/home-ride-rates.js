@@ -1,5 +1,33 @@
-            
             (function() {
+                const FALLBACK_IMAGE = 'assets/images/safeline-cruze-side-r.png';
+
+                // Labels are rendered server-side (index.php, data-labels) so
+                // they follow the site language; English defaults keep the
+                // cards readable if the attribute is ever missing.
+                function getLabels() {
+                    const defaults = {
+                        baseFare: 'Base fare',
+                        coversKm: 'Includes the first {km} km',
+                        perKm: 'Each extra km',
+                        perKmUnit: '/ km',
+                        cta: 'Book in the app',
+                        empty: 'Ride rates are not available right now.'
+                    };
+                    const el = document.getElementById('ride-rates-content');
+                    try {
+                        return Object.assign(defaults, JSON.parse(el.getAttribute('data-labels') || '{}'));
+                    } catch (e) {
+                        return defaults;
+                    }
+                }
+
+                // API values go into innerHTML, so escape them.
+                function esc(value) {
+                    return String(value == null ? '' : value).replace(/[&<>"']/g, function (ch) {
+                        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch];
+                    });
+                }
+
                 async function loadRideRates() {
                     const contentContainer = document.getElementById('ride-rates-content');
                     try {
@@ -44,60 +72,49 @@
                         return;
                     }
 
+                    const labels = getLabels();
                     let cardsHtml = '';
                     categories.forEach(function (category) {
                         const pricing = category.pricing;
                         const baseFare = parseFloat(pricing.base_fare || 0).toLocaleString();
                         const perKmRate = parseFloat(pricing.per_km_rate || 0).toLocaleString();
                         const baseKm = parseFloat(pricing.base_km || 0);
-                        const imageUrl = category.image_key ? `${SAFELINE_API_BASE}/uploads/${category.image_key}` : 'assets/images/safeline-cruze-side-r.png';
+                        const imageUrl = category.image_key ? `${SAFELINE_API_BASE}/uploads/${category.image_key}` : FALLBACK_IMAGE;
+                        const covers = labels.coversKm.split('{km}').join(baseKm);
 
                         cardsHtml += `
-                            <div class="col-xl-3 col-lg-4 col-md-6">
-                                <div class="ride-card">
-                                    <div class="ride-card__bg" style="background-image: url(assets/images/shapes/taxi-card-bg-1-1.png);"></div>
-                                    <div class="ride-card__inner">
-                                        <div class="ride-card__image">
-                                            <img src="${imageUrl}" alt="${category.name}" onerror="this.src='assets/images/safeline-cruze-side-r.png'">
-                                            <h3 class="ride-card__price">starting ${baseFare} RWF</h3>
-                                        </div>
-                                        <div class="ride-card__content">
-                                            <h3 class="ride-card__title">${category.name}</h3>
-                                            <ul class="ride-card__list list-unstyled">
-                                                <li>
-                                                    <span>Base Fare (${baseKm} km)</span>
-                                                    <span>${baseFare} RWF</span>
-                                                </li>
-                                                <li>
-                                                    <span>Per Km Rate</span>
-                                                    <span>${perKmRate} RWF</span>
-                                                </li>
-                                                ${category.description ? `
-                                                <li>
-                                                    <span>Details</span>
-                                                    <span>${category.description}</span>
-                                                </li>` : ''}
-                                            </ul>
-                                            <a href="#download-app" class="cityride-btn cityride-btn--border">
-                                                <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                                <span>get the app</span>
-                                            </a>
-                                        </div>
-                                    </div>
+                            <article class="rate-card">
+                                <div class="rate-card__media">
+                                    <img src="${esc(imageUrl)}" alt="${esc(category.name)}" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='${FALLBACK_IMAGE}'">
                                 </div>
-                            </div>
+                                <div class="rate-card__body">
+                                    <h3 class="rate-card__title">${esc(category.name)}</h3>
+                                    ${category.description ? `<p class="rate-card__desc">${esc(category.description)}</p>` : ''}
+                                    <div class="rate-card__price">
+                                        <span class="rate-card__label">${esc(labels.baseFare)}</span>
+                                        <span class="rate-card__amount">${esc(baseFare)}<small>RWF</small></span>
+                                        <span class="rate-card__note">${esc(covers)}</span>
+                                    </div>
+                                    <div class="rate-card__row">
+                                        <span>${esc(labels.perKm)}</span>
+                                        <strong>${esc(perKmRate)} RWF <small>${esc(labels.perKmUnit)}</small></strong>
+                                    </div>
+                                    <a href="#download-app" class="rate-card__btn cityride-btn cityride-btn--primary">
+                                        <span>${esc(labels.cta)}</span>
+                                        <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                            </article>
                         `;
                     });
 
+                    // One category reads better as a single wide card than as a
+                    // lone narrow column.
+                    const gridClass = categories.length === 1 ? 'rate-grid rate-grid--single' : 'rate-grid';
                     contentContainer.innerHTML = `
-                        <div class="tab active-tab fadeInUp animated" data-wow-delay="200ms">
-                            <div class="container position-relative">
-                                <div class="ride-rates-one__inner-bg">
-                                    <div class="ride-rates-one__inner-bg__bg" style="background-image: url(assets/images/shapes/taxi-rates-inner-bg-1-1.png);"></div>
-                                </div>
-                            </div>
-                            <div class="ride-rates-one__tab-container container">
-                                <div class="row gutter-y-30">
+                        <div class="tab active-tab">
+                            <div class="container">
+                                <div class="${gridClass}">
                                     ${cardsHtml}
                                 </div>
                             </div>
@@ -108,18 +125,11 @@
                 function renderNoCategories() {
                     const contentContainer = document.getElementById('ride-rates-content');
                     contentContainer.innerHTML = `
-                        <div class="tab active-tab fadeInUp animated" data-wow-delay="200ms">
-                            <div class="container position-relative">
-                                <div class="ride-rates-one__inner-bg">
-                                    <div class="ride-rates-one__inner-bg__bg" style="background-image: url(assets/images/shapes/taxi-rates-inner-bg-1-1.png);"></div>
-                                </div>
-                            </div>
-                            <div class="ride-rates-one__tab-container container">
-                                <div class="row gutter-y-30">
-                                    <div class="col-12 text-center py-5">
-                                        <i class="fas fa-car fa-3x" style="color: #63C51F; opacity: 0.5;"></i>
-                                        <p class="mt-3" style="color: #556677; font-size: 18px;">Ride rates are not available right now.</p>
-                                    </div>
+                        <div class="tab active-tab">
+                            <div class="container">
+                                <div class="rate-state" role="status">
+                                    <i class="fas fa-car" aria-hidden="true"></i>
+                                    <span>${esc(getLabels().empty)}</span>
                                 </div>
                             </div>
                         </div>

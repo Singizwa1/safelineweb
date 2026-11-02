@@ -96,7 +96,7 @@ $form_delivery_email  = getenv('FORM_DELIVERY_EMAIL') ?: '';
 $contact_form_to      = $form_delivery_email;   // contact form -> this inbox
 
 // Contact Information
-$contact_phone = "+250 788 471 117";
+$contact_phone = "+250 781 975 570";
 $contact_email = "info@safeline.com";
 $contact_address = "Kigali, Rwanda";
 $contact_maps_url = "https://www.google.com/maps/place/Kigali/data=!4m2!3m1!1s0x19dca4258ed8e797:0xf32b36a5411d0bc8?sa=X&ved=1t:242&ictx=111";
@@ -124,30 +124,22 @@ $social_handles = [
 $site_url_label = 'www.safeline.rw';
 $site_url       = 'https://safeline.rw';
 
-// Navigation Structure (items with 'children' render as dropdowns). Labels go
+// Navigation: the site is a single landing page, so every item is an anchor
+// on it (items with 'children' would still render as dropdowns). Labels go
 // through t() so the menu follows $current_lang; the array keys header.php
 // reads as $name are therefore already-translated text, same as before.
 $nav_items = [
-    t('nav_home') => '/home',
     t('nav_about') => [
-        'url'   => '/about',
+        'url'      => '/#services',
         'children' => [
-            t('nav_about_story')  => '/about',
-            t('nav_about_vision') => '/mission',
-            t('nav_about_team')   => '/team',
-            t('nav_about_safety') => '/safety',
+            t('nav_services')     => '/#services',
+            t('nav_about_vision') => '/#mission',
+            t('nav_reviews')      => '/#testimonials',
+            t('nav_get_app')      => '/#download-app',
         ],
     ],
-    t('nav_how_it_works') => [
-        'url'   => '/how-it-works',
-        'children' => [
-            t('nav_how_booking')  => '/how-it-works',
-            t('nav_how_fleet')    => '/taxi',
-            t('nav_how_coverage') => '/#coverage',
-            t('nav_how_faq')      => '/contact#faq',
-        ],
-    ],
-    t('nav_contact') => '/contact',
+    t('nav_how_it_works') => '/#how-it-works',
+    t('nav_contact')      => '/#contact',
 ];
 
 // Action Configuration

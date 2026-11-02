@@ -1,0 +1,1102 @@
+/* ==========================================================================
+   SafeLine - premium layer (every page)
+   --------------------------------------------------------------------------
+   Loaded on every page (includes/header.php) after every other stylesheet;
+   every rule is scoped under body.sl-ui. Tokens, shared chrome and the home
+   sections live here; inner-page sections are in safeline-pages.css.
+   The base theme (cityride.min.css + safeline-theme.css)
+   uses !important in places; matching overrides here are marked the same.
+
+   Themes: <html data-theme="dark|light">, set before paint by the head
+   script in includes/header.php. Dark is the default. The brand frame
+   (topbar, header, hero, stats, CTA card, footer) is #001832 in both
+   themes; content sections read their colours from the theme tokens.
+
+   Palette is deliberately small: navy #001832, green #63C51F (primary
+   actions), teal #007BA1 (accent), plus white / ink for text.
+
+   Contents
+     0. Tokens + themes
+     1. Base type, buttons, section titles
+     2. Topbar + header + theme switch
+     3. Hero + stage + stats band
+     4. Services
+     5. How it works
+     6. Contact
+    10. Intercity (rendered by home-intercity.js)
+    12. Testimonials
+    13. Download app
+    14. Footer
+    15. Motion + reduced motion
+    16. Phone refinements
+    17. Edge alignment
+   ========================================================================== */
+
+/* 0. TOKENS ------------------------------------------------------------- */
+body.sl-ui {
+    /* brand - fixed in both themes */
+    --hp-navy: #001832;          /* hero / brand foundation - exact */
+    --hp-navy-950: #000E1F;
+    --hp-navy-850: #03203F;
+    --hp-teal: #007BA1;          /* secondary accent - exact */
+    --hp-teal-300: #5CC3E2;      /* the same teal, lifted for dark surfaces */
+    --hp-green: #63C51F;         /* primary buttons - exact */
+    --hp-line-dark: rgba(255, 255, 255, .09);
+
+    /* theme - dark (default) */
+    --hp-bg: #001832;            /* every content section, same surface */
+    --hp-bg-alt: #001832;
+    --hp-card: #052544;
+    --hp-inset: rgba(255, 255, 255, .04);
+    --hp-text: #FFFFFF;
+    --hp-text-soft: rgba(255, 255, 255, .7);
+    --hp-line: rgba(255, 255, 255, .09);
+    --hp-accent: #5CC3E2;
+    --hp-accent-bg: rgba(92, 195, 226, .08);
+    --hp-accent-line: rgba(92, 195, 226, .22);
+    --hp-card-shadow: 0 18px 36px -26px rgba(0, 0, 0, .8);
+    --hp-hover-line: rgba(92, 195, 226, .4);
+    --hp-line-strong: rgba(255, 255, 255, .18);
+
+    /* The base theme reads these everywhere (parts/variables.css); pointing
+       them at the theme tokens lets older inner-page rules follow the theme. */
+    --color-bg: var(--hp-bg-alt);
+    --color-surface: var(--hp-card);
+    --color-border: var(--hp-line);
+    --color-border-light: var(--hp-line);
+    --color-text: var(--hp-text);
+    --color-text-secondary: var(--hp-text-soft);
+    --color-text-muted: var(--hp-text-soft);
+    --color-primary-text: var(--hp-green);
+
+    --hp-radius: 14px;
+    --hp-radius-sm: 12px;
+    --hp-shadow: 0 20px 48px -24px rgba(0, 14, 31, .55);
+    --hp-ease: cubic-bezier(.16, 1, .3, 1);
+    --hp-section-y: clamp(40px, 4.2vw, 64px);
+    /* One content width for header, hero and every section: mirrors the
+       theme's .container widths (safeline-theme.css 'PAGE WIDTH'). */
+    --hp-gutter: 15px;
+    --hp-wrap: 100%;
+    /* distance from a full-width box's edge to the content edge */
+    --hp-gutter-x: max(var(--hp-gutter), calc((100% - var(--hp-wrap)) / 2 + var(--hp-gutter)));
+    background: var(--hp-navy);
+}
+
+/* theme - light: white only appears here */
+html[data-theme="light"] body.sl-ui {
+    --hp-bg: #FFFFFF;
+    --hp-bg-alt: #F4F7FA;
+    --hp-card: #FFFFFF;
+    --hp-inset: #F4F7FA;
+    --hp-text: #0A1F38;
+    --hp-text-soft: #4A5B70;
+    --hp-line: rgba(0, 24, 50, .1);
+    --hp-accent: #007BA1;
+    --hp-accent-bg: rgba(0, 123, 161, .07);
+    --hp-accent-line: rgba(0, 123, 161, .2);
+    --hp-card-shadow: 0 14px 32px -22px rgba(0, 24, 50, .3);
+    --hp-hover-line: rgba(0, 123, 161, .35);
+    --hp-line-strong: rgba(0, 24, 50, .2);
+    --color-primary-text: #3B760D;   /* green text needs the dark tone on white */
+}
+
+@media (min-width: 576px)  { body.sl-ui { --hp-wrap: 540px; } }
+@media (min-width: 768px)  { body.sl-ui { --hp-wrap: 720px; } }
+@media (min-width: 992px)  { body.sl-ui { --hp-wrap: 960px; } }
+@media (min-width: 1200px) { body.sl-ui { --hp-wrap: 1160px; } }
+@media (min-width: 1400px) { body.sl-ui { --hp-wrap: 1280px; } }
+@media (min-width: 1600px) { body.sl-ui { --hp-wrap: 1400px; } }
+@media (min-width: 1800px) { body.sl-ui { --hp-wrap: 1520px; } }
+
+/* ALIGNMENT: topbar, header and hero share the section container, so logo,
+   headline and section titles all start on the same x. */
+body.sl-ui .container,
+body.sl-ui .topbar > .container-fluid,
+body.sl-ui .main-header > .container-fluid {
+    max-width: var(--hp-wrap) !important;
+    margin-left: auto; margin-right: auto;
+    padding-left: var(--hp-gutter) !important;
+    padding-right: var(--hp-gutter) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    html:has(body.sl-ui) { scroll-behavior: smooth; }
+}
+html:has(body.sl-ui) { scroll-padding-top: 80px; }
+
+/* 1. BASE ------------------------------------------------------------------ */
+body.sl-ui .page-wrapper { background: var(--hp-bg); overflow-x: clip; }
+
+body.sl-ui .section-space {
+    padding-top: var(--hp-section-y) !important;
+    padding-bottom: var(--hp-section-y) !important;
+}
+/* identical surfaces in dark, so a hairline marks where one section ends */
+body.sl-ui .sl-services ~ section { border-top: 1px solid var(--hp-line); }
+
+/* Section titles: small pill eyebrow + tight display heading */
+body.sl-ui .sec-title { margin-bottom: clamp(20px, 2.4vw, 30px); }
+body.sl-ui .sec-title__top { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+body.sl-ui .sec-title--center .sec-title__top { justify-content: center; }
+body.sl-ui .sec-title__shape { display: none !important; }
+body.sl-ui .sec-title__tagline {
+    display: inline-flex; align-items: center; gap: 8px;
+    margin: 0; padding: 5px 12px;
+    border-radius: 999px;
+    font-family: var(--font-ui, 'Inter', sans-serif);
+    font-size: 11.5px !important; font-weight: 700 !important;
+    letter-spacing: .14em !important; text-transform: uppercase;
+    color: var(--hp-accent) !important;
+    background: var(--hp-accent-bg);
+    border: 1px solid var(--hp-accent-line);
+}
+body.sl-ui .sec-title__tagline::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--hp-green);
+}
+body.sl-ui .sec-title__title {
+    font-family: var(--font-heading, 'Sora', sans-serif) !important;
+    font-size: clamp(24px, 2.3vw, 34px) !important;
+    line-height: 1.14 !important;
+    letter-spacing: -.02em !important;
+    font-weight: 700 !important;
+    text-transform: none !important;
+    color: var(--hp-text) !important;
+    margin: 0;
+    text-wrap: balance;
+}
+
+/* Buttons: one system. Primary = #63C51F everywhere. */
+body.sl-ui .cityride-btn {
+    border-radius: 10px !important;
+    font-family: var(--font-ui, 'Inter', sans-serif) !important;
+    font-weight: 700 !important;
+    font-size: 14.5px !important;
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    padding: 12px 22px !important;
+    min-height: 46px;
+    transition: transform .35s var(--hp-ease), box-shadow .35s var(--hp-ease),
+                background-color .25s ease, color .25s ease, border-color .25s ease !important;
+}
+body.sl-ui .cityride-btn::before,
+body.sl-ui .cityride-btn::after { display: none !important; }
+body.sl-ui .cityride-btn--primary,
+body.sl-ui .cityride-btn--secondary,
+body.sl-ui .submit-btn-enhanced {
+    background: var(--hp-green) !important;
+    color: var(--hp-navy) !important;
+    border: 1px solid transparent !important;
+    box-shadow: 0 8px 20px -10px rgba(99, 197, 31, .6);
+}
+body.sl-ui .cityride-btn--primary span,
+body.sl-ui .cityride-btn--secondary span,
+body.sl-ui .cityride-btn--primary i,
+body.sl-ui .cityride-btn--secondary i { color: var(--hp-navy) !important; }
+body.sl-ui .cityride-btn--primary:hover,
+body.sl-ui .cityride-btn--secondary:hover,
+body.sl-ui .submit-btn-enhanced:hover {
+    background: #6FD42A !important;
+    transform: translateY(-2px);
+    box-shadow: 0 14px 28px -12px rgba(99, 197, 31, .7);
+}
+body.sl-ui .cityride-btn--border {
+    background: rgba(255, 255, 255, .04) !important;
+    border: 1px solid rgba(255, 255, 255, .22) !important;
+    color: #fff !important;
+}
+body.sl-ui .cityride-btn--border span { color: inherit !important; }
+body.sl-ui .cityride-btn--border:hover {
+    background: rgba(255, 255, 255, .1) !important;
+    border-color: rgba(255, 255, 255, .45) !important;
+    transform: translateY(-2px);
+}
+body.sl-ui .cityride-btn__icon {
+    background: rgba(0, 24, 50, .1) !important; border-radius: 7px;
+    width: 26px; height: 26px; display: inline-grid; place-items: center;
+}
+
+/* Shared focus ring */
+body.sl-ui a:focus-visible,
+body.sl-ui button:focus-visible,
+body.sl-ui [tabindex]:focus-visible {
+    outline: 2px solid var(--hp-teal-300) !important;
+    outline-offset: 3px;
+    border-radius: 10px;
+}
+
+/* 2. TOPBAR + HEADER --------------------------------------------------- */
+body.sl-ui .topbar {
+    background: var(--hp-navy-950) !important;
+    border-bottom: 1px solid var(--hp-line-dark) !important;
+}
+body.sl-ui .topbar a,
+body.sl-ui .topbar__info a { color: rgba(255, 255, 255, .72) !important; transition: color .2s ease; }
+body.sl-ui .topbar a:hover { color: #fff !important; }
+body.sl-ui .topbar__phone__number { color: #fff !important; }
+
+body.sl-ui .main-header {
+    background: var(--hp-navy) !important;
+    box-shadow: none !important;
+    border-bottom: 1px solid var(--hp-line-dark);
+    position: relative;
+    z-index: 20;
+}
+/* The theme clones the header into a fixed bar that slides in on scroll.
+   The position rule above must not pull that clone back into the flow. */
+body.sl-ui .sticky-header--cloned {
+    position: fixed !important; top: 0; left: 0; right: 0; z-index: 999 !important;
+    background: rgba(0, 24, 50, .86) !important;
+    -webkit-backdrop-filter: saturate(160%) blur(14px);
+    backdrop-filter: saturate(160%) blur(14px);
+    border-bottom: 1px solid var(--hp-line-dark);
+    box-shadow: 0 12px 30px -18px rgba(0, 0, 0, .6) !important;
+}
+body.sl-ui .main-header .main-menu__list > li > a {
+    color: rgba(255, 255, 255, .78) !important;
+    font-family: var(--font-ui, 'Inter', sans-serif) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    letter-spacing: .01em !important;
+    text-transform: none !important;
+    position: relative;
+    transition: color .25s ease;
+}
+body.sl-ui .main-header .main-menu__list > li > a::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -8px;
+    height: 2px; border-radius: 2px;
+    background: var(--hp-green);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .35s var(--hp-ease);
+}
+body.sl-ui .main-header .main-menu__list > li > a:hover,
+body.sl-ui .main-header .main-menu__list > li.current > a { color: #fff !important; }
+body.sl-ui .main-header .main-menu__list > li > a:hover::after,
+body.sl-ui .main-header .main-menu__list > li.current > a::after { transform: scaleX(1); }
+body.sl-ui .main-header .main-menu__list > li > ul {
+    background: var(--hp-navy-850) !important;
+    border: 1px solid var(--hp-line-dark);
+    border-radius: 12px; overflow: hidden;
+    box-shadow: var(--hp-shadow);
+}
+body.sl-ui .main-header .main-menu__list > li > ul a { color: rgba(255, 255, 255, .8) !important; }
+/* dropdown arrow: desktop only (the phone menu adds its own toggle button) */
+body.sl-ui .main-menu__caret { font-size: 10px; margin-left: 6px; transition: transform .25s var(--hp-ease); }
+body.sl-ui .main-header .main-menu__list > li.dropdown:hover .main-menu__caret,
+body.sl-ui .main-header .main-menu__list > li.dropdown:focus-within .main-menu__caret { transform: rotate(180deg); }
+body.sl-ui .mobile-nav__container .main-menu__caret { display: none; }
+body.sl-ui .main-header__btn { min-height: 42px; padding: 10px 18px !important; font-size: 14px !important; }
+body.sl-ui .mobile-nav__btn span { background: #fff !important; }
+
+/* Theme switch: sun in dark (go light), moon in light (go dark) */
+body.sl-ui .main-header__right__inner { display: flex; align-items: center; gap: 12px; }
+body.sl-ui .hp-theme-toggle {
+    flex: 0 0 auto;
+    width: 40px; height: 40px; padding: 0;
+    display: inline-grid; place-items: center;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, .18);
+    background: rgba(255, 255, 255, .05);
+    color: #fff; font-size: 16px; line-height: 1;
+    cursor: pointer;
+    transition: background-color .25s ease, border-color .25s ease;
+}
+body.sl-ui .hp-theme-toggle:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .35); }
+body.sl-ui .hp-theme-toggle i { grid-area: 1 / 1; transition: transform .45s var(--hp-ease), opacity .3s ease; }
+body.sl-ui .hp-theme-toggle__moon { opacity: 0; transform: rotate(-90deg) scale(.6); }
+html[data-theme="light"] body.sl-ui .hp-theme-toggle__sun { opacity: 0; transform: rotate(90deg) scale(.6); }
+html[data-theme="light"] body.sl-ui .hp-theme-toggle__moon { opacity: 1; transform: none; }
+
+/* Mobile drawer */
+body.sl-ui .mobile-nav__content {
+    background: linear-gradient(180deg, var(--hp-navy-850), var(--hp-navy-950)) !important;
+    border-right: 1px solid var(--hp-line-dark);
+}
+/* reversed logo needs no white tile behind it */
+body.sl-ui .mobile-nav__wrapper .mobile-nav__content .logo-box img { background: transparent !important; padding: 0 !important; height: 52px !important; }
+body.sl-ui .mobile-nav__overlay { background: rgba(0, 10, 22, .7) !important; }
+body.sl-ui .mobile-nav__container .main-menu__list > li { border-bottom: 1px solid var(--hp-line-dark) !important; }
+body.sl-ui .mobile-nav__container .main-menu__list > li > a { font-weight: 600; font-size: 16px; }
+body.sl-ui .mobile-nav__container .main-menu__list > li.current > a { color: var(--hp-green) !important; }
+body.sl-ui .mobile-nav__wrapper .mobile-nav__content {
+    transition: transform .5s var(--hp-ease), opacity .4s ease, visibility .5s ease !important;
+}
+
+/* 3. HERO ------------------------------------------------------------------ */
+/* Full-bleed fleet photos that slide like a carousel, with one still sentence
+   on a shade in the theme's surface colour: navy with white ink in dark mode,
+   soft white with navy ink in light mode. The shade covers only the copy side
+   and the foot, leaving the car clear; every colour below is a token, so the
+ --dir is +1 (next) or -1 (back). */
+body.sl-ui .sl-hero {
+    --hero-ink: #FFFFFF;
+    --hero-ink-soft: rgba(255, 255, 255, .88);
+    --hero-line: rgba(255, 255, 255, .3);
+    --hero-accent: #8BDF52;
+    --hero-shade: 0, 24, 50;             /* rgb the photo is shaded towards = the stats band below */
+    --hero-glow: rgba(0, 8, 20, .35);    /* text-shadow lifting ink off the photo */
+    --hero-dim: .35;                     /* brightness of the photo sliding out */
+    --ctl-ink: #FFFFFF;
+    --ctl-bg: rgba(255, 255, 255, .08);
+    --ctl-line: rgba(255, 255, 255, .34);
+    --ctl-hover-bg: #FFFFFF;
+    --ctl-hover-ink: #001832;
+    --hero-slide: 1.1s;
+    --dir: 1;
+    position: relative; isolation: isolate; overflow: hidden;
+    display: flex; flex-direction: column;
+    min-height: clamp(560px, calc(100svh - 134px), 860px);
+    background: rgb(var(--hero-shade));
+    color: var(--hero-ink);
+    touch-action: pan-y;                 /* vertical scroll stays native; horizontal swipes are ours */
+    -webkit-user-select: none; user-select: none;
+}
+
+/* slides: stacked; the incoming one slides over, the outgoing drifts back and dims */
+body.sl-ui .sl-hero__slides {
+    position: absolute; inset: -14px; z-index: -2;
+    translate: var(--hp-px, 0) var(--hp-py, 0);
+    transition: translate .8s var(--hp-ease);
+}
+body.sl-ui .sl-hero__slide { position: absolute; inset: 0; overflow: hidden; visibility: hidden; }
+body.sl-ui .sl-hero__slide img {
+    width: 100%; height: 100%; display: block;
+    object-fit: cover; object-position: var(--focus, 50% 55%);
+    transform: scale(var(--zoom, 1.1)); transform-origin: 22% 55%;
+    -webkit-user-drag: none;
+}
+body.sl-ui .sl-hero__slide.is-active {
+    visibility: visible; z-index: 2;
+    animation: sl-hero-in var(--hero-slide) var(--hp-ease) both;
+}
+body.sl-ui .sl-hero__slide.is-active.is-first { animation: hp-fade 1.2s ease both; }
+body.sl-ui .sl-hero__slide.is-active img { animation: sl-hero-zoom 9s linear both; }
+body.sl-ui .sl-hero__slide.is-prev {
+    visibility: visible; z-index: 1;
+    animation: sl-hero-out var(--hero-slide) var(--hp-ease) both;
+}
+@keyframes sl-hero-in   { from { transform: translateX(calc(var(--dir) * 100%)); } to { transform: none; } }
+@keyframes sl-hero-out  { from { transform: none; filter: brightness(1); } to { transform: translateX(calc(var(--dir) * -30%)); filter: brightness(var(--hero-dim)); } }
+@keyframes sl-hero-zoom { from { transform: scale(calc(var(--zoom, 1.1) + .05)); } to { transform: scale(var(--zoom, 1.1)); } }
+
+/* shade: a band behind the copy and a short foot; the car itself is untouched */
+body.sl-ui .sl-hero__shade {
+    position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background:
+        linear-gradient(90deg,
+            rgba(var(--hero-shade), .82) 0%,
+            rgba(var(--hero-shade), .6) 26%,
+            rgba(var(--hero-shade), .12) 46%,
+            rgba(var(--hero-shade), 0) 58%),
+        linear-gradient(180deg,
+            rgba(var(--hero-shade), 0) 80%,
+            rgb(var(--hero-shade)) 100%);
+}
+
+/* layout */
+body.sl-ui .sl-hero__inner {
+    position: relative; flex: 1; width: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: clamp(56px, 9vh, 110px) !important;
+    padding-bottom: clamp(110px, 15vh, 150px) !important;
+}
+body.sl-ui .sl-hero__copy { max-width: 560px; }
+
+/* copy */
+body.sl-ui .sl-hero__title {
+    margin: 0 0 22px;
+    font-family: var(--font-heading, 'Sora', sans-serif);
+    font-size: clamp(44px, 5.4vw, 86px);
+    font-weight: 600; line-height: 1.02; letter-spacing: -.045em;
+    color: var(--hero-ink);
+    text-shadow: 0 2px 30px var(--hero-glow);
+    text-wrap: balance;
+}
+/* the accent: a light italic serif on its own line */
+body.sl-ui .sl-hero__title em {
+    display: block; margin-top: .04em;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic; font-weight: 400;
+    font-size: 1.08em; letter-spacing: -.005em; line-height: 1;
+    color: var(--hero-accent);
+}
+body.sl-ui .sl-hero__lead {
+    margin: 0 0 36px; max-width: 34ch;
+    font-size: clamp(17px, 1.35vw, 19.5px); line-height: 1.65; font-weight: 450;
+    color: var(--hero-ink-soft);
+    text-shadow: 0 1px 16px var(--hero-glow);
+}
+body.sl-ui .sl-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; }
+body.sl-ui .sl-hero__btn,
+body.sl-ui .sl-hero__link {
+    min-height: 52px; padding: 0 30px !important; border-radius: 999px !important;
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    font-size: 15.5px !important; font-weight: 700 !important;
+}
+body.sl-ui .sl-hero__link {
+    color: var(--ctl-ink) !important; text-decoration: none;
+    border: 1.5px solid var(--ctl-line);
+    background: var(--ctl-bg);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    transition: background-color .3s ease, border-color .3s ease, color .3s ease;
+}
+body.sl-ui .sl-hero__link i { font-size: 12px; transition: transform .4s var(--hp-ease); }
+body.sl-ui .sl-hero__link:hover { background: var(--ctl-hover-bg); border-color: var(--ctl-hover-bg); color: var(--ctl-hover-ink) !important; }
+body.sl-ui .sl-hero__link:hover i { transform: translateX(4px); }
+
+/* controls: two arrows, bottom right */
+body.sl-ui .sl-hero__controls {
+    position: absolute; z-index: 2;
+    left: var(--hp-gutter); right: var(--hp-gutter); bottom: clamp(24px, 4vh, 40px);
+    display: flex; align-items: center; justify-content: flex-end;
+}
+body.sl-ui .sl-hero__nav { display: flex; align-items: center; gap: 10px; }
+body.sl-ui .sl-hero__arrow {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center; font-size: 15px;
+    color: var(--ctl-ink); background: var(--ctl-bg);
+    border: 1px solid var(--ctl-line);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    transition: background-color .3s ease, border-color .3s ease, color .3s ease, transform .3s var(--hp-ease);
+}
+body.sl-ui .sl-hero__arrow:hover { background: var(--ctl-hover-bg); border-color: var(--ctl-hover-bg); color: var(--ctl-hover-ink); }
+body.sl-ui .sl-hero__arrow:active { transform: scale(.94); }
+body.sl-ui .sl-hero__btn:focus-visible,
+body.sl-ui .sl-hero__link:focus-visible,
+body.sl-ui .sl-hero__arrow:focus-visible { outline: 2px solid var(--hp-green); outline-offset: 3px; }
+
+/* held (a control focused, scrolled away or browser tab hidden): the photo's slow zoom freezes along with the autoplay timer */
+body.sl-ui .sl-hero.is-held .sl-hero__slide img { animation-play-state: paused; }
+
+/* wide screens: show the photo a little smaller, anchored right, so the whole
+   car sits in view beside the copy instead of under it. The photo's left edge
+   fades into the hero surface behind the text. Only from 16:10 up: the photo
+   fills the full height of the right --fit share of the hero, so a 4:3
+   photo is barely cropped and no gap shows above or below. */
+@media (min-width: 992px) and (min-aspect-ratio: 16/10) {
+    body.sl-ui .sl-hero__slide img {
+        position: absolute; top: 0; right: 0; width: var(--fit, 74%); height: 100%;
+        transform-origin: 70% 55%;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+        mask-image: linear-gradient(90deg, transparent 0%, #000 22%);
+    }
+    @keyframes sl-hero-zoom { from { transform: scale(1.05); } to { transform: scale(1); } }
+}
+
+/* phone: copy anchored to the bottom over a deeper foot shade */
+@media (max-width: 767px) {
+    body.sl-ui .sl-hero { min-height: min(760px, calc(100svh - 110px)); }
+    body.sl-ui .sl-hero__shade {
+        background: linear-gradient(180deg,
+            rgba(var(--hero-shade), 0) 0%,
+            rgba(var(--hero-shade), 0) 40%,
+            rgba(var(--hero-shade), .78) 64%,
+            rgb(var(--hero-shade)) 100%);
+    }
+    body.sl-ui .sl-hero__inner { justify-content: flex-end; padding-top: 240px !important; padding-bottom: 92px !important; }
+    body.sl-ui .sl-hero__slide img { transform: scale(1.04); transform-origin: 50% 40%; }
+    @keyframes sl-hero-zoom { from { transform: scale(1.09); } to { transform: scale(1.04); } }
+    body.sl-ui .sl-hero__title { font-size: clamp(40px, 11.5vw, 58px); margin-bottom: 14px; }
+    body.sl-ui .sl-hero__lead { margin-bottom: 26px; font-size: 16.5px; }
+    body.sl-ui .sl-hero__actions { gap: 10px; }
+    body.sl-ui .sl-hero__btn, body.sl-ui .sl-hero__link { flex: 1 1 0; padding: 0 18px !important; }
+    body.sl-ui .sl-hero__controls { bottom: 24px; justify-content: center; }
+    body.sl-ui .sl-hero__arrow { width: 44px; height: 44px; font-size: 13px; }
+}
+
+/* light mode: the same photos under a soft white band behind the copy only,
+   navy ink with a faint white glow; the car keeps its own colours. */
+html[data-theme="light"] body.sl-ui .sl-hero {
+    --hero-ink: #0A1F38;
+    --hero-ink-soft: #2E4258;
+    --hero-line: rgba(0, 24, 50, .2);
+    --hero-accent: #2F6B0C;
+    --hero-shade: 244, 247, 250;
+    --hero-glow: rgba(255, 255, 255, .85);
+    --hero-dim: 1.25;
+    --ctl-ink: #0A1F38;
+    --ctl-bg: rgba(255, 255, 255, .72);
+    --ctl-line: rgba(0, 24, 50, .18);
+    --ctl-hover-bg: #0A1F38;
+    --ctl-hover-ink: #FFFFFF;
+}
+html[data-theme="light"] body.sl-ui .sl-hero__shade {
+    background:
+        linear-gradient(90deg,
+            rgba(var(--hero-shade), .88) 0%,
+            rgba(var(--hero-shade), .7) 26%,
+            rgba(var(--hero-shade), .15) 46%,
+            rgba(var(--hero-shade), 0) 58%),
+        linear-gradient(180deg,
+            rgba(var(--hero-shade), 0) 80%,
+            rgb(var(--hero-shade)) 100%);
+}
+@media (max-width: 767px) {
+    html[data-theme="light"] body.sl-ui .sl-hero__shade {
+        background: linear-gradient(180deg,
+            rgba(var(--hero-shade), 0) 0%,
+            rgba(var(--hero-shade), 0) 40%,
+            rgba(var(--hero-shade), .82) 64%,
+            rgb(var(--hero-shade)) 100%);
+    }
+}
+
+/* Stats: a glass band that closes the hero */
+body.sl-ui .stats-bar {
+    background: var(--hp-navy) !important;
+    padding: clamp(20px, 2.4vw, 28px) 0 clamp(22px, 2.8vw, 34px) !important;
+}
+body.sl-ui .stats-bar__grid {
+    background: rgba(255, 255, 255, .03);
+    border: 1px solid var(--hp-line-dark);
+    border-radius: var(--hp-radius);
+    padding: 4px 8px !important;
+}
+body.sl-ui .stats-bar__item { position: relative; padding-top: 12px !important; padding-bottom: 12px !important; }
+body.sl-ui .stats-bar__number {
+    font-family: var(--font-heading, 'Sora', sans-serif) !important;
+    color: #fff !important;
+    font-size: clamp(20px, 2vw, 26px) !important;
+    font-weight: 700 !important;
+    letter-spacing: -.02em;
+}
+body.sl-ui .stats-bar__number::first-letter { color: inherit; }
+body.sl-ui .stats-bar__label {
+    color: rgba(255, 255, 255, .6) !important;
+    font-size: 12.5px !important; letter-spacing: .04em;
+}
+body.sl-ui .stats-bar__item::before {
+    content: ""; display: block; width: 18px; height: 3px; margin: 0 auto 8px;
+    border-radius: 3px; background: var(--hp-green);
+}
+body.sl-ui .stats-bar__divider { background: var(--hp-line-dark) !important; }
+
+/* 3b. HEADER + STATS IN LIGHT MODE --------------------------------------- */
+/* Header, hero (see 3) and stats follow the theme. The thin topbar, mobile drawer
+   and footer stay navy in both modes as the brand frame. */
+body.sl-ui .logo-ink--dark { display: none !important; }
+html[data-theme="light"] body.sl-ui .main-header .logo-ink--light { display: none !important; }
+html[data-theme="light"] body.sl-ui .main-header .logo-ink--dark { display: inline-block !important; }
+
+html[data-theme="light"] body.sl-ui .main-header {
+    background: #FFFFFF !important;
+    border-bottom-color: var(--hp-line);
+}
+html[data-theme="light"] body.sl-ui .sticky-header--cloned {
+    background: rgba(255, 255, 255, .9) !important;
+    border-bottom-color: var(--hp-line);
+    box-shadow: 0 12px 30px -20px rgba(0, 24, 50, .35) !important;
+}
+html[data-theme="light"] body.sl-ui .main-header .main-menu__list > li > a { color: #4A5B70 !important; }
+html[data-theme="light"] body.sl-ui .main-header .main-menu__list > li > a:hover,
+html[data-theme="light"] body.sl-ui .main-header .main-menu__list > li.current > a { color: #0A1F38 !important; }
+html[data-theme="light"] body.sl-ui .main-header .main-menu__list > li > ul { background: #FFFFFF !important; border-color: var(--hp-line); }
+html[data-theme="light"] body.sl-ui .main-header .main-menu__list > li > ul a { color: #4A5B70 !important; }
+html[data-theme="light"] body.sl-ui .mobile-nav__btn span { background: #0A1F38 !important; }
+html[data-theme="light"] body.sl-ui .hp-theme-toggle {
+    color: #0A1F38; background: #F4F7FA; border-color: var(--hp-line);
+}
+html[data-theme="light"] body.sl-ui .hp-theme-toggle:hover { background: #E9EEF4; border-color: var(--hp-line-strong); }
+
+html[data-theme="light"] body.sl-ui .stats-bar { background: #F4F7FA !important; }
+
+/* stats band */
+html[data-theme="light"] body.sl-ui .stats-bar__grid { background: #FFFFFF; border-color: var(--hp-line); box-shadow: var(--hp-card-shadow); }
+html[data-theme="light"] body.sl-ui .stats-bar__number { color: #0A1F38 !important; }
+html[data-theme="light"] body.sl-ui .stats-bar__label { color: #4A5B70 !important; }
+html[data-theme="light"] body.sl-ui .stats-bar__divider { background: var(--hp-line) !important; }
+
+/* 4. SERVICES ------------------------------------------------------------- */
+/* Photo-led cards: the picture does the talking, one line of copy. */
+body.sl-ui .sl-services { background: var(--hp-bg-alt); }
+body.sl-ui .sl-services__grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.4vw, 18px);
+}
+body.sl-ui .sl-service {
+    display: flex; flex-direction: column; overflow: hidden;
+    border-radius: var(--hp-radius);
+    border: 1px solid var(--hp-line);
+    background: var(--hp-card);
+    box-shadow: var(--hp-card-shadow);
+    text-decoration: none;
+    transition: translate .5s var(--hp-ease), border-color .3s ease;
+}
+body.sl-ui .sl-service:hover { translate: 0 -4px; border-color: var(--hp-hover-line); }
+/* photo on top at its own 4:3 shape, so the car is never cropped away */
+body.sl-ui .sl-service__media { display: block; overflow: hidden; aspect-ratio: 4 / 3; background: var(--hp-navy); }
+body.sl-ui .sl-service__media img {
+    display: block; width: 100%; height: 100%; object-fit: cover;
+    transition: transform 1.1s var(--hp-ease);
+}
+body.sl-ui .sl-service:hover .sl-service__media img { transform: scale(1.05); }
+body.sl-ui .sl-service__body {
+    display: grid; grid-template-columns: 38px 1fr; column-gap: 12px; row-gap: 2px;
+    align-items: center; padding: 14px 16px 16px;
+}
+body.sl-ui .sl-service__icon {
+    grid-row: 1 / span 2;
+    width: 38px; height: 38px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 16px;
+    background: var(--hp-green); color: var(--hp-navy);
+}
+body.sl-ui .sl-service__title {
+    font-family: var(--font-heading, 'Sora', sans-serif);
+    font-size: 16.5px; font-weight: 700; letter-spacing: -.01em; color: var(--hp-text);
+}
+body.sl-ui .sl-service__text { font-size: 13.5px; color: var(--hp-text-soft); }
+@media (max-width: 991px) { body.sl-ui .sl-services__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 575px) {
+    body.sl-ui .sl-services__grid { grid-template-columns: 1fr; }
+    body.sl-ui .sl-service__media { aspect-ratio: 16 / 9; }
+}
+
+/* 5. HOW IT WORKS ---------------------------------------------------------- */
+/* Three big icons joined by a line, a title and one line each. */
+body.sl-ui .sl-steps { background: var(--hp-bg); }
+body.sl-ui .sl-steps__list {
+    position: relative;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(16px, 2vw, 28px);
+    margin: 0; padding: 0; counter-reset: sl-step;
+}
+body.sl-ui .sl-steps__list::before {
+    content: ""; position: absolute; top: 36px; left: 16.6%; right: 16.6%; height: 2px;
+    background: linear-gradient(90deg, var(--hp-green), var(--hp-accent));
+    opacity: .5;
+}
+body.sl-ui .sl-step {
+    position: relative; display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center;
+    counter-increment: sl-step;
+}
+body.sl-ui .sl-step__icon {
+    position: relative;
+    width: 72px; height: 72px; border-radius: 50%; margin-bottom: 8px;
+    display: grid; place-items: center; font-size: 26px;
+    background: var(--hp-card); color: var(--hp-green);
+    border: 1px solid var(--hp-line);
+    box-shadow: var(--hp-card-shadow), 0 0 0 6px var(--hp-bg);
+}
+body.sl-ui .sl-step__icon::after {
+    content: counter(sl-step);
+    position: absolute; right: -4px; top: -4px;
+    width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-heading, 'Sora', sans-serif); font-size: 12px; font-weight: 700;
+    background: var(--hp-green); color: var(--hp-navy);
+}
+body.sl-ui .sl-step__title {
+    font-family: var(--font-heading, 'Sora', sans-serif);
+    font-size: 17px; font-weight: 700; color: var(--hp-text);
+}
+body.sl-ui .sl-step__text { font-size: 14px; color: var(--hp-text-soft); max-width: 22ch; }
+/* phones: one row per step, icon on the left with the line running
+   through the icons only */
+@media (max-width: 767px) {
+    body.sl-ui .sl-steps__list { grid-template-columns: 1fr; gap: 18px; max-width: 420px; margin: 0 auto; }
+    body.sl-ui .sl-steps__list::before { top: 28px; bottom: 28px; left: 28px; right: auto; width: 2px; height: auto; }
+    body.sl-ui .sl-step {
+        grid-template-columns: 56px 1fr; column-gap: 16px; row-gap: 2px;
+        justify-items: start; align-items: center; text-align: left;
+    }
+    body.sl-ui .sl-step__icon { grid-row: 1 / span 2; width: 56px; height: 56px; font-size: 20px; margin: 0; }
+    body.sl-ui .sl-step__text { max-width: none; }
+}
+
+/* VISION & MISSION --------------------------------------------------------- */
+/* Same surface as every other section; uses the theme tokens so it follows
+   light and dark mode. Cards carry a numbered watermark. */
+body.sl-ui .sl-purpose { background: var(--hp-bg); }
+body.sl-ui .sl-purpose__lead {
+    text-align: center; max-width: 520px; margin: -12px auto 36px;
+    font-size: 15.5px; color: var(--hp-text-soft);
+}
+body.sl-ui .sl-purpose__grid {
+    display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(16px, 2.2vw, 28px); max-width: 1000px; margin: 0 auto;
+}
+body.sl-ui .sl-purpose__card {
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; gap: 18px;
+    padding: clamp(24px, 3vw, 36px);
+    background: var(--hp-bg);
+    border: 1px solid var(--hp-line);
+    border-radius: 18px;
+    box-shadow: var(--hp-card-shadow);
+    transition: border-color .35s var(--hp-ease), transform .35s var(--hp-ease);
+}
+body.sl-ui .sl-purpose__card::before {
+    content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px;
+    background: var(--hp-green);
+}
+body.sl-ui .sl-purpose__card:hover { border-color: var(--hp-hover-line); transform: translateY(-4px); }
+body.sl-ui .sl-purpose__head { display: flex; align-items: center; gap: 16px; }
+body.sl-ui .sl-purpose__icon {
+    flex: none; width: 56px; height: 56px; border-radius: 16px;
+    display: grid; place-items: center; font-size: 22px;
+    background: var(--hp-green); color: var(--hp-navy);
+}
+body.sl-ui .sl-purpose__label {
+    display: block; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--hp-accent); margin-bottom: 2px;
+}
+body.sl-ui .sl-purpose__title {
+    font-family: var(--font-heading, 'Sora', sans-serif);
+    font-size: clamp(20px, 2vw, 24px); font-weight: 700; color: var(--hp-text); margin: 0;
+}
+body.sl-ui .sl-purpose__text {
+    font-size: 16px; line-height: 1.65; color: var(--hp-text-soft); margin: 0;
+}
+body.sl-ui .sl-purpose__tags { display: flex; flex-wrap: wrap; gap: 8px; margin: auto 0 0; padding: 0; }
+body.sl-ui .sl-purpose__tags li {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; color: var(--hp-text);
+    background: var(--hp-inset); border: 1px solid var(--hp-line);
+}
+body.sl-ui .sl-purpose__tags i { font-size: 10px; color: var(--hp-green); }
+@media (max-width: 767px) {
+    body.sl-ui .sl-purpose__grid { grid-template-columns: 1fr; }
+    body.sl-ui .sl-purpose__text { font-size: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    body.sl-ui .sl-purpose__card { transition: none; }
+    body.sl-ui .sl-purpose__card:hover { transform: none; }
+}
+
+/* 6. CONTACT --------------------------------------------------------------- */
+body.sl-ui .sl-contact { background: var(--hp-bg); }
+body.sl-ui .sl-contact__grid {
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(12px, 1.4vw, 18px);
+}
+body.sl-ui .sl-contact__item {
+    display: grid; justify-items: start; gap: 2px;
+    padding: 18px;
+    background: var(--hp-card);
+    border: 1px solid var(--hp-line);
+    border-radius: var(--hp-radius);
+    box-shadow: var(--hp-card-shadow);
+    text-decoration: none;
+    transition: translate .45s var(--hp-ease), border-color .3s ease;
+}
+body.sl-ui .sl-contact__item:hover { translate: 0 -4px; border-color: var(--hp-hover-line); }
+body.sl-ui .sl-contact__icon {
+    width: 42px; height: 42px; border-radius: 12px; margin-bottom: 10px;
+    display: grid; place-items: center; font-size: 18px;
+    background: var(--hp-navy); color: var(--hp-green); border: 1px solid var(--hp-line-dark);
+}
+body.sl-ui .sl-contact__item--whatsapp .sl-contact__icon { background: #25D366; color: #fff; border-color: transparent; }
+body.sl-ui .sl-contact__label { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--hp-accent); }
+body.sl-ui .sl-contact__value { font-size: 15.5px; font-weight: 700; color: var(--hp-text); word-break: break-word; }
+@media (max-width: 991px) { body.sl-ui .sl-contact__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { body.sl-ui .sl-contact__grid { grid-template-columns: 1fr; } }
+
+/* 10. INTERCITY ------------------------------------------------------------ */
+body.sl-ui .intercity-one { background: var(--hp-bg) !important; }
+body.sl-ui .intercity-one__lead { color: var(--hp-text-soft) !important; text-wrap: balance; font-size: 15.5px; margin-bottom: 26px !important; }
+body.sl-ui #intercity-trip-list { justify-content: center; }
+body.sl-ui .intercity-trip-card {
+    background: var(--hp-card) !important;
+    border: 1px solid var(--hp-line);
+    border-radius: var(--hp-radius) !important;
+    box-shadow: var(--hp-card-shadow) !important;
+    transition: transform .45s var(--hp-ease), border-color .3s ease;
+    animation: hp-rise .7s var(--hp-ease) both;
+}
+body.sl-ui .intercity-trip-card:hover { transform: translateY(-4px); border-color: var(--hp-hover-line); }
+body.sl-ui .intercity-trip-card__route,
+body.sl-ui .intercity-trip-card__price { color: var(--hp-text) !important; }
+body.sl-ui .intercity-trip-card__meta,
+body.sl-ui .intercity-trip-card__price small { color: var(--hp-text-soft) !important; }
+body.sl-ui .intercity-trip-card__badge { background: var(--hp-accent-bg) !important; color: var(--hp-accent) !important; }
+
+/* 12. TESTIMONIALS --------------------------------------------------------- */
+body.sl-ui .testimonials-one { background: var(--hp-bg) !important; }
+body.sl-ui .testimonials-one__shape-right { display: none !important; }
+body.sl-ui .testimonial-card {
+    background: var(--hp-card) !important;
+    border: 1px solid var(--hp-line) !important;
+    border-radius: var(--hp-radius) !important;
+    box-shadow: var(--hp-card-shadow) !important;
+    padding: 16px !important;
+    display: flex; flex-direction: column; height: 100%;
+    transition: transform .45s var(--hp-ease), border-color .3s ease;
+}
+body.sl-ui .testimonials-one .owl-stage { display: flex; }
+body.sl-ui .testimonials-one .owl-item { display: flex; }
+body.sl-ui .testimonials-one .owl-item > .item { display: flex; width: 100%; padding: 4px 0 18px; }
+body.sl-ui .testimonials-one .owl-nav { margin-top: 18px !important; }
+body.sl-ui .testimonial-card:hover { transform: translateY(-4px); border-color: var(--hp-hover-line) !important; }
+body.sl-ui .testimonials-one .owl-nav { display: flex !important; justify-content: center; gap: 8px; }
+body.sl-ui .testimonials-one .owl-carousel .owl-nav button.owl-prev,
+body.sl-ui .testimonials-one .owl-carousel .owl-nav button.owl-next {
+    width: 42px !important; height: 42px !important; padding: 0 !important; margin: 0 !important;
+    border-radius: 50% !important;
+    background: var(--hp-card) !important; color: var(--hp-text) !important;
+    border: 1px solid var(--hp-line) !important; box-shadow: none !important;
+    clip-path: none !important; transform: none !important;
+    display: inline-grid !important; place-items: center;
+}
+body.sl-ui .testimonials-one .owl-carousel .owl-nav button.owl-prev:hover,
+body.sl-ui .testimonials-one .owl-carousel .owl-nav button.owl-next:hover {
+    background: var(--hp-green) !important; color: var(--hp-navy) !important; border-color: transparent !important;
+}
+body.sl-ui .testimonials-one .owl-nav button::before,
+body.sl-ui .testimonials-one .owl-nav button::after { display: none !important; }
+body.sl-ui .testimonials-one .owl-nav button span { color: inherit !important; transform: none !important; }
+body.sl-ui .testimonial-card__name { color: var(--hp-text) !important; font-size: 16px !important; }
+body.sl-ui .testimonial-card__designation { color: var(--hp-accent) !important; font-size: 12.5px !important; font-weight: 600; }
+body.sl-ui .testimonial-card__text {
+    color: var(--hp-text-soft) !important; font-size: 14px !important; line-height: 1.55 !important; flex: 1;
+    font-style: normal !important; min-height: 0 !important; margin: 10px 0 !important;
+}
+/* quote badge sits on the avatar instead of over long names */
+body.sl-ui .testimonial-card__author { position: relative; flex: 0 0 auto; }
+body.sl-ui .testimonial-card__icon {
+    top: auto !important; right: -2px !important; bottom: -2px;
+    width: 24px !important; height: 24px !important; font-size: 10px !important;
+    background: var(--hp-green) !important; color: var(--hp-navy) !important;
+    border: 2px solid var(--hp-card);
+}
+body.sl-ui .testimonial-card__icon i { color: var(--hp-navy) !important; }
+body.sl-ui .testimonial-card__bottom { border-color: var(--hp-line) !important; }
+body.sl-ui .testimonial-card__bottom i { color: var(--hp-green) !important; }
+
+/* 13. DOWNLOAD APP --------------------------------------------------------- */
+body.sl-ui .download-app-three { position: relative; overflow: hidden; background: var(--hp-bg-alt) !important; }
+body.sl-ui .download-app-three__bg,
+body.sl-ui .download-app-three__element,
+body.sl-ui .download-app-three__element-one { display: none !important; }
+body.sl-ui .download-app-three__inner { background: transparent !important; }
+body.sl-ui .download-app-three .sec-title { margin-bottom: 14px !important; }
+body.sl-ui .download-app-three__top__text { color: var(--hp-text-soft) !important; font-size: 16px; max-width: 30em; margin-bottom: 22px !important; }
+/* store badges stay dark in both themes, like the official badges */
+body.sl-ui .download-app-three__btn {
+    border: 1px solid rgba(255, 255, 255, .16) !important;
+    border-radius: 12px !important;
+    transition: transform .35s var(--hp-ease), border-color .3s ease !important;
+}
+body.sl-ui .download-app-three__btn:hover { transform: translateY(-2px); border-color: rgba(99, 197, 31, .6) !important; }
+body.sl-ui .download-app-three__btn__title { color: rgba(255, 255, 255, .7) !important; }
+body.sl-ui .download-app-three__btn__text { color: #fff !important; }
+body.sl-ui .download-app-three::before,
+body.sl-ui .download-app-three::after,
+body.sl-ui .download-app-three__image__inner::after { display: none !important; }
+/* Copy left, visual right. A grid rather than absolute positioning, because
+   WOW.js animates transform on the visual. */
+body.sl-ui .download-app-three__inner {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center; gap: 40px;
+}
+body.sl-ui .download-app-three__inner > .row { margin: 0; }
+body.sl-ui .download-app-three__inner > .row > [class*="col-"] { width: 100%; max-width: 100%; flex: 0 0 100%; padding: 0; }
+/* Visual: Kigali in a lit circle, the SafeLine car driving out in front */
+body.sl-ui .download-app-three__image {
+    position: relative; width: min(100%, 380px); aspect-ratio: 1.25; justify-self: end;
+}
+body.sl-ui .download-app-three__image__inner {
+    position: absolute !important; inset: 0 0 auto auto !important;
+    right: 4% !important; top: 0 !important; bottom: auto !important; left: auto !important;
+    width: 72% !important; height: auto !important; aspect-ratio: 1;
+    border-radius: 50%; overflow: hidden;
+    background: none !important;
+    animation: none !important;
+    box-shadow: 0 0 0 10px var(--hp-inset), 0 0 0 11px var(--hp-line);
+}
+body.sl-ui .download-app-three__image__inner img { width: 100%; height: 100%; object-fit: cover; }
+body.sl-ui .download-app-three__image__item {
+    position: absolute !important; left: 0 !important; right: auto !important; bottom: 4% !important; top: auto !important;
+    transform: none !important; width: 78%; max-width: none !important;
+    animation: none !important;
+}
+body.sl-ui .download-app-three__image__item img {
+    width: 100%; max-width: none !important; height: auto;
+    filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .45));
+    animation: hp-float 7s ease-in-out infinite;
+}
+@media (max-width: 991px) {
+    body.sl-ui .download-app-three__image { width: min(100%, 380px); margin: 4px auto 0; justify-self: center; }
+    body.sl-ui .download-app-three__inner { grid-template-columns: 1fr; gap: 20px; }
+    body.sl-ui .download-app-three__image__inner { display: block !important; }
+}
+
+/* app features as chips under the copy */
+body.sl-ui .sl-app-feats { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 22px; padding: 0; }
+body.sl-ui .sl-app-feats li {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px; border-radius: 999px;
+    background: var(--hp-card); border: 1px solid var(--hp-line);
+    color: var(--hp-text); font-size: 13.5px; font-weight: 600;
+}
+body.sl-ui .sl-app-feats i { color: var(--hp-green); }
+
+/* 14. FOOTER --------------------------------------------------------------- */
+/* Navy in both themes (the brand frame). Four columns: brand, explore,
+   contact, get the app; 2x2 on tablets, one column on phones. */
+body.sl-ui .sl-footer {
+    background: var(--hp-navy-950);
+    border-top: 1px solid var(--hp-line-dark);
+    color: rgba(255, 255, 255, .68);
+    font-size: 14.5px;
+}
+body.sl-ui .sl-footer__grid {
+    display: grid; grid-template-columns: 1.3fr .85fr 1.2fr 1.65fr;
+    gap: 40px 44px;
+    padding: clamp(48px, 5.5vw, 76px) 0 clamp(36px, 4vw, 52px);
+}
+body.sl-ui .sl-footer__logo { display: inline-block; }
+body.sl-ui .sl-footer__logo img { display: block; width: 150px; height: auto; transform: translateX(-10.9%); }
+body.sl-ui .sl-footer__about { margin: 16px 0 20px; max-width: 34ch; line-height: 1.7; color: rgba(255, 255, 255, .66); }
+body.sl-ui .sl-footer__badge {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px 7px 12px; border-radius: 999px;
+    background: rgba(99, 197, 31, .1); border: 1px solid rgba(99, 197, 31, .28);
+    color: #B9EE92; font-size: 12.5px; font-weight: 600;
+}
+body.sl-ui .sl-footer__badge::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--hp-green); box-shadow: 0 0 0 4px rgba(99, 197, 31, .2);
+}
+body.sl-ui .sl-footer__title {
+    margin: 6px 0 20px;
+    font-family: inherit; font-size: 12.5px; font-weight: 700;
+    letter-spacing: .14em; text-transform: uppercase; color: #FFFFFF;
+}
+body.sl-ui .sl-footer__links,
+body.sl-ui .sl-footer__contact { list-style: none; margin: 0; padding: 0; display: grid; }
+body.sl-ui .sl-footer__links { gap: 12px; }
+body.sl-ui .sl-footer__links a {
+    color: rgba(255, 255, 255, .72); text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+    padding-bottom: 2px;
+    transition: color .25s ease, background-size .35s var(--hp-ease);
+}
+body.sl-ui .sl-footer__links a:hover { color: #FFFFFF; background-size: 100% 1px; }
+body.sl-ui .sl-footer__contact { gap: 14px; }
+body.sl-ui .sl-footer__contact a { display: flex; align-items: flex-start; gap: 12px; color: rgba(255, 255, 255, .8); text-decoration: none; }
+body.sl-ui .sl-footer__contact a > i {
+    flex: none; width: 36px; height: 36px; border-radius: 10px;
+    display: grid; place-items: center; font-size: 13px;
+    background: rgba(255, 255, 255, .05); border: 1px solid var(--hp-line-dark);
+    color: var(--hp-green);
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+body.sl-ui .sl-footer__contact span { display: grid; gap: 3px; padding-top: 8px; line-height: 1.35; word-break: break-word; }
+body.sl-ui .sl-footer__contact small { font-size: 12.5px; color: var(--hp-teal-300); }
+body.sl-ui .sl-footer__contact small i { font-size: 10px; margin-left: 2px; }
+body.sl-ui .sl-footer__contact a:hover { color: #FFFFFF; }
+body.sl-ui .sl-footer__contact a:hover > i { background: var(--hp-green); color: var(--hp-navy); border-color: transparent; }
+body.sl-ui .sl-footer__app-text { margin: 0 0 18px; max-width: 30ch; line-height: 1.65; }
+/* the two store buttons always share one row, equal width */
+body.sl-ui .sl-footer__stores { display: flex; gap: 10px; max-width: 360px; }
+body.sl-ui .sl-footer__store {
+    display: inline-flex; align-items: center; gap: 10px;
+    flex: 1 1 0; min-width: 0; padding: 10px 14px; border-radius: 12px;
+    background: #000; border: 1px solid rgba(255, 255, 255, .16);
+    color: #FFFFFF; text-decoration: none;
+    transition: border-color .25s ease, transform .3s var(--hp-ease);
+}
+body.sl-ui .sl-footer__store svg { flex: none; width: 22px; height: 22px; }
+body.sl-ui .sl-footer__store span { display: grid; line-height: 1.2; }
+body.sl-ui .sl-footer__store small { font-size: 10.5px; color: rgba(255, 255, 255, .66); white-space: nowrap; }
+body.sl-ui .sl-footer__store strong { font-size: 15px; font-weight: 600; color: #FFFFFF; white-space: nowrap; }
+body.sl-ui .sl-footer__store:hover { border-color: rgba(99, 197, 31, .6); transform: translateY(-2px); }
+body.sl-ui .sl-footer__bottom { border-top: 1px solid var(--hp-line-dark); }
+body.sl-ui .sl-footer__bottom-inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding-top: 20px; padding-bottom: 20px;
+}
+body.sl-ui .sl-footer__copy { margin: 0; font-size: 13px; color: rgba(255, 255, 255, .5); }
+body.sl-ui .sl-footer__social { display: flex; gap: 8px; }
+body.sl-ui .sl-footer__social a {
+    width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+    color: #FFFFFF; font-size: 13px; text-decoration: none;
+    border: 1px solid var(--hp-line-dark);
+    transition: background-color .25s ease, color .25s ease;
+}
+body.sl-ui .sl-footer__social a:hover { background: var(--hp-green); color: var(--hp-navy); }
+body.sl-ui .sl-footer a:focus-visible { outline: 2px solid var(--hp-green); outline-offset: 3px; border-radius: 8px; }
+@media (max-width: 1199px) {
+    body.sl-ui .sl-footer__grid { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
+}
+@media (max-width: 575px) {
+    body.sl-ui .sl-footer__grid { grid-template-columns: 1fr; gap: 34px; }
+    body.sl-ui .sl-footer__links { grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+    body.sl-ui .sl-footer__bottom-inner { flex-direction: column; align-items: flex-start; }
+}
+body.sl-ui .safeline-scroll__btn {
+    background: #052544 !important; color: #fff !important;
+    border: 1px solid rgba(255, 255, 255, .14) !important;
+}
+body.sl-ui .safeline-scroll__btn:hover { background: var(--hp-green) !important; color: var(--hp-navy) !important; }
+
+/* 15. MOTION ---------------------------------------------------------------- */
+@keyframes hp-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: none; }
+}
+@keyframes hp-drift {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(-60px, 40px, 0) scale(1.08); }
+}
+@keyframes hp-flow-y { from { background-position: 0 200%; } to { background-position: 0 0; } }
+@keyframes hp-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+}
+@keyframes hp-fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* Hero entrance - pure CSS, plays once on load */
+body.sl-ui .sl-hero__copy > * { animation: hp-rise 1.1s var(--hp-ease) both; }
+body.sl-ui .sl-hero__title   { animation-delay: .25s; }
+body.sl-ui .sl-hero__lead    { animation-delay: .4s; }
+body.sl-ui .sl-hero__actions { animation-delay: .5s; }
+body.sl-ui .sl-hero__controls { animation: hp-fade 1.2s ease both .8s; }
+body.sl-ui .stats-bar__grid { animation: hp-rise 1s var(--hp-ease) both .6s; }
+
+/* Staggered reveals for groups (safeline-premium.js toggles .hp-in) */
+body.sl-ui .hp-reveal { opacity: 0; transform: translateY(20px); }
+body.sl-ui .hp-reveal.hp-in {
+    opacity: 1; transform: none;
+    transition: opacity .8s var(--hp-ease) var(--hp-delay, 0ms), transform .8s var(--hp-ease) var(--hp-delay, 0ms);
+}
+html.reveal-off body.sl-ui .hp-reveal { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+    body.sl-ui *,
+    body.sl-ui *::before,
+    body.sl-ui *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        animation-delay: 0ms !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+    body.sl-ui .hp-reveal { opacity: 1 !important; transform: none !important; }
+    html:has(body.sl-ui) { scroll-behavior: auto !important; }
+}
+
+/* 16. PHONE REFINEMENTS ------------------------------------------------------ */
+@media (max-width: 767px) {
+    body.sl-ui .stats-bar__grid {
+        display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 !important;
+    }
+    body.sl-ui .stats-bar__divider { display: none !important; }
+    body.sl-ui .stats-bar__item { padding: 12px 8px !important; }
+    body.sl-ui .cityride-btn { padding: 11px 18px !important; }
+}
+@media (max-width: 380px) {
+    body.sl-ui .hp-theme-toggle { width: 36px; height: 36px; font-size: 14px; }
+    body.sl-ui .main-header__right__inner { gap: 8px; }
+}
+
+/* 17. EDGE ALIGNMENT --------------------------------------------------------- */
+/* The logo PNG carries 10.9% transparent padding on its left (85px of 780),
+   so the visible mark sat ~19px inside the content edge. Shift it back so the
+   S mark lines up with the headline and section titles below. */
+body.sl-ui .main-header__logo img,
+body.sl-ui .mobile-nav__content .logo-box img { transform: translateX(-10.9%); }
+}

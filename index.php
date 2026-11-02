@@ -16,8 +16,8 @@ include 'includes/header.php';
 .intercity-trip-card__route i { color: #63C51F; margin: 0 4px; font-size: 14px; }
 .intercity-trip-card__meta { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--color-text-secondary, #5A6577); }
 .intercity-trip-card__meta i { width: 16px; color: #63C51F; margin-right: 6px; }
-.intercity-trip-card__footer { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 10px; }
-.intercity-trip-card__price { font-weight: 800; color: #001832; }
+.intercity-trip-card__footer { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; padding-top: 10px; }
+.intercity-trip-card__price { font-weight: 800; color: #001832; white-space: nowrap; }
 .intercity-trip-card__price small { font-weight: 500; color: var(--color-text-secondary, #5A6577); }
 
 .phone-input-group { display: flex; align-items: stretch; }
@@ -26,101 +26,34 @@ include 'includes/header.php';
 .form-error-text { color: #C62828; font-size: 12.5px; margin: 6px 0 0; }
 </style>
 
-    <section class="main-slider-one" id="home">
-            <!-- Outer carousel: holds ONE static shell item by default (bg,
-                 car, buttons - identical across the 3 copy variants below,
-                 so there is nothing to slide at this level). home-intercity.js
-                 swaps this whole carousel's contents for a dedicated
-                 Intercity promo slide via its Owl API when a trip is
-                 published - that full-slide takeover is unaffected by the
-                 text rotator nested inside the static item below. -->
-            <div class="main-slider-one__carousel cityride-owl__carousel cityride-owl__carousel--basic-nav owl-carousel" data-owl-options='{
-            "loop": true,
-            "items": 1,
-            "autoplay": true,
-            "smartSpeed": 1000,
-            "nav": false,
-            "navText": ["<span class=\"icon-arrow-left\"></span>","<span class=\"icon-arrow-right\"></span>"],
-            "dots": true,
-            "margin": 0
-	    }'>
-                <div class="item">
-                    <div class="main-slider-one__item">
-                        <div class="main-slider-one__bg" style="background-image: url(assets/images/backgrounds/main-slider-bg-1-1.jpg);"></div>
-                        <div class="container">
-                            <div class="row gutter-y-50">
-                                <div class="main-slider-one__col-content">
-                                    <div class="main-slider-one__content">
-                                        <!-- Inner carousel: only this text rotates. No dots/nav - it is
-                                             a passive rotator, not something a visitor steers. -->
-                                        <div class="hero-text-carousel cityride-owl__carousel owl-carousel" data-owl-options='{
-                                        "loop": true,
-                                        "items": 1,
-                                        "autoplay": true,
-                                        "autoplayTimeout": 4500,
-                                        "smartSpeed": 700,
-                                        "nav": false,
-                                        "dots": false,
-                                        "margin": 0
-                                        }'>
-                                            <div class="item">
-                                                <div class="main-slider-one__top">
-                                                    <p class="main-slider-one__sub-title"><span class="main-slider-one__sub-title__icon"><i class="fas fa-shield-alt" aria-hidden="true"></i></span><span class="main-slider-one__sub-title__text"><?php te('home_hero1_kicker'); ?></span></p>
-                                                </div>
-                                                <h2 class="main-slider-one__title"><?php te('home_hero1_title'); ?></h2>
-                                                <p class="main-slider-one__text"><?php te('home_hero1_text'); ?></p>
-                                            </div>
-                                            <div class="item">
-                                                <div class="main-slider-one__top">
-                                                    <p class="main-slider-one__sub-title"><span class="main-slider-one__sub-title__icon"><i class="fas fa-tag" aria-hidden="true"></i></span><span class="main-slider-one__sub-title__text"><?php te('home_hero2_kicker'); ?></span></p>
-                                                </div>
-                                                <h2 class="main-slider-one__title"><?php te('home_hero2_title'); ?></h2>
-                                                <p class="main-slider-one__text"><?php te('home_hero2_text'); ?></p>
-                                            </div>
-                                            <div class="item">
-                                                <div class="main-slider-one__top">
-                                                    <p class="main-slider-one__sub-title"><span class="main-slider-one__sub-title__icon"><i class="fas fa-headset" aria-hidden="true"></i></span><span class="main-slider-one__sub-title__text"><?php te('home_hero3_kicker'); ?></span></p>
-                                                </div>
-                                                <h2 class="main-slider-one__title"><?php te('home_hero3_title'); ?></h2>
-                                                <p class="main-slider-one__text"><?php te('home_hero3_text'); ?></p>
-                                            </div>
-                                        </div>
-                                        <div class="main-slider-one__button">
-                                            <a href="#download-app" class="js-ride-cta main-slider-one__btn cityride-btn cityride-btn--primary"><span><?php te('primary_cta_text'); ?></span></a>
-                                            <a href="/taxi" class="main-slider-one__btn cityride-btn cityride-btn--border"><span><?php te('home_explore_fleet'); ?></span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="main-slider-one__col-aside">
-                                    <div class="hero-lane" aria-hidden="true">
-                                        <img class="hero-lane__car" src="assets/images/safeline-rav4-side.png" alt="" decoding="async">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="main-slider-one__pattern" style="background-image: url(assets/images/shapes/main-slider-pattern-1-1.png);"></div>
-                        <div class="main-slider-one__shape">
-                            <div class="main-slider-one__shape__one"></div>
-                            <div class="main-slider-one__shape__two"></div>
-                        </div>
-                        <div class="main-slider-one__shape-two">
-                            <div class="main-slider-one__shape-two__one"></div>
-                        </div>
-                        <div class="main-slider-one__shape-line">
-                            <div class="main-slider-one__shape-line__one"></div>
-                            <div class="main-slider-one__shape-line__two"></div>
-                        </div>
+    <!-- HERO: full-bleed fleet photos that slide (autoplay, arrows, swipe,
+         drag, keyboard) under one still sentence. Photos are decorative
+         (aria-hidden). Carousel logic: assets/js/safeline-premium.js (2). -->
+    <section class="sl-hero" id="home">
+            <div class="sl-hero__slides" aria-hidden="true">
+                <div class="sl-hero__slide is-active is-first"><img src="assets/images/safeline-fleet-side-branded.jpg" alt="" width="1600" height="1200" fetchpriority="high" decoding="async" draggable="false" style="--focus: 50% 45%"></div>
+                <div class="sl-hero__slide"><img src="assets/images/safeline-road-01.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 80%; --zoom: 1"></div>
+                <div class="sl-hero__slide"><img src="assets/images/fleet-07-branded.jpg" alt="" width="1600" height="1200" decoding="async" draggable="false" style="--focus: 50% 66%"></div>
+                <div class="sl-hero__slide"><img src="assets/images/safeline-road-02.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 50%"></div>
+            </div>
+            <div class="sl-hero__shade" aria-hidden="true"></div>
+
+            <div class="container sl-hero__inner">
+                <div class="sl-hero__copy">
+                    <h1 class="sl-hero__title"><?php te('home_hero_title_a'); ?> <em><?php te('home_hero_title_b'); ?></em></h1>
+                    <p class="sl-hero__lead"><?php te('home_hero_lead'); ?></p>
+                    <div class="sl-hero__actions">
+                        <a href="#download-app" class="js-ride-cta cityride-btn cityride-btn--primary sl-hero__btn"><span><?php te('primary_cta_text'); ?></span></a>
+                        <a href="#services" class="sl-hero__link"><?php te('home_see_services'); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                 </div>
-            </div><!-- /.main-slider-one__carousel -->
 
-            <!-- Background traffic: one car. Decorative only, so
-                 aria-hidden and empty alt. Sits above the slides
-                 (z-index 4) but is pointer-events:none. -->
-            <div class="sl-road" aria-hidden="true">
-                <span class="sl-road__surface"></span>
-                <span class="sl-road__dashes"></span>
-                <img class="sl-car" src="assets/images/safeline-cruze-side-r.png" alt="" decoding="async">
+                <div class="sl-hero__controls">
+                    <div class="sl-hero__nav">
+                        <button type="button" class="sl-hero__arrow" data-step="-1" aria-label="<?php te('home_hero_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                        <button type="button" class="sl-hero__arrow" data-step="1" aria-label="<?php te('home_hero_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -151,598 +84,107 @@ include 'includes/header.php';
             </div>
         </section>
 
-        <!-- Booking CTA Feature Showcase Section -->
-        <section class="booking-cta-section" id="booking-cta">
-            <div class="container">
-                <div class="booking-cta-card">
-                    <div class="row align-items-center">
-                        <div class="col-lg-7">
-                            <div class="booking-cta-card__content">
-                                <div class="booking-cta-card__badge">
-                                    <i class="fas fa-shield-alt"></i> <?php te('home_cta_badge'); ?>
-                                </div>
-                                <h2 class="booking-cta-card__title"><?php te('home_cta_title'); ?> <br><span><?php te('home_cta_subtitle'); ?></span></h2>
-                                <p class="booking-cta-card__text"><?php te('home_cta_text'); ?></p>
-                                <div class="booking-cta-card__features">
-                                    <div class="cta-feature-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span><?php te('home_cta_feature1'); ?></span>
-                                    </div>
-                                    <div class="cta-feature-item">
-                                        <i class="fas fa-tags"></i>
-                                        <span><?php te('home_cta_feature2'); ?></span>
-                                    </div>
-                                    <div class="cta-feature-item">
-                                        <i class="fas fa-user-shield"></i>
-                                        <span><?php te('home_cta_feature3'); ?></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-5 text-lg-end text-center mt-4 mt-lg-0">
-                            <div class="booking-cta-card__actions">
-                                <img class="booking-cta-card__car" aria-hidden="true" alt=""
-                                     src="assets/images/safeline-cruze-side-r.png"
-                                     loading="lazy" decoding="async" width="1000" height="365">
-                                <a href="#download-app" class="js-ride-cta cityride-btn cityride-btn--primary booking-cta-btn">
-                                    <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                    <span><?php te('primary_cta_text'); ?></span>
-                                </a>
-                                <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="booking-cta-call-link">
-                                    <i class="fas fa-phone-alt"></i> <?php te('home_call_prefix', ['phone' => $contact_phone]); ?>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-
-        <section class="services-one section-space" id="services">
-            <div class="services-one__bg" style="background-image: url(assets/images/shapes/services-bg-1-1.webp);"></div>
-            <!-- /.services-one__bg -->
-            <div class="container">
-                <div class="cityride-info">
-                    <div class="cityride-info__inner">
-                        <div class="row align-items-center gutter-y-30">
-                            <div class="col-lg-7">
-                                <div class="cityride-info__head">
-                                    <p class="cityride-info__eyebrow"><?php te('home_simple_eyebrow'); ?></p>
-                                    <h3 class="cityride-info__heading"><?php te('home_simple_title'); ?></h3>
-                                    <p class="cityride-info__lead">
-                                        <?php te('home_simple_text'); ?>
-                                    </p>
-                                </div>
-
-                                <div class="cityride-info__feature-grid row gutter-y-20">
-                                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="0ms">
-                                        <div class="cityride-info__item">
-                                            <div class="cityride-info__item__icon">
-                                                <i class="icon-booking"></i>
-                                            </div>
-                                            <div class="cityride-info__item__body">
-                                                <h4 class="cityride-info__item__title"><?php te('home_item1_title'); ?></h4>
-                                                <p class="cityride-info__item__text"><?php te('home_item1_text'); ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="100ms">
-                                        <div class="cityride-info__item">
-                                            <div class="cityride-info__item__icon">
-                                                <i class="icon-map"></i>
-                                            </div>
-                                            <div class="cityride-info__item__body">
-                                                <h4 class="cityride-info__item__title"><?php te('home_item2_title'); ?></h4>
-                                                <p class="cityride-info__item__text"><?php te('home_item2_text'); ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 col-sm-6 wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms">
-                                        <div class="cityride-info__item">
-                                            <div class="cityride-info__item__icon">
-                                                <i class="icon-costumer"></i>
-                                            </div>
-                                            <div class="cityride-info__item__body">
-                                                <h4 class="cityride-info__item__title"><?php te('home_item3_title'); ?></h4>
-                                                <p class="cityride-info__item__text"><?php te('home_item3_text'); ?></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div><!-- /.cityride-info__feature-grid -->
-
-                                <div class="cityride-info__cta">
-                                    <a href="#download-app" class="js-ride-cta cityride-btn cityride-btn--primary">
-                                        <span><?php te('primary_cta_text'); ?></span>
-                                    </a>
-                                    <a class="cityride-info__cta__call" href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>">
-                                        <i class="fas fa-phone-alt" aria-hidden="true"></i>
-                                        <span><?php te('home_or_call', ['phone' => $contact_phone]); ?></span>
-                                    </a>
-                                </div>
-                            </div><!-- /.col-lg-7 -->
-
-                            <div class="col-lg-5">
-                                <div class="cityride-info__image-wrap wow fadeInRight" data-wow-duration="1500ms" data-wow-delay="300ms">
-                                    <img src="assets/images/safeline-car-04.jpeg" alt="A SafeLine taxi on the road in Kigali" class="cityride-info__image-new" loading="lazy" decoding="async" width="720" height="540">
-                                    <p class="cityride-info__image-caption">
-                                        <i class="fas fa-shield-alt" aria-hidden="true"></i>
-                                        <?php te('home_image_caption'); ?>
-                                    </p>
-                                </div>
-                            </div><!-- /.col-lg-5 -->
-                        </div><!-- /.row -->
-                    </div><!-- /.cityride-info__inner -->
-                </div><!-- /.cityride-info -->
-            </div><!-- /.container -->
-            <div class="container">
-                <div class="services-one__top">
-                    <div class="row gutter-y-50 align-items-center">
-                        <div class="col-md-8">
-                            <div class="sec-title ">
-                                <div class="sec-title__top wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                    <div class="sec-title__shape"></div><!-- /.sec-title__shape -->
-                                    <h6 class="sec-title__tagline"><?php te('home_services_tagline'); ?></h6><!-- /.sec-title__tagline -->
-                                </div><!-- /.sec-title__top -->
-                                <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_services_title_line1'); ?> <br><?php te('home_services_title_line2'); ?></h3><!-- /.sec-title__title -->
-                            </div><!-- /.sec-title -->
-                        </div><!-- /.col-md-8 -->
-                        <div class="col-md-4">
-                            <div class="services-one__custome-navs"></div><!-- /.services-one__custom-navs -->
-                        </div><!-- /.col-md-4 -->
-                    </div><!-- /.row gutter-y-40 -->
-                </div><!-- /.services-one__top -->
-                <div class="services-one__carousel cityride-owl__carousel cityride-owl__carousel--basic-nav owl-carousel owl-theme" data-owl-options='{
-            "items": 1,
-            "margin": 10,
-            "loop": true,
-            "smartSpeed": 700,
-            "navContainer": ".services-one__custome-navs",
-            "nav": true,
-            "dots": false,
-            "navText": ["<span class=\"icon-arrow-left\"></span>","<span class=\"icon-arrow-right\"></span>"],
-            "autoplay": true,
-            "responsive": {
-                "0": {
-                    "items": 1,
-                    "margin": 10
-                },
-                "576": {
-                    "items": 1,
-                    "margin": 30
-                },
-                "768": {
-                    "items": 2,
-                    "margin": 30
-                },
-                "992": {
-                    "items": 2,
-                    "margin": 30
-                },
-                "1200": {
-                    "items": 3,
-                    "margin": 30
-                }
-            }
-        }'>
-                    <div class="item">
-                        <div class="service-card wow fadeInUp" data-wow-duration='1500ms' data-wow-delay='200ms'>
-                            <div class="service-card__image">
-                                <img src="assets/images/fleet-07-branded.jpg" alt="cityride image" loading="lazy" decoding="async" width="720" height="540">
-                            </div><!-- /.service-card__image -->
-                            <div class="service-card__middle">
-                                <div class="service-card__icon">
-                                    <div class="service-card__icon__inner"><i class="icon-car-1"></i></div><!-- /.service-card__icon__inner -->
-                                    <h3 class="service-card__title"><a href="/#download-app" class="js-ride-cta"><?php te('home_service1'); ?></a></h3>
-                                </div><!-- /.service-card__icon -->
-                                <div class="service-card__middle__element"><img src="assets/images/shapes/service-element.png" alt loading="lazy" decoding="async" width="24" height="44"></div><!-- /.service-card__middle__element -->
-                            </div><!-- /.service-card__content -->
-                            <div class="service-card__btn">
-                                <a href="/#download-app" class="js-ride-cta service-card__link"><?php te('home_explore_more'); ?> <i class="fas fa-arrow-right"></i></a><!-- /.service-card__link -->
-                            </div><!-- /.service-card__btn -->
-                        </div><!-- /.service-card -->
-                    </div><!-- /.item -->
-                    <div class="item">
-                        <div class="service-card wow fadeInUp" data-wow-duration='1500ms' data-wow-delay='300ms'>
-                            <div class="service-card__image">
-                                <img src="assets/images/safeline-fleet-side-branded.jpg" alt="A SafeLine driver waiting beside the car on a corporate transfer" loading="lazy" decoding="async" width="720" height="540">
-                            </div><!-- /.service-card__image -->
-                            <div class="service-card__middle">
-                                <div class="service-card__icon">
-                                    <div class="service-card__icon__inner"><i class="icon-car-2"></i></div><!-- /.service-card__icon__inner -->
-                                    <h3 class="service-card__title"><a href="/#download-app" class="js-ride-cta"><?php te('home_service2'); ?></a></h3>
-                                </div><!-- /.service-card__icon -->
-                                <div class="service-card__middle__element"><img src="assets/images/shapes/service-element.png" alt loading="lazy" decoding="async" width="24" height="44"></div><!-- /.service-card__middle__element -->
-                            </div><!-- /.service-card__content -->
-                            <div class="service-card__btn">
-                                <a href="/#download-app" class="js-ride-cta service-card__link"><?php te('home_explore_more'); ?> <i class="fas fa-arrow-right"></i></a><!-- /.service-card__link -->
-                            </div><!-- /.service-card__btn -->
-                        </div><!-- /.service-card -->
-                    </div><!-- /.item -->
-                    <div class="item">
-                        <div class="service-card wow fadeInUp" data-wow-duration='1500ms' data-wow-delay='400ms'>
-                            <div class="service-card__image">
-                                <img src="assets/images/safeline-car-03.jpeg" alt="A SafeLine taxi waiting at Kigali International Airport" loading="lazy" decoding="async" width="1600" height="1200">
-                            </div><!-- /.service-card__image -->
-                            <div class="service-card__middle">
-                                <div class="service-card__icon">
-                                    <div class="service-card__icon__inner"><i class="icon-car-3"></i></div><!-- /.service-card__icon__inner -->
-                                    <h3 class="service-card__title"><a href="/#download-app" class="js-ride-cta"><?php te('home_service3'); ?></a></h3>
-                                </div><!-- /.service-card__icon -->
-                                <div class="service-card__middle__element"><img src="assets/images/shapes/service-element.png" alt loading="lazy" decoding="async" width="24" height="44"></div><!-- /.service-card__middle__element -->
-                            </div><!-- /.service-card__content -->
-                            <div class="service-card__btn">
-                                <a href="/#download-app" class="js-ride-cta service-card__link"><?php te('home_explore_more'); ?> <i class="fas fa-arrow-right"></i></a><!-- /.service-card__link -->
-                            </div><!-- /.service-card__btn -->
-                        </div><!-- /.service-card -->
-                    </div><!-- /.item -->
-                </div><!-- /.services-one__carousel -->
-            </div><!-- /.container -->
-            <div class="services-one__inner-bg"></div><!-- /.services-one__inner-bg -->
-        </section><!-- /.services-one section-space -->
-
-        <section class="why-choose-one section-space-bottom">
+        <!-- SERVICES: photo-led cards, one line each -->
+        <section class="sl-services section-space" id="services">
             <div class="container">
                 <div class="sec-title sec-title--center">
-                    <div class="sec-title__top wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                        <div class="sec-title__shape"></div><!-- /.sec-title__shape -->
-                        <h6 class="sec-title__tagline"><?php te('home_why_tagline'); ?></h6><!-- /.sec-title__tagline -->
-                        <div class="sec-title__shape"></div><!-- /.sec-title__shape -->
-                    </div><!-- /.sec-title__top -->
-                    <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_why_title_line1'); ?> <br><?php te('home_why_title_line2'); ?></h3><!-- /.sec-title__title -->
-                </div><!-- /.sec-title -->
-                <div class="tabs-box wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                    <div class="tab-buttons">
-                        <button data-tab="#itemOne" class="tab-btn active-btn"><span></span> <?php te('home_tab1'); ?> </button>
-                        <button data-tab="#itemTwo" class="tab-btn"><span></span> <?php te('home_tab2'); ?> </button>
-                        <button data-tab="#itemThree" class="tab-btn"><span></span> <?php te('home_tab3'); ?> </button>
-                        <button data-tab="#itemFour" class="tab-btn"><span></span> <?php te('home_tab4'); ?> </button>
-                    </div><!-- /.tab-box-buttons -->
-                    <div class="tabs-content">
-                        <div class="why-choose-one__item tab active-tab fadeInUp" data-wow-delay="200ms" id="itemOne">
-                            <div class="why-choose-one__item__bg" style="background-image: url(assets/images/shapes/contact-bg-1-1.png);"></div><!-- /.why-choose-one__item__bg -->
-                            <div class="row gutter-y-40 align-items-center">
-                                <div class="col-lg-7">
-                                    <div class="why-choose-one__left">
-                                        <h2 class="why-choose-one__title"><?php te('home_tab1_title'); ?></h2>
-                                        <p class="why-choose-one__text"><?php te('home_tab1_text'); ?></p><!-- /.why-choose-one__text -->
-                                        <ul class="why-choose-one__list">
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item1'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item2'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item3'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item4'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item5'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab1_item6'); ?></li>
-                                        </ul>
-                                        <div class="why-choose-one__btn-box">
-                                            <a href="#download-app" class="js-ride-cta why-choose-one__btn cityride-btn cityride-btn--secondary">
-                                                <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                                <span><?php te('home_get_started'); ?></span>
-                                            </a><!-- /.why-choose-one__btn -->
-                                            <div class="why-choose-one__btn__border"></div><!-- /.why-choose-one__btn__border -->
-                                        </div><!-- /.why-choose-one__btn-box -->
-                                    </div><!-- /.why-choose-one__left -->
-                                </div><!-- /.col-lg-7 -->
-                                <div class="col-lg-5">
-                                    <div class="why-choose-one__thumb">
-                                        <img src="assets/images/safeline-car-06.jpeg" alt="A SafeLine vehicle being checked before a trip" loading="lazy" decoding="async" width="720" height="540">
-                                    </div><!-- /.why-choose-one__thumb -->
-                                </div><!-- /.col-lg-5 -->
-                            </div><!-- /.row gutter-y-40 -->
-                        </div><!-- /.item -->
-                        <div class="why-choose-one__item tab fadeInUp" data-wow-delay="200ms" id="itemTwo">
-                            <div class="why-choose-one__item__bg" style="background-image: url(assets/images/shapes/contact-bg-1-1.png);"></div><!-- /.why-choose-one__item__bg -->
-                            <div class="row gutter-y-40 align-items-center">
-                                <div class="col-lg-7">
-                                    <div class="why-choose-one__left">
-                                        <h2 class="why-choose-one__title"><?php te('home_tab2_title'); ?></h2>
-                                        <p class="why-choose-one__text"><?php te('home_tab2_text'); ?></p><!-- /.why-choose-one__text -->
-                                        <ul class="why-choose-one__list">
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item1'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item2'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item3'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item4'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item5'); ?></li>
-                                            <li class="why-choose-one__list__item"> <i class="icon-check-mark"></i><?php te('home_tab2_item6'); ?></li>
-                                        </ul>
-                                        <div class="why-choose-one__btn-box">
-                                            <a href="#download-app" class="js-ride-cta why-choose-one__btn cityride-btn cityride-btn--secondary">
-                                                <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                                <span><?php te('home_get_started'); ?></span>
-                                            </a><!-- /.why-choose-one__btn -->
-                                            <div class="why-choose-one__btn__border"></div><!-- /.why-choose-one__btn__border -->
-                                        </div><!-- /.why-choose-one__btn-box -->
-                                    </div><!-- /.why-choose-one__left -->
-                                </div><!-- /.col-lg-7 -->
-                                <div class="col-lg-5">
-                                    <div class="why-choose-one__thumb">
-                                        <img src="assets/images/safeline-car-05.jpeg" alt="SafeLine cars lined up in the fleet yard" loading="lazy" decoding="async" width="720" height="540">
-                                    </div><!-- /.why-choose-one__thumb -->
-                                </div><!-- /.col-lg-5 -->
-                            </div><!-- /.row gutter-y-40 -->
-                        </div><!-- /.item -->
-                        <div class="why-choose-one__item tab fadeInUp" data-wow-delay="200ms" id="itemThree">
-                            <div class="why-choose-one__item__bg" style="background-image: url(assets/images/shapes/contact-bg-1-1.png);"></div><!-- /.why-choose-one__item__bg -->
-                            <div class="row gutter-y-40 align-items-center">
-                                <div class="col-lg-7">
-                                    <div class="why-choose-one__left">
-                                        <h2 class="why-choose-one__title"><?php te('home_tab3_title'); ?></h2>
-                                        <p class="why-choose-one__text"><?php te('home_tab3_text'); ?></p><!-- /.why-choose-one__text -->
-                                        <ul class="why-choose-one__list">
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item1'); ?></li>
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item2'); ?></li>
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item3'); ?></li>
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item4'); ?></li>
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item5'); ?></li>
-                                        <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab3_item6'); ?></li>
-                                    </ul>
-                                        <div class="why-choose-one__btn-box">
-                                            <a href="#download-app" class="js-ride-cta why-choose-one__btn cityride-btn cityride-btn--secondary">
-                                                <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                                <span><?php te('home_get_started'); ?></span>
-                                            </a><!-- /.why-choose-one__btn -->
-                                            <div class="why-choose-one__btn__border"></div><!-- /.why-choose-one__btn__border -->
-                                        </div><!-- /.why-choose-one__btn-box -->
-                                    </div><!-- /.why-choose-one__left -->
-                                </div><!-- /.col-lg-7 -->
-                                <div class="col-lg-5">
-                                    <div class="why-choose-one__thumb">
-                                        <img src="assets/images/fleet-07-branded.jpg" alt="A SafeLine taxi on a Kigali city street" loading="lazy" decoding="async" width="720" height="540">
-                                    </div><!-- /.why-choose-one__thumb -->
-                                </div><!-- /.col-lg-5 -->
-                            </div><!-- /.row gutter-y-40 -->
-                        </div><!-- /.item -->
-                        <div class="why-choose-one__item tab fadeInUp" data-wow-delay="200ms" id="itemFour">
-                            <div class="why-choose-one__item__bg" style="background-image: url(assets/images/shapes/contact-bg-1-1.png);"></div><!-- /.why-choose-one__item__bg -->
-                            <div class="row gutter-y-40 align-items-center">
-                                <div class="col-lg-7">
-                                    <div class="why-choose-one__left">
-                                        <h2 class="why-choose-one__title"><?php te('home_tab4_title'); ?></h2>
-                                        <p class="why-choose-one__text"><?php te('home_tab4_text'); ?></p><!-- /.why-choose-one__text -->
-                                        <ul class="why-choose-one__list">
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item1'); ?></li>
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item2'); ?></li>
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item3'); ?></li>
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item4'); ?></li>
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item5'); ?></li>
-                                            <li class="why-choose-one__list__item"><i class="icon-check-mark"></i><?php te('home_tab4_item6'); ?></li>
-                                        </ul>
-                                        <div class="why-choose-one__btn-box">
-                                            <a href="#download-app" class="js-ride-cta why-choose-one__btn cityride-btn cityride-btn--secondary">
-                                                <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                                <span><?php te('home_get_started'); ?></span>
-                                            </a>
-                                            <!-- /.why-choose-one__btn -->
-                                            <div class="why-choose-one__btn__border"></div>
-                                            <!-- /.why-choose-one__btn__border -->
-                                        </div><!-- /.why-choose-one__btn-box -->
-                                    </div><!-- /.why-choose-one__left -->
-                                </div><!-- /.col-lg-7 -->
-                                <div class="col-lg-5">
-                                    <div class="why-choose-one__thumb">
-                                        <img src="assets/images/safeline-car-03.jpeg" alt="A SafeLine taxi waiting at Kigali International Airport" loading="lazy" decoding="async" width="1600" height="1200">
-                                    </div><!-- /.why-choose-one__thumb -->
-                                </div><!-- /.col-lg-5 -->
-                            </div><!-- /.row gutter-y-40 -->
-                        </div><!-- /.item -->
-                    </div><!-- /.tabs-content -->
-                </div><!-- /.tab-box -->
-
-            </div><!-- /.container -->
-            <div class="why-choose-one__shape-left">
-                <div class="why-choose-one__shape-left__one"></div><!-- /.why-choose-one__shape-left__one -->
-                <div class="why-choose-one__shape-left__two"></div><!-- /.why-choose-one__shape-left__two -->
-            </div><!-- /.why-choose-one__shape-left -->
-            <div class="why-choose-one__shape-right">
-                <div class="why-choose-one__shape-right__one"></div><!-- /.why-choose-one__shape-right__one -->
-                <div class="why-choose-one__shape-right__two"></div><!-- /.why-choose-one__shape-right__two -->
-            </div><!-- /.why-choose-one__shape-right -->
+                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('home_services_tagline'); ?></h6></div>
+                    <h3 class="sec-title__title"><?php te('home_services_title_line1'); ?> <?php te('home_services_title_line2'); ?></h3>
+                </div>
+                <div class="sl-services__grid">
+                    <a class="sl-service" href="#download-app">
+                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                        <span class="sl-service__body">
+                            <span class="sl-service__icon"><i class="fas fa-car-side" aria-hidden="true"></i></span>
+                            <span class="sl-service__title"><?php te('home_service1'); ?></span>
+                            <span class="sl-service__text"><?php te('home_service1_text'); ?></span>
+                        </span>
+                    </a>
+                    <a class="sl-service" href="#download-app">
+                        <span class="sl-service__media"><img src="assets/images/safeline-fleet-side-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="1200"></span>
+                        <span class="sl-service__body">
+                            <span class="sl-service__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
+                            <span class="sl-service__title"><?php te('home_service3'); ?></span>
+                            <span class="sl-service__text"><?php te('home_service3_text'); ?></span>
+                        </span>
+                    </a>
+                    <a class="sl-service" href="#download-app">
+                        <span class="sl-service__media"><img src="assets/images/cards/card-corporate.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                        <span class="sl-service__body">
+                            <span class="sl-service__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
+                            <span class="sl-service__title"><?php te('home_service2'); ?></span>
+                            <span class="sl-service__text"><?php te('home_service2_text'); ?></span>
+                        </span>
+                    </a>
+                    <a class="sl-service" href="#download-app">
+                        <span class="sl-service__media"><img src="assets/images/fleet-07-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="1200"></span>
+                        <span class="sl-service__body">
+                            <span class="sl-service__icon"><i class="fas fa-key" aria-hidden="true"></i></span>
+                            <span class="sl-service__title"><?php te('home_service4'); ?></span>
+                            <span class="sl-service__text"><?php te('home_service4_text'); ?></span>
+                        </span>
+                    </a>
+                </div>
+            </div>
         </section>
-        <!-- /.why-choose-one section-space-bottom -->
 
-        <div class="about-four about-four--one section-space" id="about">
-            <div class="about-four__bg" style="background-image: url(assets/images/shapes/about-bg.webp);"></div><!-- /.about-four__bg -->
-            <div class="container">
-                <div class="row gutter-y-40 align-items-center">
-                    <div class="col-lg-6">
-                        <div class="about-four__image wow fadeInLeft" data-wow-duration="1500ms" data-wow-delay="150ms">
-                            <div class="about-four__image__item"> <img src="assets/images/safeline-car-03.jpeg" alt="A SafeLine taxi waiting at Kigali International Airport" loading="lazy" decoding="async" width="1600" height="929"> </div><!-- /.about-four__image__item -->
-                            <div class="about-four__image__small">
-                                <!--<img src="assets/images/about/about-s-1-1.jpg" alt="" loading="lazy" decoding="async" width="262" height="221">-->
-                                <!-- The template's play button was wired to magnificPopup with
-                                     href="#", so clicking it opened an empty lightbox. Removed
-                                     until there is a real video to point it at. -->
-                            </div><!-- /.about-four__image__small -->
-                            <div class="about-four__funfact">
-                                <div class="about-four__funfact__icon">
-                                    <i class="icon-hand-wall"></i>
-                                </div><!-- /.about-four__funfact__icon -->
-                                <div class="about-four__funfact__content">
-                                    <h4 class="about-four__funfact__number count-box">
-                                        <span class="count-text" data-stop="6561" data-speed="1500">6,561</span>
-                                        <span>+</span>
-                                    </h4>
-                                    <p class="about-four__funfact__text"><?php te('home_funfact_label'); ?></p><!-- /.about-four__funfact__title -->
-                                </div><!-- /.about-four__funfact__content -->
-                            </div><!-- /.about-four__funfact -->
-                        </div><!-- /.about-four__image -->
-                    </div><!-- /.col-lg-6 -->
-                    <div class="col-lg-6">
-                        <div class="about-four__right">
-                            <div class="sec-title ">
-                                <div class="sec-title__top wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                    <div class="sec-title__shape"></div><!-- /.sec-title__shape -->
-                                    <h6 class="sec-title__tagline"><?php te('home_about_tagline'); ?></h6><!-- /.sec-title__tagline -->
-                                </div><!-- /.sec-title__top -->
-                                <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_about_title'); ?></h3>
-                            </div><!-- /.sec-title -->
-                            <p class="about-four__top__text wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                <?php te('home_about_text'); ?>
-                            </p>
+        <!-- VISION & MISSION: two short statement cards on a navy band -->
+        <section class="sl-purpose section-space" id="mission">
 
-                            <ul class="about-four__points list-unstyled wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms">
-                                <li>
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                    <span><strong><?php te('home_about_point1_title'); ?></strong> <?php te('home_about_point1_text'); ?></span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                    <span><strong><?php te('home_about_point2_title'); ?></strong> <?php te('home_about_point2_text'); ?></span>
-                                </li>
-                                <li>
-                                    <i class="fas fa-check" aria-hidden="true"></i>
-                                    <span><strong><?php te('home_about_point3_title'); ?></strong> <?php te('home_about_point3_text'); ?></span>
-                                </li>
-                            </ul>
-                            <div class="about-four__bottom wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                <div class="emargency-call">
-                                    <div class="emargency-call__image">
-                                        <img src="assets/images/vanessa.jpg" style="height:80px" alt="Person" loading="lazy" decoding="async" width="864" height="864">
-                                        <div class="emargency-call__icon">
-                                            <i class="icon-telephone-call"></i>
-                                        </div>
-                                    </div>
-                                    <div class="emargency-call__content">
-                                        <h4 class="emargency-call__title"><?php te('about_emergency_call_us'); ?></h4>
-                                        <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="emargency-call__number">+250 788 471 117</a>
-                                        <!--<a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>" class="emargency-call__number">+250 788 471 117</a>-->
-                                    </div>
-                                </div><!-- /.emargency-call -->
-                                <div class="about-four__btn-box">
-                                    <a href="/about" class="about-four__btn cityride-btn cityride-btn--secondary">
-                                        <span class="cityride-btn__icon"><i class="icon-front-car"></i></span>
-                                        <span><?php te('home_about_more'); ?></span>
-                                    </a><!-- /.about-four__btn -->
-                                    <div class="about-four__btn__border"></div><!-- /.about-four__btn__border -->
-                                </div><!-- /.about-four__btn__box -->
-                            </div><!-- /.about-four__author -->
-                        </div><!-- /.about-four__right -->
-                    </div><!-- /.col-lg-6 -->
-                </div><!-- /.row -->
-            </div><!-- /.container -->
-            <div class="about-four__element">
-                <img src="assets/images/shapes/download-app-shape-2-1.png" alt loading="lazy" decoding="async" width="145" height="111">
-            </div><!-- /.about-four__element -->
-        </div><!-- /.about-four -->
-
-        <div class="pattern-bg" style="background-image: url(assets/images/shapes/pattern.png);"></div><!-- /.pattern-bg -->
-
-        <!-- FLEET SHOWCASE -->
-        <section class="fleet-strip section-space" id="fleet">
             <div class="container">
                 <div class="sec-title sec-title--center">
-                    <div class="sec-title__top wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                        <div class="sec-title__shape"></div>
-                        <h6 class="sec-title__tagline"><?php te('home_fleet_tagline'); ?></h6>
-                        <div class="sec-title__shape"></div>
-                    </div>
-                    <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_fleet_title'); ?></h3>
+                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('home_purpose_tagline'); ?></h6></div>
+                    <h3 class="sec-title__title"><?php te('home_purpose_title'); ?></h3>
                 </div>
-
-                <div class="fleet-strip__grid">
-                    <article class="fleet-card wow fadeInUp" data-wow-delay="100ms">
-                        <div class="fleet-card__media">
-                            <img src="assets/images/fleet-07-branded.jpg" alt="A liveried SafeLine Cruze, rear three-quarter view" loading="lazy" decoding="async">
+                <p class="sl-purpose__lead"><?php te('home_purpose_lead'); ?></p>
+                <div class="sl-purpose__grid">
+                    <?php foreach (['vision' => 'fa-eye', 'mission' => 'fa-bullseye'] as $key => $icon): ?>
+                    <article class="sl-purpose__card sl-purpose__card--<?php echo $key; ?>">
+                        <div class="sl-purpose__head">
+                            <span class="sl-purpose__icon"><i class="fas <?php echo $icon; ?>" aria-hidden="true"></i></span>
+                            <div>
+                                <span class="sl-purpose__label"><?php te('home_purpose_' . $key . '_label'); ?></span>
+                                <h4 class="sl-purpose__title"><?php te('home_purpose_' . $key . '_title'); ?></h4>
+                            </div>
                         </div>
-                        <div class="fleet-card__body">
-                            <span class="fleet-card__badge"><?php te('home_fleet1_badge'); ?></span>
-                            <h4 class="fleet-card__title">Voiture Économique</h4>
-                            <p class="fleet-card__text"><?php te('home_fleet1_text'); ?></p>
-                            <ul class="fleet-card__specs">
-                                <li><i class="fas fa-shield-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_driver'); ?></li>
-                                <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_gps'); ?></li>
-                            </ul>
-                        </div>
+                        <p class="sl-purpose__text"><?php te('home_purpose_' . $key . '_text'); ?></p>
+                        <ul class="sl-purpose__tags list-unstyled">
+                            <?php for ($i = 1; $i <= 3; $i++): ?>
+                            <li><i class="fas fa-check" aria-hidden="true"></i><?php te('home_purpose_' . $key . '_tag' . $i); ?></li>
+                            <?php endfor; ?>
+                        </ul>
                     </article>
-
-                    <article class="fleet-card wow fadeInUp" data-wow-delay="200ms">
-                        <div class="fleet-card__media">
-                            <img src="assets/images/safeline-fleet-side-branded.jpg" alt="The SafeLine decal on a fleet Cruze" loading="lazy" decoding="async">
-                        </div>
-                        <div class="fleet-card__body">
-                            <span class="fleet-card__badge"><?php te('home_fleet2_badge'); ?></span>
-                            <h4 class="fleet-card__title">Course Standard</h4>
-                            <p class="fleet-card__text"><?php te('home_fleet2_text'); ?></p>
-                            <ul class="fleet-card__specs">
-                                <li><i class="fas fa-shield-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_driver'); ?></li>
-                                <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_gps'); ?></li>
-                            </ul>
-                        </div>
-                    </article>
-
-                    <article class="fleet-card wow fadeInUp" data-wow-delay="300ms">
-                        <div class="fleet-card__media">
-                            <img src="assets/images/safeline-car-04.jpeg" alt="A SafeLine Cruze ready in the fleet bay" loading="lazy" decoding="async">
-                        </div>
-                        <div class="fleet-card__body">
-                            <span class="fleet-card__badge"><?php te('home_fleet3_badge'); ?></span>
-                            <h4 class="fleet-card__title">Course Premium</h4>
-                            <p class="fleet-card__text"><?php te('home_fleet3_text'); ?></p>
-                            <ul class="fleet-card__specs">
-                                <li><i class="fas fa-shield-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_driver'); ?></li>
-                                <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> <?php te('home_fleet_spec_gps'); ?></li>
-                            </ul>
-                        </div>
-                    </article>
-                </div>
-
-                <div class="fleet-strip__foot wow fadeInUp" data-wow-delay="200ms">
-                    <p class="fleet-strip__note"><i class="fas fa-shield-alt" aria-hidden="true"></i> <?php te('home_fleet_foot_note'); ?></p>
-                    <a href="/taxi" class="cityride-btn cityride-btn--primary"><span><?php te('home_fleet_foot_btn'); ?></span></a>
+                    <?php endforeach; ?>
                 </div>
             </div>
         </section>
 
-        <section class="ride-rates-one section-space ride-rates-one--home-3" id="ride-rates">
-            <div class="ride-rates-one__bg" style="background-image: url(assets/images/shapes/taxi-rates-bg-1-1.webp);"></div>
-            <div class="ride-rates-one__main-tab-box tabs-box">
-                <div class="container">
-                    <div class="ride-rates-one__top">
-                        <div class="row gutter-y-40 align-items-center">
-                            <div class="col-lg-6">
-                                <div class="sec-title">
-                                    <div class="sec-title__top wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                        <div class="sec-title__shape"></div>
-                                        <h6 class="sec-title__tagline"><?php te('home_rates_tagline'); ?></h6>
-                                    </div>
-                                    <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_rates_title_line1'); ?> <br><?php te('home_rates_title_line2'); ?></h3>
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <!-- Ride now and self-drive rental are app-only features -
-                                     point those visitors at the app instead of implying
-                                     either works on this site. Intercity travel is the one
-                                     booking this site actually takes (see #intercity below). -->
-
-                                <div class="ride-rates-one__app-note wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                    <i class="fas fa-mobile-alt" aria-hidden="true"></i>
-                                    <span><?php te('home_rates_app_note_lead'); ?> <strong><?php te('home_rates_app_note_now'); ?></strong> <?php te('home_rates_app_note_mid'); ?> <strong><?php te('home_rates_app_note_rent'); ?></strong> <?php te('home_rates_app_note_tail'); ?></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- HOW IT WORKS: three icons, three short lines -->
+        <section class="sl-steps section-space" id="how-it-works">
+            <div class="container">
+                <div class="sec-title sec-title--center">
+                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('home_simple_eyebrow'); ?></h6></div>
+                    <h3 class="sec-title__title"><?php te('home_steps_title'); ?></h3>
                 </div>
-                <div class="tabs-content" id="ride-rates-content">
-                    <div class="tab active-tab fadeInUp animated" data-wow-delay="200ms" id="loading-tab">
-                        <div class="container position-relative">
-                            <div class="ride-rates-one__inner-bg">
-                                <div class="ride-rates-one__inner-bg__bg" style="background-image: url(assets/images/shapes/taxi-rates-inner-bg-1-1.png);"></div>
-                            </div>
-                        </div>
-                        <div class="ride-rates-one__tab-container container">
-                            <div class="row gutter-y-30">
-                                <div class="col-12 text-center py-5">
-                                    <i class="fas fa-spinner fa-spin fa-3x" style="color: #63C51F;"></i>
-                                    <p class="mt-3" style="color: #556677; font-size: 18px;"><?php te('home_rates_loading'); ?></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <ol class="sl-steps__list list-unstyled">
+                    <li class="sl-step">
+                        <span class="sl-step__icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
+                        <span class="sl-step__title"><?php te('home_step1_title'); ?></span>
+                        <span class="sl-step__text"><?php te('home_step1_text'); ?></span>
+                    </li>
+                    <li class="sl-step">
+                        <span class="sl-step__icon"><i class="fas fa-tags" aria-hidden="true"></i></span>
+                        <span class="sl-step__title"><?php te('home_step2_title'); ?></span>
+                        <span class="sl-step__text"><?php te('home_step2_text'); ?></span>
+                    </li>
+                    <li class="sl-step">
+                        <span class="sl-step__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
+                        <span class="sl-step__title"><?php te('home_step3_title'); ?></span>
+                        <span class="sl-step__text"><?php te('home_step3_text'); ?></span>
+                    </li>
+                </ol>
             </div>
         </section>
-
-        <script src="<?php echo asset_url('assets/js/home-ride-rates.js'); ?>"></script>
 
         <section class="intercity-one section-space" id="intercity" hidden>
             <div class="container">
@@ -843,44 +285,6 @@ include 'includes/header.php';
         </div>
 
         <script src="<?php echo asset_url('assets/js/home-intercity.js'); ?>"></script>
-
-        <!-- Coverage + FAQ -->
-        <section class="safeline-coverage section-space" id="coverage">
-            <div class="container">
-
-                <div class="sec-title sec-title--center">
-                    <div class="sec-title__top">
-                        <div class="sec-title__shape"></div>
-                        <h6 class="sec-title__tagline"><?php te('home_coverage_tagline'); ?></h6>
-                        <div class="sec-title__shape"></div>
-                    </div>
-                    <h3 class="sec-title__title"><?php te('home_coverage_title'); ?></h3>
-                </div>
-
-                <p class="safeline-coverage__lead">
-                    <?php te('home_coverage_lead'); ?>
-                </p>
-
-                <ul class="safeline-coverage__areas list-unstyled">
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Remera</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Kacyiru</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Kimihurura</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Nyarutarama</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Kicukiro</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Gikondo</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Nyamirambo</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Gisozi</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> Kigali Airport</li>
-                    <li><i class="fas fa-map-marker-alt" aria-hidden="true"></i> City Centre</li>
-                </ul>
-
-                <p class="safeline-coverage__more">
-                    <?php te('home_coverage_more_lead'); ?>
-                    <a href="/contact#faq"><?php te('home_coverage_more_link'); ?></a>.
-                </p>
-
-            </div>
-        </section>
 
         <section class="testimonials-one section-space" id="testimonials">
             <div class="container">
@@ -1104,9 +508,6 @@ include 'includes/header.php';
             </div>
         </section>
 
-        
-
-
         <section class="download-app-three section-space" id="download-app">
             <div class="download-app-three__bg" style="background-image: url(assets/images/shapes/download-app-bg-2-1.webp);"></div><!-- /.download-app-three__bg -->
             <div class="container">
@@ -1122,15 +523,20 @@ include 'includes/header.php';
                                     <h3 class="sec-title__title wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="200ms"><?php te('home_download_title1'); ?> <br> <?php te('home_download_title2'); ?></h3><!-- /.sec-title__title -->
                                 </div><!-- /.sec-title -->
                                 <p class="download-app-three__top__text wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms"><?php te('home_download_text'); ?></p><!-- /.download-app-three__top__text -->
+                                <ul class="sl-app-feats list-unstyled">
+                                    <li><i class="fas fa-tags" aria-hidden="true"></i><?php te('home_app_feat1'); ?></li>
+                                    <li><i class="fas fa-location-arrow" aria-hidden="true"></i><?php te('home_app_feat2'); ?></li>
+                                    <li><i class="fas fa-mobile-alt" aria-hidden="true"></i><?php te('home_app_feat3'); ?></li>
+                                </ul>
                                 <div class="download-app-three__button wow fadeInUp" data-wow-duration="1500ms" data-wow-delay="150ms">
-                                    <a href="https://www.apple.com/app-store/" class="download-app-three__btn store-badge" target="_blank" rel="noopener" aria-label="Download SafeLine on the App Store">
+                                    <a href="https://www.apple.com/app-store/" class="download-app-three__btn store-badge" target="_blank" rel="noopener" aria-label="<?php te('home_app_store_aria'); ?>">
                                         <div class="download-app-three__btn__icon"><svg class="store-badge__mark" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg></div>
                                         <div class="download-app-three__btn__content">
                                             <span class="download-app-three__btn__title"><?php te('home_download_on_the'); ?></span>
                                             <span class="download-app-three__btn__text">App Store</span>
                                         </div>
                                     </a>
-                                    <a href="https://play.google.com/" class="download-app-three__btn store-badge" target="_blank" rel="noopener" aria-label="Get SafeLine on Google Play">
+                                    <a href="https://play.google.com/" class="download-app-three__btn store-badge" target="_blank" rel="noopener" aria-label="<?php te('home_play_store_aria'); ?>">
                                         <div class="download-app-three__btn__icon"><svg class="store-badge__mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path fill="#00A0FF" d="M23.2 12.2C16.9 18.9 13.2 29.2 13.2 42.6v426.9c0 13.4 3.7 23.7 10.2 30.1l1.4 1.3 239.2-239.2v-5.6L24.6 10.8l-1.4 1.4z"/><path fill="#FFCE00" d="M343.1 335.7l-79.7-79.8v-5.7l79.8-79.8 1.8 1L439.6 225c27 15.3 27 40.5 0 55.9l-94.6 53.7-1.9 1.1z"/><path fill="#FF3A44" d="M345 334.6L263.4 253 23.2 493.2c8.9 9.4 23.6 10.6 40.2 1.2L345 334.6z"/><path fill="#00C853" d="M345 171.4L63.4 11.6C46.8 2.2 32.1 3.4 23.2 12.8L263.4 253 345 171.4z"/></svg></div>
                                         <div class="download-app-three__btn__content">
                                             <span class="download-app-three__btn__title"><?php te('home_get_it_on'); ?></span>
@@ -1143,10 +549,11 @@ include 'includes/header.php';
                     </div><!-- /.row gutter-y-40 -->
                     <div class="download-app-three__image wow fadeInRight" data-wow-duration="1500ms" data-wow-delay="150ms">
                         <div class="download-app-three__image__inner">
-                            <img src="assets/images/resources/download-app-1-1.png" alt="The SafeLine app shown on a phone" loading="lazy" decoding="async" width="370" height="370">
+                            <img src="assets/images/resources/download-app-1-1.png" alt="<?php te('home_app_city_alt'); ?>" loading="lazy" decoding="async" width="370" height="370">
                         </div><!-- /.download-app-three__image__inner -->
                         <div class="download-app-three__image__item">
-                            <img src="assets/images/resources/download-app-taxi-mockup-3-1.png" alt="The SafeLine booking screen on a phone" loading="lazy" decoding="async" width="398" height="453">
+                            <!-- Was a template phone mockup branded "CITYCAR"; a real SafeLine car is shown instead until genuine app screenshots exist. -->
+                            <img src="assets/images/safeline-cruze-side.png" alt="<?php te('home_app_car_alt'); ?>" loading="lazy" decoding="async" width="1000" height="365">
                         </div><!-- /.download-app-three__image__item -->
                     </div><!-- /.download-app-one__image -->
                 </div><!-- /.download-app-three__inner -->
@@ -1158,5 +565,37 @@ include 'includes/header.php';
                 <img src="assets/images/shapes/book-shape-1-1-rtl.png" alt loading="lazy" decoding="async" width="100" height="69">
             </div><!-- /.download-app-three__element -->
         </section><!-- /.download-app-three section-space -->
+
+        <!-- CONTACT: four tap targets, no form -->
+        <section class="sl-contact section-space" id="contact">
+            <div class="container">
+                <div class="sec-title sec-title--center">
+                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('nav_contact'); ?></h6></div>
+                    <h3 class="sec-title__title"><?php te('home_contact_title'); ?></h3>
+                </div>
+                <div class="sl-contact__grid">
+                    <a class="sl-contact__item" href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>">
+                        <span class="sl-contact__icon"><i class="fas fa-phone-alt" aria-hidden="true"></i></span>
+                        <span class="sl-contact__label"><?php te('topbar_call_us'); ?></span>
+                        <strong class="sl-contact__value"><?php echo $contact_phone; ?></strong>
+                    </a>
+                    <a class="sl-contact__item sl-contact__item--whatsapp" href="https://wa.me/<?php echo preg_replace('/[^0-9]/', '', $contact_phone); ?>" target="_blank" rel="noopener">
+                        <span class="sl-contact__icon"><i class="fab fa-whatsapp" aria-hidden="true"></i></span>
+                        <span class="sl-contact__label">WhatsApp</span>
+                        <strong class="sl-contact__value"><?php te('home_contact_whatsapp'); ?></strong>
+                    </a>
+                    <a class="sl-contact__item" href="mailto:<?php echo $contact_email; ?>">
+                        <span class="sl-contact__icon"><i class="fas fa-envelope" aria-hidden="true"></i></span>
+                        <span class="sl-contact__label"><?php te('home_contact_email'); ?></span>
+                        <strong class="sl-contact__value"><?php echo $contact_email; ?></strong>
+                    </a>
+                    <a class="sl-contact__item" href="<?php echo $contact_maps_url; ?>" target="_blank" rel="noopener">
+                        <span class="sl-contact__icon"><i class="fas fa-map-marker-alt" aria-hidden="true"></i></span>
+                        <span class="sl-contact__label"><?php te('home_contact_find'); ?></span>
+                        <strong class="sl-contact__value"><?php echo $contact_address; ?></strong>
+                    </a>
+                </div>
+            </div>
+        </section>
 
 <?php include 'includes/footer.php'?>

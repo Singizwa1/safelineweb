@@ -11,10 +11,12 @@ RewriteCond %{REQUEST_METHOD} =GET
 RewriteCond %{THE_REQUEST} \s/+(.+?)\.php[\s?] [NC]
 RewriteRule ^ /%1 [R=301,L]
 
-# The Leadership & Team page used to live at /welcome. Keep that address
-# working so an already-shared link does not 404.
-RewriteCond %{REQUEST_METHOD} =GET
-RewriteRule ^welcome/?$ /team [R=301,L]
+# The site is now a single landing page. The old inner pages redirect to
+# the matching section so already-shared links do not 404.
+RewriteRule ^how-it-works/?$ /#how-it-works [R=301,NE,L]
+RewriteRule ^contact/?$ /#contact [R=301,NE,L]
+RewriteRule ^taxi/?$ /#services [R=301,NE,L]
+RewriteRule ^(about|mission|safety|team|welcome)/?$ / [R=301,L]
 
 # /home serves the home page (index.php). / remains canonical - every page
 # emits <link rel="canonical"> so the two addresses are not indexed twice.

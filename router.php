@@ -19,10 +19,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
     return true;
 }
 
-// /welcome moved to /team (mirrors the .htaccess redirect)
-if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET'
-    && ($path === 'welcome' || $path === 'welcome/')) {
-    header('Location: /team', true, 301);
+// Retired inner pages -> their landing-page section (mirrors the .htaccess rules)
+$retired = ['how-it-works' => '/#how-it-works', 'contact' => '/#contact', 'taxi' => '/#services',
+            'about' => '/', 'mission' => '/', 'safety' => '/', 'team' => '/', 'welcome' => '/'];
+if (isset($retired[rtrim($path, '/')])) {
+    header('Location: ' . $retired[rtrim($path, '/')], true, 301);
     return true;
 }
 

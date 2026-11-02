@@ -2,6 +2,17 @@
     var heroInjected = false;
     var tripsById = {};
 
+    /** Departure as "30 Oct, 10:49". Browsers ship no Kinyarwanda date data
+     * (they silently fall back to US English), so rw month names are ours. */
+    var RW_MONTHS = ['Mut.', 'Gas.', 'Wer.', 'Mat.', 'Gic.', 'Kam.', 'Nya.', 'Kan.', 'Nze.', 'Ukw.', 'Ugu.', 'Uku.'];
+    function formatWhen(d) {
+        if (SAFELINE_LANG !== 'rw') {
+            return d.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+        var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+        return d.getDate() + ' ' + RW_MONTHS[d.getMonth()] + ', ' + pad(d.getHours()) + ':' + pad(d.getMinutes());
+    }
+
    
     function loadTrips(attempt) {
         fetch(SAFELINE_API_BASE + '/public/intercity-trips')
@@ -54,7 +65,7 @@
 
         trips.forEach(function (trip, i) {
             var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-            var when = departure.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+            var when = formatWhen(departure);
             var price = parseFloat(trip.price_per_seat).toLocaleString();
             // Same waitlist detection as renderCard() below - a trip with 0
             // truly-free seats but a pending-payment hold still reaches this
@@ -89,7 +100,7 @@
 
     function renderCard(trip) {
         var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-        var when = departure.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        var when = formatWhen(departure);
         var price = parseFloat(trip.price_per_seat).toLocaleString();
         var pickupPoints = trip.pickup_locations || [];
         var pickupLine = pickupPoints.length
@@ -113,7 +124,7 @@
             '<li><i class="fas fa-clock"></i>' + jsT('ic_departs', { when: when }) + '</li>' +
             '</ul>' +
             '<div class="intercity-trip-card__footer">' +
-            '<span class="intercity-trip-card__price">' + price + ' RWF<small>/seat</small></span>' +
+            '<span class="intercity-trip-card__price">' + price + ' RWF<small>' + jsT('ic_per_seat_suffix') + '</small></span>' +
             buttonHtml +
             '</div></div></div>';
     }
@@ -190,7 +201,7 @@
         var trip = tripsById[tripId];
         if (!trip) return;
         var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-        var when = departure.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        var when = formatWhen(departure);
 
         modalMode = (trip.seats_available === 0 && (trip.pending_seats || 0) > 0) ? 'waitlist' : 'book';
 

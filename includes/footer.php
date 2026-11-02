@@ -1,95 +1,63 @@
 <?php include_once 'config.php'; ?>
-        <footer class="main-footer main-footer--two">
-            <div class="main-footer__top main-footer__top--two">
-                <div class="container">
-                    <div class="row">
+        <!-- FOOTER: brand, explore, contact (with a maps link instead of an
+             embedded map), get the app; copyright and socials below. Navy in
+             both themes - the brand frame. Styles: safeline-premium.css (14). -->
+        <footer class="sl-footer">
+            <div class="container">
+                <div class="sl-footer__grid">
+                    <div class="sl-footer__brand">
+                        <a href="/" class="sl-footer__logo" aria-label="<?php echo $brand_name; ?>">
+                            <img src="images/safelinelogo/safelinelogo-light.png" width="150" height="150" alt="<?php echo $brand_name; ?>" loading="lazy">
+                        </a>
+                        <p class="sl-footer__about"><?php te('footer_about_text'); ?></p>
+                        <span class="sl-footer__badge"><?php te('footer_available'); ?></span>
+                    </div>
 
-                        <!-- COLUMN 1: Brand + Social -->
-                        <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="100ms">
-                            <div class="footer-widget footer-widget--about">
-                                <a href="/" class="footer-widget__logo logo-retina">
-                                    <img src="images/safelinelogo/safelinelogo.png" width="130" height="130" alt="<?php echo $brand_name; ?>" loading="lazy">
-                                </a>
-                                <p class="footer-widget__about-text"><?php te('footer_about_text'); ?></p>
-                                <div class="footer-widget__social">
-                                    <?php foreach($social_links as $platform => $url): if ($url === '' || $url === '#') { continue; } ?>
-                                        <a href="<?php echo $url; ?>" class="footer-widget__social__<?php echo $platform; ?>" aria-label="<?php echo ucfirst($platform); ?>">
-                                            <?php if ($platform === 'x'): ?>
-                                                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-                                            <?php else: ?>
-                                                <i class="fab fa-<?php echo $platform; ?>"></i>
-                                            <?php endif; ?>
-                                        </a>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
+                    <nav class="sl-footer__col" aria-label="<?php te('footer_explore'); ?>">
+                        <h4 class="sl-footer__title"><?php te('footer_explore'); ?></h4>
+                        <ul class="sl-footer__links">
+                            <li><a href="/#services"><?php te('nav_services'); ?></a></li>
+                            <li><a href="/#how-it-works"><?php te('nav_how_it_works'); ?></a></li>
+                            <li><a href="/#testimonials"><?php te('nav_reviews'); ?></a></li>
+                            <li><a href="/#download-app"><?php te('nav_get_app'); ?></a></li>
+                            <li><a href="/#contact"><?php te('nav_contact'); ?></a></li>
+                        </ul>
+                    </nav>
+
+                    <div class="sl-footer__col">
+                        <h4 class="sl-footer__title"><?php te('footer_link_contact'); ?></h4>
+                        <ul class="sl-footer__contact">
+                            <li><a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>"><i class="fas fa-phone-alt" aria-hidden="true"></i><span><?php echo $contact_phone; ?></span></a></li>
+                            <li><a href="mailto:<?php echo $contact_email; ?>"><i class="fas fa-envelope" aria-hidden="true"></i><span><?php echo $contact_email; ?></span></a></li>
+                            <li><a href="<?php echo $contact_maps_url; ?>" target="_blank" rel="noopener"><i class="fas fa-map-marker-alt" aria-hidden="true"></i><span><?php echo $contact_address; ?><small><?php te('footer_open_maps'); ?> <i class="fas fa-external-link-alt" aria-hidden="true"></i></small></span></a></li>
+                        </ul>
+                    </div>
+
+                    <div class="sl-footer__col">
+                        <h4 class="sl-footer__title"><?php te('footer_get_app'); ?></h4>
+                        <p class="sl-footer__app-text"><?php te('footer_app_text'); ?></p>
+                        <div class="sl-footer__stores">
+                            <a href="https://www.apple.com/app-store/" class="sl-footer__store" target="_blank" rel="noopener" aria-label="<?php te('home_app_store_aria'); ?>">
+                                <svg class="store-badge__mark" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path fill="#FFFFFF" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                                <span><small><?php te('home_download_on_the'); ?></small><strong>App Store</strong></span>
+                            </a>
+                            <a href="https://play.google.com/" class="sl-footer__store" target="_blank" rel="noopener" aria-label="<?php te('home_play_store_aria'); ?>">
+                                <svg class="store-badge__mark" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false"><path fill="#00A0FF" d="M23.2 12.2C16.9 18.9 13.2 29.2 13.2 42.6v426.9c0 13.4 3.7 23.7 10.2 30.1l1.4 1.3 239.2-239.2v-5.6L24.6 10.8l-1.4 1.4z"/><path fill="#FFCE00" d="M343.1 335.7l-79.7-79.8v-5.7l79.8-79.8 1.8 1L439.6 225c27 15.3 27 40.5 0 55.9l-94.6 53.7-1.9 1.1z"/><path fill="#FF3A44" d="M345 334.6L263.4 253 23.2 493.2c8.9 9.4 23.6 10.6 40.2 1.2L345 334.6z"/><path fill="#00C853" d="M345 171.4L63.4 11.6C46.8 2.2 32.1 3.4 23.2 12.8L263.4 253 345 171.4z"/></svg>
+                                <span><small><?php te('home_get_it_on'); ?></small><strong>Google Play</strong></span>
+                            </a>
                         </div>
-
-                        <!-- COLUMN 2: Quick Links -->
-                        <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="200ms">
-                            <div class="footer-widget footer-widget--links">
-                                <h4 class="footer-widget__title"><?php te('footer_quick_links'); ?></h4>
-                                <ul class="list-unstyled footer-widget__links">
-                                    <li><a href="/about"><i class="fas fa-chevron-right"></i> <?php te('footer_link_about'); ?></a></li>
-                                    <li><a href="/taxi"><i class="fas fa-chevron-right"></i> <?php te('footer_link_fleet'); ?></a></li>
-                                    <li><a href="/how-it-works"><i class="fas fa-chevron-right"></i> <?php te('footer_link_how_it_works'); ?></a></li>
-                                    <li><a href="/mission"><i class="fas fa-chevron-right"></i> <?php te('footer_link_mission'); ?></a></li>
-                                    <li><a href="/safety"><i class="fas fa-chevron-right"></i> <?php te('footer_link_safety'); ?></a></li>
-                                    <li><a href="/contact"><i class="fas fa-chevron-right"></i> <?php te('footer_link_contact'); ?></a></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- COLUMN 3: Contact Info -->
-                        <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="300ms">
-                            <div class="footer-widget footer-widget--contact">
-                                <h4 class="footer-widget__title"><?php te('footer_link_contact'); ?></h4>
-                                <ul class="list-unstyled footer-widget__info">
-                                    <li>
-                                        <div class="footer-widget__info__icon"><i class="fas fa-phone-alt"></i></div>
-                                        <div class="footer-widget__info__phones">
-                                            <a href="tel:<?php echo str_replace(' ', '', $contact_phone); ?>"><?php echo $contact_phone; ?></a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="footer-widget__info__icon"><i class="fas fa-envelope"></i></div>
-                                        <a href="mailto:<?php echo $contact_email; ?>"><?php echo $contact_email; ?></a>
-                                    </li>
-                                    <li>
-                                        <div class="footer-widget__info__icon"><i class="fas fa-map-marker-alt"></i></div>
-                                        <span><?php echo $contact_address; ?></span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- COLUMN 4: Map -->
-                        <div class="col-xl-3 col-lg-6 col-md-6 wow fadeInUp" data-wow-delay="400ms">
-                            <div class="footer-widget footer-widget--map">
-                                <h4 class="footer-widget__title"><?php te('footer_our_location'); ?></h4>
-                                <div class="footer-widget__map-wrap">
-                                    <iframe title="<?php te('footer_map_title'); ?>"
-                                            src="https://www.google.com/maps?q=Kigali%2C%20Rwanda&amp;output=embed&amp;z=12"
-                                            loading="lazy"
-                                            referrerpolicy="no-referrer-when-downgrade"
-                                            allowfullscreen></iframe>
-                                </div>
-                            </div>
-                        </div>
-
                     </div>
                 </div>
             </div>
-            <div class="main-footer__bottom">
-                <div class="container">
-                    <div class="main-footer__bottom__inner">
-                        <p class="main-footer__copyright">&copy; <?php echo date('Y'); ?> <?php echo $brand_name; ?>. <?php te('footer_rights_reserved'); ?></p>
-                        <ul class="list-unstyled main-footer__bottom__list">
-                            <?php /* Privacy Policy and Terms pages do not exist yet, so these
-                                      linked to "#". Rendering them only once real pages are in
-                                      place - a legal link that goes nowhere is worse than none.
-                                      See DEPLOY-CPANEL.md. */ ?>
-                        </ul>
+            <div class="sl-footer__bottom">
+                <div class="container sl-footer__bottom-inner">
+                    <p class="sl-footer__copy">&copy; <?php echo date('Y'); ?> <?php echo $brand_name; ?>. <?php te('footer_rights_reserved'); ?></p>
+                    <?php /* Socials render only once real profile URLs are set in
+                              config.php ($social_links); placeholders are skipped. */ ?>
+                    <div class="sl-footer__social">
+                        <?php foreach ($social_links as $platform => $url): if ($url === '' || $url === '#') { continue; } ?>
+                            <a href="<?php echo $url; ?>" target="_blank" rel="noopener" aria-label="<?php echo ucfirst($platform); ?>"><i class="fab fa-<?php echo $platform === 'x' ? 'twitter' : $platform; ?>" aria-hidden="true"></i></a>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
@@ -101,7 +69,7 @@
         <div class="mobile-nav__content">
             <span class="mobile-nav__close mobile-nav__toggler"><i class="fa fa-times"></i></span>
             <div class="logo-box">
-                <a href="/" aria-label="logo image"><img src="images/safelinelogo/safelinelogo.png" width="76" height="76" alt="<?php echo $brand_name; ?>" /></a>
+                <a href="/" aria-label="<?php echo $brand_name; ?>"><img src="images/safelinelogo/safelinelogo-light.png" width="76" height="76" alt="<?php echo $brand_name; ?>" /></a>
             </div>
             <div class="mobile-nav__container"></div>
             <ul class="mobile-nav__contact list-unstyled">
@@ -152,6 +120,8 @@
     <script src="assets/vendors/jquery-lettering/jquery.lettering.min.js"></script>
 <?php endif; ?>
     <script src="assets/js/cityride.js"></script>
+    <!-- Premium layer, every page: theme switch, staggered reveals, hero pointer depth -->
+    <script src="<?php echo asset_url('assets/js/safeline-premium.js'); ?>" defer></script>
 
     <!-- Language switcher -->
     <script>
@@ -180,6 +150,7 @@
             var code = li.getAttribute('data-lang');
             var url = new URL(window.location.href);
             url.searchParams.set('lang', code);
+            url.hash = '';
             window.location.href = url.toString();
         }
 
@@ -220,7 +191,7 @@
         var SEL = [
             '.sec-title', '.service-card', '.fleet-card', '.testimonial-card',
             '.stats-bar__item', '.cta-feature-item', '.hiw-feature-card',
-            '.hiw-tab', '.contact-strip__item', '.footer-widget',
+            '.hiw-tab', '.contact-strip__item', '.sl-footer__grid > *',
             '.download-app-three__btn', '.booking-cta-card', '.about-four__image',
             '.about-four__right', '.contact-faq__item'
         ].join(',');

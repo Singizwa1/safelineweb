@@ -32,7 +32,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com/">
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,400&family=Sora:wght@400..800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,400&family=Sora:wght@400..800&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
     <!-- Vendor CSS -->
     <link rel="stylesheet" href="assets/vendors/bootstrap/css/bootstrap.min.css">
@@ -58,9 +58,35 @@
     <link rel="stylesheet" href="assets/vendors/nouislider/nouislider.pips.css">
     <link rel="stylesheet" href="assets/vendors/tiny-slider/tiny-slider.css">
 <?php endif; ?>
-<?php if (($current_page ?? '') === 'how-it-works'): ?>
-    <link rel="stylesheet" href="<?php echo asset_url('assets/css/how-it-works.css'); ?>">
-<?php endif; ?>
+    <!-- Premium layer, loaded last (scoped under body.sl-ui) -->
+    <link rel="stylesheet" href="<?php echo asset_url('assets/css/safeline-premium.css'); ?>">
+    <script>
+        // Theme before first paint, so a saved choice never flashes. Dark is
+        // the default; light only when the visitor picks it (safeline-premium.js).
+        (function () {
+            var theme = 'dark';
+            try { theme = localStorage.getItem('safeline-theme') === 'light' ? 'light' : 'dark'; } catch (e) {}
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+
+        // Every load (refresh, language switch, old-page redirect) opens at the
+        // hero: no restored scroll position, no #section jump. ?lang= is
+        // dropped from the address too - the cookie already remembers it.
+        (function () {
+            if ('scrollRestoration' in history) { history.scrollRestoration = 'manual'; }
+            var url = new URL(window.location.href);
+            if (url.hash || url.searchParams.has('lang')) {
+                url.hash = '';
+                url.searchParams.delete('lang');
+                history.replaceState(null, '', url.pathname + url.search);
+            }
+            function toTop() { window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); }
+            toTop();
+            window.addEventListener('DOMContentLoaded', toTop);
+            window.addEventListener('load', toTop);
+            window.addEventListener('pageshow', function (e) { if (e.persisted) { toTop(); } });
+        })();
+    </script>
     <script>
         // Single source for every SafeLine API call any page makes - see
         // includes/config.php ($safeline_api_base). Defined here (head) so it
@@ -95,7 +121,7 @@
     </script>
 </head>
 
-<body class="custom-cursor">
+<body class="custom-cursor sl-ui page-<?php echo htmlspecialchars($current_page ?? 'default', ENT_QUOTES, 'UTF-8'); ?>">
 
     <div class="custom-cursor__cursor"></div>
     <div class="custom-cursor__cursor-two"></div>
@@ -165,7 +191,10 @@
                     <!-- Logo -->
                     <div class="main-header__logo logo-retina">
                         <a href="/">
-                            <img src="images/safelinelogo/safelinelogo.png" alt="<?php echo $brand_name; ?>" width="120" height="120">
+                            <!-- White-ink logo on the dark header, dark-ink logo in light
+                                 mode; safeline-premium.css shows one of the two. -->
+                            <img class="logo-ink logo-ink--light" src="images/safelinelogo/safelinelogo-light.png" alt="<?php echo $brand_name; ?>" width="120" height="120">
+                            <img class="logo-ink logo-ink--dark" src="images/safelinelogo/safelinelogo.png" alt="" aria-hidden="true" width="120" height="120">
                         </a>
                     </div>
 
@@ -193,7 +222,7 @@
                                     }
                                 ?>
                                 <li class="<?php echo $is_current ? 'current' : ''; ?> <?php echo $has_children ? 'dropdown' : ''; ?>">
-                                    <a href="<?php echo $link; ?>"><?php echo $name; ?></a>
+                                    <a href="<?php echo $link; ?>"><?php echo $name; ?><?php if ($has_children): ?><i class="fas fa-chevron-down main-menu__caret" aria-hidden="true"></i><?php endif; ?></a>
                                     <?php if ($has_children): ?>
                                         <ul>
                                             <?php foreach ($children as $child_name => $child_link): ?>
@@ -215,6 +244,14 @@
 
                     <!-- Right Actions -->
                     <div class="main-header__right__inner">
+                        <!-- Light / dark switch (wired in safeline-premium.js) -->
+                        <button type="button" class="hp-theme-toggle"
+                                data-label-light="<?php te('theme_to_light'); ?>"
+                                data-label-dark="<?php te('theme_to_dark'); ?>"
+                                aria-label="<?php te('theme_to_light'); ?>" title="<?php te('theme_to_light'); ?>">
+                            <i class="fas fa-sun hp-theme-toggle__sun" aria-hidden="true"></i>
+                            <i class="fas fa-moon hp-theme-toggle__moon" aria-hidden="true"></i>
+                        </button>
                         <div class="main-header__btn-box">
                             <a href="<?php echo ($current_page ?? '') === 'home' ? '#download-app' : $primary_cta_link; ?>" class="js-ride-cta main-header__btn cityride-btn cityride-btn--primary">
                                 <span><?php echo $primary_cta_text; ?></span>
