@@ -373,7 +373,7 @@ return [
     'home_hiw_tagline' => 'How it works',
     'home_hiw_title' => 'Simple from start to finish',
     'home_hiw_lead' => 'Three ways to move with SafeLine. Open one to see the steps.',
-    'home_hiw_view_btn' => 'View how it works',
+    'home_hiw_view_btn' => 'View More',
     'hiw_modal_close' => 'Close',
     'hiw_modal_steps' => 'Step by step',
     'hiw_modal_good' => 'Good to know',
