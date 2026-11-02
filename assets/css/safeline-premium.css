@@ -654,55 +654,130 @@ body.sl-ui .sl-service__text { font-size: 13.5px; color: var(--hp-text-soft); }
 }
 
 /* 5. HOW IT WORKS ---------------------------------------------------------- */
-/* Three big icons joined by a line, a title and one line each. */
-body.sl-ui .sl-steps { background: var(--hp-bg); }
-body.sl-ui .sl-steps__list {
-    position: relative;
+/* One card per service, same surface as the section; "View" opens a
+   <dialog> with the steps. Icons match the Services cards. */
+body.sl-ui .sl-hiw { background: var(--hp-bg); }
+body.sl-ui .sl-hiw__lead {
+    text-align: center; max-width: 520px; margin: -12px auto 36px;
+    font-size: 15.5px; color: var(--hp-text-soft);
+}
+body.sl-ui .sl-hiw__grid {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: clamp(16px, 2vw, 28px);
-    margin: 0; padding: 0; counter-reset: sl-step;
+    gap: clamp(16px, 2vw, 24px);
 }
-body.sl-ui .sl-steps__list::before {
-    content: ""; position: absolute; top: 36px; left: 16.6%; right: 16.6%; height: 2px;
-    background: linear-gradient(90deg, var(--hp-green), var(--hp-accent));
-    opacity: .5;
+body.sl-ui .sl-hiw-card {
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+    padding: clamp(22px, 2.6vw, 30px);
+    background: var(--hp-bg);
+    border: 1px solid var(--hp-line); border-radius: 18px;
+    box-shadow: var(--hp-card-shadow);
+    transition: border-color .35s var(--hp-ease), transform .35s var(--hp-ease);
 }
-body.sl-ui .sl-step {
-    position: relative; display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center;
-    counter-increment: sl-step;
+body.sl-ui .sl-hiw-card::before {
+    content: ""; position: absolute; left: 0; top: 0; right: 0; height: 3px;
+    background: var(--hp-green);
 }
-body.sl-ui .sl-step__icon {
-    position: relative;
-    width: 72px; height: 72px; border-radius: 50%; margin-bottom: 8px;
-    display: grid; place-items: center; font-size: 26px;
-    background: var(--hp-card); color: var(--hp-green);
-    border: 1px solid var(--hp-line);
-    box-shadow: var(--hp-card-shadow), 0 0 0 6px var(--hp-bg);
-}
-body.sl-ui .sl-step__icon::after {
-    content: counter(sl-step);
-    position: absolute; right: -4px; top: -4px;
-    width: 24px; height: 24px; border-radius: 50%;
-    display: grid; place-items: center;
-    font-family: var(--font-heading, 'Sora', sans-serif); font-size: 12px; font-weight: 700;
+body.sl-ui .sl-hiw-card:hover { border-color: var(--hp-hover-line); transform: translateY(-4px); }
+body.sl-ui .sl-hiw-card__icon {
+    flex: none; width: 52px; height: 52px; border-radius: 14px; margin-bottom: 6px;
+    display: grid; place-items: center; font-size: 21px;
     background: var(--hp-green); color: var(--hp-navy);
 }
-body.sl-ui .sl-step__title {
+body.sl-ui .sl-hiw-card__title {
     font-family: var(--font-heading, 'Sora', sans-serif);
-    font-size: 17px; font-weight: 700; color: var(--hp-text);
+    font-size: 19px; font-weight: 700; color: var(--hp-text); margin: 0;
 }
-body.sl-ui .sl-step__text { font-size: 14px; color: var(--hp-text-soft); max-width: 22ch; }
-/* phones: one row per step, icon on the left with the line running
-   through the icons only */
-@media (max-width: 767px) {
-    body.sl-ui .sl-steps__list { grid-template-columns: 1fr; gap: 18px; max-width: 420px; margin: 0 auto; }
-    body.sl-ui .sl-steps__list::before { top: 28px; bottom: 28px; left: 28px; right: auto; width: 2px; height: auto; }
-    body.sl-ui .sl-step {
-        grid-template-columns: 56px 1fr; column-gap: 16px; row-gap: 2px;
-        justify-items: start; align-items: center; text-align: left;
-    }
-    body.sl-ui .sl-step__icon { grid-row: 1 / span 2; width: 56px; height: 56px; font-size: 20px; margin: 0; }
-    body.sl-ui .sl-step__text { max-width: none; }
+body.sl-ui .sl-hiw-card__text { font-size: 15px; line-height: 1.6; color: var(--hp-text-soft); margin: 0 0 8px; }
+body.sl-ui .sl-hiw-card__btn {
+    margin-top: auto;
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 9px 16px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; cursor: pointer;
+    color: var(--hp-text); background: var(--hp-inset);
+    border: 1px solid var(--hp-line);
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+body.sl-ui .sl-hiw-card__btn i { font-size: 12px; color: var(--hp-green); transition: transform .25s var(--hp-ease); }
+body.sl-ui .sl-hiw-card__btn:hover,
+body.sl-ui .sl-hiw-card__btn:focus-visible { background: var(--hp-green); color: var(--hp-navy); border-color: var(--hp-green); }
+body.sl-ui .sl-hiw-card__btn:hover i,
+body.sl-ui .sl-hiw-card__btn:focus-visible i { color: var(--hp-navy); transform: translateX(3px); }
+@media (max-width: 991px) { body.sl-ui .sl-hiw__grid { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; } }
+
+/* pop-up */
+body.sl-ui .sl-hiw-modal {
+    width: min(560px, calc(100% - 32px)); max-height: calc(100dvh - 32px);
+    padding: 0; border: 0; background: transparent; color: var(--hp-text);
+    overflow: visible;
+}
+body.sl-ui .sl-hiw-modal::backdrop { background: rgba(0, 10, 22, .65); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+body.sl-ui .sl-hiw-modal[open] { animation: sl-hiw-in .35s var(--hp-ease); }
+@keyframes sl-hiw-in { from { opacity: 0; transform: translateY(16px) scale(.98); } to { opacity: 1; transform: none; } }
+body.sl-ui .sl-hiw-modal__box {
+    position: relative; overflow-y: auto; max-height: calc(100dvh - 32px);
+    padding: clamp(22px, 4vw, 32px);
+    background: var(--hp-bg); border: 1px solid var(--hp-line); border-radius: 20px;
+    box-shadow: var(--hp-shadow);
+}
+body.sl-ui .sl-hiw-modal__box::before {
+    content: ""; position: absolute; left: 0; top: 0; right: 0; height: 4px;
+    background: var(--hp-green); border-radius: 20px 20px 0 0;
+}
+body.sl-ui .sl-hiw-modal__close {
+    position: absolute; top: 14px; right: 14px;
+    width: 36px; height: 36px; border-radius: 50%;
+    display: grid; place-items: center; cursor: pointer;
+    background: var(--hp-inset); color: var(--hp-text); border: 1px solid var(--hp-line);
+    transition: background-color .2s ease;
+}
+body.sl-ui .sl-hiw-modal__close:hover { background: var(--hp-line); }
+body.sl-ui .sl-hiw-modal__head { display: flex; align-items: center; gap: 14px; padding-right: 40px; margin-bottom: 22px; }
+body.sl-ui .sl-hiw-modal__head .sl-hiw-card__icon { margin: 0; }
+body.sl-ui .sl-hiw-modal__where {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--hp-accent);
+}
+body.sl-ui .sl-hiw-modal__where i { font-size: 11px; }
+body.sl-ui .sl-hiw-modal__title {
+    font-family: var(--font-heading, 'Sora', sans-serif);
+    font-size: clamp(21px, 3vw, 25px); font-weight: 700; color: var(--hp-text); margin: 2px 0 0;
+}
+body.sl-ui .sl-hiw-modal__sub {
+    font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--hp-text-soft); margin: 0 0 12px;
+}
+/* numbered steps joined by a line */
+body.sl-ui .sl-hiw-modal__steps { position: relative; margin: 0 0 22px; padding: 0; display: grid; gap: 14px; }
+body.sl-ui .sl-hiw-modal__steps::before {
+    content: ""; position: absolute; left: 15px; top: 16px; bottom: 16px; width: 2px;
+    background: var(--hp-line-strong);
+}
+body.sl-ui .sl-hiw-modal__steps li { position: relative; display: grid; grid-template-columns: 32px 1fr; gap: 14px; align-items: start; }
+body.sl-ui .sl-hiw-modal__num {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-family: var(--font-heading, 'Sora', sans-serif); font-size: 14px; font-weight: 700;
+    background: var(--hp-green); color: var(--hp-navy);
+    box-shadow: 0 0 0 4px var(--hp-bg);
+}
+body.sl-ui .sl-hiw-modal__steps strong { display: block; font-size: 15.5px; color: var(--hp-text); margin: 4px 0 2px; }
+body.sl-ui .sl-hiw-modal__steps p { font-size: 14.5px; line-height: 1.55; color: var(--hp-text-soft); margin: 0; }
+body.sl-ui .sl-hiw-modal__good { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 24px; padding: 0; }
+body.sl-ui .sl-hiw-modal__good li {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; color: var(--hp-text);
+    background: var(--hp-inset); border: 1px solid var(--hp-line);
+}
+body.sl-ui .sl-hiw-modal__good i { font-size: 10px; color: var(--hp-green); }
+body.sl-ui .sl-hiw-modal__cta { width: 100%; justify-content: center; text-align: center; }
+html.sl-hiw-lock { overflow: hidden; }
+@media (prefers-reduced-motion: reduce) {
+    body.sl-ui .sl-hiw-card, body.sl-ui .sl-hiw-card__btn i { transition: none; }
+    body.sl-ui .sl-hiw-card:hover { transform: none; }
+    body.sl-ui .sl-hiw-modal[open] { animation: none; }
 }
 
 /* VISION & MISSION --------------------------------------------------------- */

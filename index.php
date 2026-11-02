@@ -109,7 +109,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/cards/card-corporate.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service2'); ?></span>
@@ -117,7 +117,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/fleet-07-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="1200"></span>
+                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-key" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service4'); ?></span>
@@ -159,32 +159,74 @@ include 'includes/header.php';
             </div>
         </section>
 
-        <!-- HOW IT WORKS: three icons, three short lines -->
-        <section class="sl-steps section-space" id="how-it-works">
+        <!-- HOW IT WORKS: one card per service; "View" opens a step-by-step
+             pop-up (<dialog>). The header dropdown links to #hiw-ride,
+             #hiw-intercity and #hiw-parcel, which open the same pop-ups
+             (wired in safeline-premium.js). -->
+        <?php
+            $hiw_items = [
+                'ride'     => ['icon' => 'fa-car-side', 'card' => 'home_step1', 'cta' => '#download-app'],
+                'intercity'=> ['icon' => 'fa-route',    'card' => 'home_step2', 'cta' => '#intercity', 'key' => 'ic'],
+                'parcel'   => ['icon' => 'fa-box',      'card' => 'home_step3', 'cta' => 'tel:' . str_replace(' ', '', $contact_phone)],
+            ];
+        ?>
+        <section class="sl-hiw section-space" id="how-it-works">
             <div class="container">
                 <div class="sec-title sec-title--center">
-                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('home_simple_eyebrow'); ?></h6></div>
-                    <h3 class="sec-title__title"><?php te('home_steps_title'); ?></h3>
+                    <div class="sec-title__top"><h6 class="sec-title__tagline"><?php te('home_hiw_tagline'); ?></h6></div>
+                    <h3 class="sec-title__title"><?php te('home_hiw_title'); ?></h3>
                 </div>
-                <ol class="sl-steps__list list-unstyled">
-                    <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-car-side" aria-hidden="true"></i></span>
-                        <span class="sl-step__title"><?php te('home_step1_title'); ?></span>
-                        <span class="sl-step__text"><?php te('home_step1_text'); ?></span>
-                    </li>
-                    <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
-                        <span class="sl-step__title"><?php te('home_step2_title'); ?></span>
-                        <span class="sl-step__text"><?php te('home_step2_text'); ?></span>
-                    </li>
-                    <li class="sl-step">
-                        <span class="sl-step__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
-                        <span class="sl-step__title"><?php te('home_step3_title'); ?></span>
-                        <span class="sl-step__text"><?php te('home_step3_text'); ?></span>
-                    </li>
-                </ol>
+                <p class="sl-hiw__lead"><?php te('home_hiw_lead'); ?></p>
+                <div class="sl-hiw__grid">
+                    <?php foreach ($hiw_items as $id => $item): ?>
+                    <article class="sl-hiw-card">
+                        <span class="sl-hiw-card__icon"><i class="fas <?php echo $item['icon']; ?>" aria-hidden="true"></i></span>
+                        <h4 class="sl-hiw-card__title"><?php te($item['card'] . '_title'); ?></h4>
+                        <p class="sl-hiw-card__text"><?php te($item['card'] . '_text'); ?></p>
+                        <button type="button" class="sl-hiw-card__btn" data-hiw-open="<?php echo $id; ?>" aria-haspopup="dialog">
+                            <span><?php te('home_hiw_view_btn'); ?></span><i class="fas fa-arrow-right" aria-hidden="true"></i>
+                        </button>
+                    </article>
+                    <?php endforeach; ?>
+                </div>
             </div>
         </section>
+
+        <?php foreach ($hiw_items as $id => $item): $k = 'hiw_' . ($item['key'] ?? $id); ?>
+        <dialog class="sl-hiw-modal" id="hiw-modal-<?php echo $id; ?>" aria-labelledby="hiw-modal-<?php echo $id; ?>-title">
+            <div class="sl-hiw-modal__box">
+                <button type="button" class="sl-hiw-modal__close" data-hiw-close aria-label="<?php te('hiw_modal_close'); ?>"><i class="fas fa-times" aria-hidden="true"></i></button>
+                <header class="sl-hiw-modal__head">
+                    <span class="sl-hiw-card__icon"><i class="fas <?php echo $item['icon']; ?>" aria-hidden="true"></i></span>
+                    <div>
+                        <span class="sl-hiw-modal__where"><i class="fas fa-map-pin" aria-hidden="true"></i><?php te($k . '_where'); ?></span>
+                        <h3 class="sl-hiw-modal__title" id="hiw-modal-<?php echo $id; ?>-title"><?php te($item['card'] . '_title'); ?></h3>
+                    </div>
+                </header>
+                <h4 class="sl-hiw-modal__sub"><?php te('hiw_modal_steps'); ?></h4>
+                <ol class="sl-hiw-modal__steps list-unstyled">
+                    <?php for ($i = 1; $i <= 4; $i++): ?>
+                    <li>
+                        <span class="sl-hiw-modal__num"><?php echo $i; ?></span>
+                        <div>
+                            <strong><?php te($k . '_s' . $i . '_t'); ?></strong>
+                            <p><?php te($k . '_s' . $i . '_d'); ?></p>
+                        </div>
+                    </li>
+                    <?php endfor; ?>
+                </ol>
+                <h4 class="sl-hiw-modal__sub"><?php te('hiw_modal_good'); ?></h4>
+                <ul class="sl-hiw-modal__good list-unstyled">
+                    <?php for ($i = 1; $i <= 3; $i++): ?>
+                    <li><i class="fas fa-check" aria-hidden="true"></i><?php te($k . '_g' . $i); ?></li>
+                    <?php endfor; ?>
+                </ul>
+                <a class="sl-hiw-modal__cta cityride-btn cityride-btn--primary" href="<?php echo $item['cta']; ?>" data-hiw-cta="<?php echo $id; ?>">
+                    <span><?php te($k . '_cta'); ?></span>
+                </a>
+            </div>
+        </dialog>
+        <?php endforeach; ?>
 
         <section class="intercity-one section-space" id="intercity" hidden>
             <div class="container">

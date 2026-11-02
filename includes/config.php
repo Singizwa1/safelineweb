@@ -138,7 +138,15 @@ $nav_items = [
             t('nav_get_app')      => '/#download-app',
         ],
     ],
-    t('nav_how_it_works') => '/#how-it-works',
+    // children open the step-by-step pop-ups (safeline-premium.js)
+    t('nav_how_it_works') => [
+        'url'      => '/#how-it-works',
+        'children' => [
+            t('home_step1_title') => '/#hiw-ride',
+            t('home_step2_title') => '/#hiw-intercity',
+            t('home_step3_title') => '/#hiw-parcel',
+        ],
+    ],
     t('nav_contact')      => '/#contact',
 ];
 

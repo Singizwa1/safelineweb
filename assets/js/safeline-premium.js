@@ -50,7 +50,7 @@
     // or the site-wide .reveal script (includes/footer.php) are left out.
     var GROUPS = [
         '.sl-services__grid',
-        '.sl-steps__list',
+        '.sl-hiw__grid',
         '.sl-app-feats',
         '.sl-contact__grid'
     ];
@@ -188,5 +188,72 @@
             layer.style.setProperty('--hp-px', '0px');
             layer.style.setProperty('--hp-py', '0px');
         });
+    }
+}());
+
+/* How it works pop-ups ------------------------------------------------------
+   Card buttons ([data-hiw-open]) and the header dropdown links (#hiw-ride,
+   #hiw-intercity, #hiw-parcel) open the matching <dialog>. Esc, the close
+   button and a click on the backdrop close it. */
+(function () {
+    var section = document.getElementById('how-it-works');
+    if (!section || typeof HTMLDialogElement === 'undefined') { return; }
+    var lastTrigger = null;
+
+    function closeMobileNav() {
+        var nav = document.querySelector('.mobile-nav__wrapper.expanded');
+        if (nav) { nav.classList.remove('expanded'); document.body.classList.remove('locked'); }
+    }
+    function open(id, trigger) {
+        var dlg = document.getElementById('hiw-modal-' + id);
+        if (!dlg || dlg.open) { return; }
+        lastTrigger = trigger || null;
+        closeMobileNav();
+        dlg.showModal();
+        document.documentElement.classList.add('sl-hiw-lock');
+    }
+
+    document.querySelectorAll('.sl-hiw-modal').forEach(function (dlg) {
+        dlg.addEventListener('close', function () {
+            document.documentElement.classList.remove('sl-hiw-lock');
+            if (lastTrigger && document.contains(lastTrigger)) { lastTrigger.focus(); }
+        });
+        // a click on the dimmed area (the <dialog> itself, outside the box) closes it
+        dlg.addEventListener('click', function (e) { if (e.target === dlg) { dlg.close(); } });
+    });
+
+    document.addEventListener('click', function (e) {
+        var btn = e.target.closest('[data-hiw-open]');
+        if (btn) { open(btn.getAttribute('data-hiw-open'), btn); return; }
+
+        if (e.target.closest('[data-hiw-close]')) { e.target.closest('dialog').close(); return; }
+
+        // Intercity CTA: the trips list is hidden while no trips are published;
+        // send people to the contact section instead.
+        var cta = e.target.closest('[data-hiw-cta]');
+        if (cta) {
+            var dlg = cta.closest('dialog');
+            if (cta.getAttribute('data-hiw-cta') === 'intercity') {
+                var trips = document.getElementById('intercity');
+                if (!trips || trips.hidden) { e.preventDefault(); dlg.close(); location.hash = 'contact'; return; }
+            }
+            if (cta.getAttribute('href').charAt(0) === '#') { dlg.close(); }
+            return;
+        }
+
+        // header dropdown: /#hiw-ride etc.
+        var link = e.target.closest('a[href*="#hiw-"]');
+        if (link) {
+            e.preventDefault();
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            open(link.getAttribute('href').split('#hiw-')[1], link);
+        }
+    });
+
+    // arriving from another page with #hiw-... in the URL
+    var m = location.hash.match(/^#hiw-(ride|intercity|parcel)$/);
+    if (m) {
+        section.scrollIntoView({ block: 'start' });
+        open(m[1]);
     }
 }());
