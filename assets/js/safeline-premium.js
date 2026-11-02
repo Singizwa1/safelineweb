@@ -237,7 +237,7 @@
                 var trips = document.getElementById('intercity');
                 if (!trips || trips.hidden) { e.preventDefault(); dlg.close(); location.hash = 'contact'; return; }
             }
-            if (cta.getAttribute('href').charAt(0) === '#') { dlg.close(); }
+            if (cta.getAttribute('href').charAt(0) === '#') { document.documentElement.classList.remove('sl-hiw-lock'); dlg.close(); }
             return;
         }
 

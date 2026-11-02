@@ -813,10 +813,6 @@ body.sl-ui .sl-purpose__icon {
     display: grid; place-items: center; font-size: 22px;
     background: var(--hp-green); color: var(--hp-navy);
 }
-body.sl-ui .sl-purpose__label {
-    display: block; font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-    color: var(--hp-accent); margin-bottom: 2px;
-}
 body.sl-ui .sl-purpose__title {
     font-family: var(--font-heading, 'Sora', sans-serif);
     font-size: clamp(20px, 2vw, 24px); font-weight: 700; color: var(--hp-text); margin: 0;
@@ -1186,3 +1182,71 @@ html.reveal-off body.sl-ui .hp-reveal { opacity: 1; transform: none; }
 body.sl-ui .main-header__logo img,
 body.sl-ui .mobile-nav__content .logo-box img { transform: translateX(-10.9%); }
 }
+
+/* TYPOGRAPHY: clean and small, in the spirit of move.rw ------------------
+   One family (DM Sans): bold headings, regular body text, small tidy labels,
+   normal sentence case (no ALL CAPS). Applies to every section except the
+   hero (.sl-hero), plus the footer and the How it works pop-ups. */
+body.sl-ui { font-weight: 400; }
+
+body.sl-ui section:not(.sl-hero),
+body.sl-ui footer,
+body.sl-ui .sl-hiw-modal {
+    --hp-text-soft: rgba(255, 255, 255, .78);
+    font-size: 15px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+}
+html[data-theme="light"] body.sl-ui section:not(.sl-hero),
+html[data-theme="light"] body.sl-ui footer,
+html[data-theme="light"] body.sl-ui .sl-hiw-modal { --hp-text-soft: #4A5568; }
+
+body.sl-ui section:not(.sl-hero) *,
+body.sl-ui footer *,
+body.sl-ui .sl-hiw-modal * { text-transform: none !important; }
+
+/* section heading: small tag, then a bold, compact title */
+body.sl-ui section:not(.sl-hero) .sec-title__tagline {
+    font-size: 13px !important; font-weight: 600 !important; letter-spacing: 0 !important;
+    padding: 4px 12px;
+}
+body.sl-ui section:not(.sl-hero) .sec-title__title {
+    font-size: clamp(22px, 2.2vw, 28px) !important;
+    font-weight: 700 !important; letter-spacing: -.01em !important; line-height: 1.25 !important;
+}
+body.sl-ui .sl-purpose__lead,
+body.sl-ui .sl-hiw__lead,
+body.sl-ui .download-app-three__top__text { font-size: 15px !important; line-height: 1.6; }
+
+/* card titles and text */
+body.sl-ui .sl-service__title,
+body.sl-ui .sl-hiw-card__title,
+body.sl-ui .sl-purpose__title { font-size: 17px; font-weight: 700; letter-spacing: 0; line-height: 1.35; }
+body.sl-ui .sl-service__text { font-size: 13.5px; }
+body.sl-ui .sl-hiw-card__text,
+body.sl-ui .sl-purpose__text { font-size: 14.5px; line-height: 1.6; }
+body.sl-ui .testimonial-card__text { font-size: 14.5px !important; line-height: 1.65 !important; }
+body.sl-ui .testimonial-card__name { font-size: 15px !important; font-weight: 700; }
+
+/* small labels, tags and buttons */
+body.sl-ui .sl-purpose__tags li,
+body.sl-ui .sl-hiw-modal__good li,
+body.sl-ui .sl-app-feats li { font-size: 12.5px; font-weight: 500; }
+body.sl-ui .sl-hiw-card__btn { font-size: 13.5px; font-weight: 600; }
+body.sl-ui section:not(.sl-hero) .cityride-btn,
+body.sl-ui .sl-hiw-modal .cityride-btn { font-size: 14px !important; font-weight: 700 !important; letter-spacing: 0 !important; }
+
+/* pop-ups */
+body.sl-ui .sl-hiw-modal__title { font-size: clamp(20px, 2.6vw, 22px); }
+body.sl-ui .sl-hiw-modal__where { font-size: 12.5px; letter-spacing: 0; font-weight: 600; }
+body.sl-ui .sl-hiw-modal__sub { font-size: 13px; letter-spacing: 0; color: var(--hp-text); }
+body.sl-ui .sl-hiw-modal__steps strong { font-size: 15px; }
+body.sl-ui .sl-hiw-modal__steps p { font-size: 14px; }
+
+/* contact and footer */
+body.sl-ui .sl-contact__label { font-size: 12.5px; letter-spacing: 0; font-weight: 600; }
+body.sl-ui .sl-contact__value { font-size: 15px; }
+body.sl-ui .sl-footer__title { font-size: 15px; letter-spacing: 0; }
+body.sl-ui footer a,
+body.sl-ui footer li,
+body.sl-ui footer p { font-size: 14px; }
+body.sl-ui .download-app-three__btn__title { letter-spacing: 0 !important; }

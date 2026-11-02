@@ -1439,9 +1439,9 @@ section.download-app-three a:hover { color: var(--color-primary, #63C51F) !impor
 
 /* TYPE SYSTEM */
 :root {
-    --cityride-font: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --cityride-heading-font: 'Sora', 'Inter', system-ui, sans-serif;
-    --cityride-special-font: 'Inter', system-ui, sans-serif;
+    --cityride-font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --cityride-heading-font: 'DM Sans', system-ui, sans-serif;
+    --cityride-special-font: 'DM Sans', system-ui, sans-serif;
 }
 
 body,

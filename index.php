@@ -143,7 +143,6 @@ include 'includes/header.php';
                         <div class="sl-purpose__head">
                             <span class="sl-purpose__icon"><i class="fas <?php echo $icon; ?>" aria-hidden="true"></i></span>
                             <div>
-                                <span class="sl-purpose__label"><?php te('home_purpose_' . $key . '_label'); ?></span>
                                 <h4 class="sl-purpose__title"><?php te('home_purpose_' . $key . '_title'); ?></h4>
                             </div>
                         </div>
@@ -167,7 +166,7 @@ include 'includes/header.php';
             $hiw_items = [
                 'ride'     => ['icon' => 'fa-car-side', 'card' => 'home_step1', 'cta' => '#download-app'],
                 'intercity'=> ['icon' => 'fa-route',    'card' => 'home_step2', 'cta' => '#intercity', 'key' => 'ic'],
-                'parcel'   => ['icon' => 'fa-box',      'card' => 'home_step3', 'cta' => 'tel:' . str_replace(' ', '', $contact_phone)],
+                'parcel'   => ['icon' => 'fa-box',      'card' => 'home_step3', 'cta' => '#contact'],
             ];
         ?>
         <section class="sl-hiw section-space" id="how-it-works">

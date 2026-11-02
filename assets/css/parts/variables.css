@@ -36,9 +36,9 @@
     --color-info: #3B82F6;
 
     /* ── Typography ── */
-    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-    --font-heading: 'Sora', 'Inter', system-ui, sans-serif;
-    --font-ui: 'Inter', system-ui, sans-serif;
+    --font-body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-heading: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-ui: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
     /* ── Font Sizes (fluid scale) ── */
