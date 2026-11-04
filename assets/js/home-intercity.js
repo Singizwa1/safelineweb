@@ -71,18 +71,9 @@
             var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
             var when = formatWhen(departure);
             var price = parseFloat(trip.price_per_seat).toLocaleString();
-            // Same waitlist detection as renderCard() below - a trip with 0
-            // truly-free seats but a pending-payment hold still reaches this
-            // slide (the API keeps it public so it's still joinable via the
-            // waiting list), so the copy/button here has to say that instead
-            // of implying a seat can be booked outright.
-            var pending = trip.pending_seats || 0;
-            var waitlistOnly = trip.seats_available === 0 && pending > 0;
-            var seatsLine = waitlistOnly
-                ? jsT(pending === 1 ? 'ic_fully_booked_pending_one' : 'ic_fully_booked_pending_many', { n: pending })
-                : jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
-            var buttonClass = waitlistOnly ? 'intercity-waitlist-btn' : 'intercity-book-btn';
-            var buttonLabel = waitlistOnly ? jsT('ic_btn_join_waitlist') : jsT('ic_btn_book_this_seat');
+            var seatsLine = jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
+            var buttonClass = 'intercity-book-btn';
+            var buttonLabel = jsT('ic_btn_book_this_seat');
             // Same spirit as the trip-card note (renderCard() below) and the
             // website card this mirrors - informational only, no self-service
             // submit, so the hero just points people at #intercity for it.
@@ -126,14 +117,8 @@
         var pickupLine = pickupPoints.length
             ? '<li><i class="fas fa-map-marker-alt"></i>' + jsT('ic_pickup', { places: pickupPoints.map(function (p) { return p.location; }).join(', ') }) + '</li>'
             : '';
-        var pending = trip.pending_seats || 0;
-        var waitlistOnly = trip.seats_available === 0 && pending > 0;
-        var badgeText = waitlistOnly
-            ? jsT(pending === 1 ? 'ic_badge_0left_pending_one' : 'ic_badge_0left_pending_many', { n: pending })
-            : jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
-        var buttonHtml = waitlistOnly
-            ? '<button type="button" class="cityride-btn cityride-btn--primary intercity-waitlist-btn">' + jsT('ic_btn_join_waitlist') + '</button>'
-            : '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' + jsT('ic_btn_book_seat') + '</button>';
+        var badgeText = jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
+        var buttonHtml = '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' + jsT('ic_btn_book_seat') + '</button>';
         // Parcel delivery lives on the same trip card, not a separate
         // section - sending a parcel always rides on a published trip, so
         // it only makes sense in context of that trip's own card. There's
@@ -165,12 +150,6 @@
 
     /** A booking can't claim more seats than this in one go, even when more are available (mirrors MAX_SEATS_PER_BOOKING server-side - the server still re-checks this, this is just so the picker doesn't offer more than it can accept). */
     var MAX_SEATS_PER_BOOKING = 8;
-
-    /** 'book' (the normal pay-now/pay-later flow) or 'waitlist' (trip has no
-     * truly-free seats left, only pending-payment ones that might still be
-     * released) - set by openModal(), read by the submit handler to decide
-     * which endpoint to call. */
-    var modalMode = 'book';
 
     /** True while a pay-now charge is awaiting the guest's approval - the
      * modal is locked (no manual close, form disabled) so it isn't lost
@@ -204,27 +183,14 @@
         var perSeat = parseFloat(trip.price_per_seat);
         document.getElementById('intercity_price_amount').textContent = perSeat.toLocaleString() + ' RWF';
 
-        var pendingRow = document.getElementById('intercity_pending_row');
-        if (trip.pending_seats > 0) {
-            pendingRow.hidden = false;
-            document.getElementById('intercity_pending_text').textContent = jsT(trip.pending_seats === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.pending_seats });
-        } else {
-            pendingRow.hidden = true;
-        }
-
-        if (modalMode === 'waitlist') {
-            document.getElementById('intercity_total_label').textContent = jsT('ic_price_per_seat_if_opens');
-            document.getElementById('intercity_total_amount').textContent = perSeat.toLocaleString() + ' RWF';
-        } else {
-            document.getElementById('intercity_total_label').textContent = seats === 1 ? jsT('ic_total') : jsT('ic_total_n_seats', { n: seats });
-            document.getElementById('intercity_total_amount').textContent = (perSeat * seats).toLocaleString() + ' RWF';
-        }
+        document.getElementById('intercity_total_label').textContent = seats === 1 ? jsT('ic_total') : jsT('ic_total_n_seats', { n: seats });
+        document.getElementById('intercity_total_amount').textContent = (perSeat * seats).toLocaleString() + ' RWF';
 
         var max = parseInt(document.getElementById('intercity_seat_count').max, 10) || MAX_SEATS_PER_BOOKING;
         var errorEl = document.getElementById('intercity_seat_count_error');
         var typedValue = parseInt(document.getElementById('intercity_seat_count').value, 10);
         if (typedValue && typedValue > max) {
-            errorEl.textContent = jsT(modalMode === 'waitlist' ? 'ic_only_n_seats_waitlist' : 'ic_only_n_seats_available', { max: max });
+            errorEl.textContent = jsT('ic_only_n_seats_available', { max: max });
             errorEl.hidden = false;
         } else {
             errorEl.hidden = true;
@@ -237,22 +203,16 @@
         var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
         var when = formatWhen(departure);
 
-        modalMode = (trip.seats_available === 0 && (trip.pending_seats || 0) > 0) ? 'waitlist' : 'book';
-
         document.getElementById('intercity-booking-form').reset();
         document.getElementById('intercity_phone_error').hidden = true;
         document.getElementById('intercity_seat_count_error').hidden = true;
         document.getElementById('intercity_trip_id').value = tripId;
         document.getElementById('intercity_dropoff_text').textContent = trip.dropoff_location;
         document.getElementById('intercity-modal-subtitle').textContent = jsT('ic_modal_subtitle', { origin: trip.origin, destination: trip.destination, when: when });
-        document.getElementById('intercity-modal-title').textContent = modalMode === 'waitlist' ? jsT('ic_btn_join_waitlist') : jsT('ic_modal_title_book');
-        document.getElementById('intercity_payment_option_row').hidden = modalMode === 'waitlist';
-        document.querySelector('#intercity-booking-form .submit-btn-enhanced').textContent =
-            modalMode === 'waitlist' ? jsT('ic_btn_join_waitlist') : jsT('ic_modal_submit_book');
+        document.getElementById('intercity-modal-title').textContent = jsT('ic_modal_title_book');
+        document.querySelector('#intercity-booking-form .submit-btn-enhanced').textContent = jsT('ic_modal_submit_book');
 
-        var maxSeats = modalMode === 'waitlist'
-            ? MAX_SEATS_PER_BOOKING
-            : Math.max(1, Math.min(trip.seats_available, MAX_SEATS_PER_BOOKING));
+        var maxSeats = Math.max(1, Math.min(trip.seats_available, MAX_SEATS_PER_BOOKING));
         var seatField = document.getElementById('intercity_seat_count');
         seatField.max = maxSeats;
         seatField.value = '1';
@@ -338,16 +298,16 @@
         // lands right at the edge is still caught instead of the UI giving
         // up a moment too early.
         //
-        // payment_deadline_at is computed server-side from PHP's time()
-        // (i.e. true UTC, formatted with no timezone marker) - parsing it
-        // as "T...", with no "Z", makes the browser read it as LOCAL time
-        // instead. For a Rwanda browser (UTC+2) that misreads the deadline
-        // as ~2 hours earlier than it really is, so giveUpAt was already in
-        // the past on the very first tick - the 30s USSD hint below never
-        // got a chance to show before the "still waiting" message took
-        // over. The "Z" forces correct UTC parsing.
+        // payment_deadline_at is computed server-side from PHP's time(),
+        // which the API now pins to Africa/Kigali (see safeLine-api's
+        // index.php date_default_timezone_set) - so this string is already
+        // Kigali-local, same as departure_datetime elsewhere in this file.
+        // Parsing it as "T..." with no "Z" reads it as the browser's local
+        // time, which is correct for a Rwanda visitor. (Before that backend
+        // fix this field was true UTC and needed a "Z" here to parse
+        // correctly - that's no longer the case.)
         var giveUpAt = deadlineAtIso
-            ? new Date(deadlineAtIso.replace(' ', 'T') + 'Z').getTime() + 20000
+            ? new Date(deadlineAtIso.replace(' ', 'T')).getTime() + 20000
             : Date.now() + 5 * 60000 + 20000;
 
         // If the MoMo prompt never actually reached the phone (missed push,
@@ -441,7 +401,7 @@
     }
 
     document.addEventListener('click', function (e) {
-        var bookBtn = e.target.closest('.intercity-book-btn, .intercity-waitlist-btn');
+        var bookBtn = e.target.closest('.intercity-book-btn');
         if (bookBtn) {
             var card = bookBtn.closest('[data-trip-id]');
             openModal(parseInt(card.dataset.tripId, 10));
@@ -522,18 +482,13 @@
         var phoneNumber = '+250' + localPhone;
         var seatCount = clampedSeatCount();
 
-        var endpoint = modalMode === 'waitlist'
-            ? SAFELINE_API_BASE + '/intercity-trips/' + tripId + '/waitlist'
-            : SAFELINE_API_BASE + '/intercity-bookings';
+        var endpoint = SAFELINE_API_BASE + '/intercity-bookings';
         // language: the backend otherwise falls back to the browser/OS Accept-Language
         // header, which doesn't reflect this site's own language switch.
-        var body = modalMode === 'waitlist'
-            ? { pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber, seat_count: seatCount, language: SAFELINE_LANG }
-            : {
-                trip_id: tripId, pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
-                seat_count: seatCount, pay_later: document.getElementById('intercity_payment_option').value === 'later',
-                language: SAFELINE_LANG,
-            };
+        var body = {
+            trip_id: tripId, pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
+            seat_count: seatCount, language: SAFELINE_LANG,
+        };
 
         fetch(endpoint, {
             method: 'POST',
@@ -550,7 +505,7 @@
                     // unexpected 500, etc.) falls back to the generic text, since
                     // the backend's own raw message is never translated.
                     var code = res.data && res.data.code;
-                    var errTitle = modalMode === 'waitlist' ? jsT('ic_err_waitlist_title') : jsT('ic_err_booking_title');
+                    var errTitle = jsT('ic_err_booking_title');
                     var errText = code && SAFELINE_I18N['ic_err_code_' + code]
                         ? jsT('ic_err_code_' + code, res.data)
                         : jsT('ic_err_please_try_again');
@@ -573,15 +528,8 @@
                 // modal and confirms via a toast instead of leaving the form
                 // sitting open with an inline banner.
                 closeModal();
-                if (modalMode === 'waitlist') {
-                    showToast(jsT('ic_toast_waitlisted_title'), jsT('ic_toast_waitlisted_text'));
-                } else if (res.data.data.payment_deadline_at) {
-                    var heldSeats = res.data.data.seat_count || 1;
-                    showToast(jsT(heldSeats === 1 ? 'ic_toast_held_title_one' : 'ic_toast_held_title_many', { n: heldSeats }), jsT('ic_toast_held_text', { code: res.data.data.booking_code }));
-                } else {
-                    var bookedSeats = res.data.data.seat_count || 1;
-                    showToast(jsT(bookedSeats === 1 ? 'ic_toast_booked_title_one' : 'ic_toast_booked_title_many', { n: bookedSeats }), jsT('ic_toast_booked_text', { code: res.data.data.booking_code }));
-                }
+                var bookedSeats = res.data.data.seat_count || 1;
+                showToast(jsT(bookedSeats === 1 ? 'ic_toast_booked_title_one' : 'ic_toast_booked_title_many', { n: bookedSeats }), jsT('ic_toast_booked_text', { code: res.data.data.booking_code }));
                 loadTrips(0);
             })
             .catch(function () {

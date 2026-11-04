@@ -3120,7 +3120,7 @@ section:has(+ .cta-one) {
     .form-banner__text, .form-banner__actions { font-size: 13.5px; }
 }
 
-/* Toast shown after the intercity booking/waitlist modal closes on success -
+/* Toast shown after the intercity booking modal closes on success -
    same colors/icon as .form-banner.is-success, but fixed over the page
    instead of inline in a form, since the form is gone by the time this shows. */
 .intercity-toast {

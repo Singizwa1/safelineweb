@@ -275,7 +275,6 @@ include 'includes/header.php';
                                         <div class="fare-display-card" id="intercity_fare_display" aria-live="polite">
                                             <div class="fare-info-row"><span class="fare-label"><?php te('home_intercity_dropoff'); ?></span><span class="fare-value" id="intercity_dropoff_text"></span></div>
                                             <div class="fare-info-row"><span class="fare-label"><?php te('home_intercity_price_per_seat'); ?></span><span class="fare-value" id="intercity_price_amount">0</span></div>
-                                            <div class="fare-info-row" id="intercity_pending_row" hidden><span class="fare-label"><?php te('home_intercity_held'); ?></span><span class="fare-value" id="intercity_pending_text"></span></div>
                                             <div class="fare-info-row"><span class="fare-label" id="intercity_total_label"><?php te('home_intercity_total'); ?></span><span class="fare-value fare-total" id="intercity_total_amount">0 RWF</span></div>
                                         </div>
                                         <div class="form-row" id="intercity_pickup_row" hidden>
@@ -289,15 +288,6 @@ include 'includes/header.php';
                                                 <label for="intercity_seat_count"><?php te('home_intercity_seat_count'); ?></label>
                                                 <input class="form-control-enhanced" id="intercity_seat_count" name="seat_count" type="number" inputmode="numeric" min="1" value="1" required>
                                                 <p class="form-error-text" id="intercity_seat_count_error" hidden></p>
-                                            </div>
-                                        </div>
-                                        <div class="form-row" id="intercity_payment_option_row">
-                                            <div class="form-group-enhanced">
-                                                <label for="intercity_payment_option"><?php te('home_intercity_payment'); ?></label>
-                                                <select class="form-control-enhanced" id="intercity_payment_option" name="payment_option">
-                                                    <option value="now"><?php te('home_intercity_pay_now'); ?></option>
-                                                    <option value="later"><?php te('home_intercity_pay_later'); ?></option>
-                                                </select>
                                             </div>
                                         </div>
                                         <div class="form-row">
