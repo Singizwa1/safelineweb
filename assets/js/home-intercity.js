@@ -205,12 +205,18 @@
 
         document.getElementById('intercity-booking-form').reset();
         document.getElementById('intercity_phone_error').hidden = true;
+        document.getElementById('intercity_payment_phone_error').hidden = true;
         document.getElementById('intercity_seat_count_error').hidden = true;
+        // The form reset above clears the payment phone field, so its
+        // network picker reverts to its MTN default here too.
+        selectNetwork('intercity_payment_phone_network', 'mtn');
         document.getElementById('intercity_trip_id').value = tripId;
         document.getElementById('intercity_dropoff_text').textContent = trip.dropoff_location;
         document.getElementById('intercity-modal-subtitle').textContent = jsT('ic_modal_subtitle', { origin: trip.origin, destination: trip.destination, when: when });
         document.getElementById('intercity-modal-title').textContent = jsT('ic_modal_title_book');
-        document.querySelector('#intercity-booking-form .submit-btn-enhanced').textContent = jsT('ic_modal_submit_book');
+        document.getElementById('intercity_continue_btn').textContent = jsT('ic_btn_continue');
+        document.getElementById('intercity_pay_btn').textContent = jsT('ic_modal_submit_book');
+        showDetailsStep();
 
         var maxSeats = Math.max(1, Math.min(trip.seats_available, MAX_SEATS_PER_BOOKING));
         var seatField = document.getElementById('intercity_seat_count');
@@ -232,6 +238,33 @@
 
     function closeModal() {
         document.getElementById('intercity-modal').classList.remove('active');
+    }
+
+    /** Booking has two steps: who's riding (name/contact phone/seats), then
+     * who's paying (a phone number that gets the MoMo/Airtel prompt - often
+     * the same number, but not always, e.g. someone booking on a guest's
+     * behalf while the guest pays themselves). Nothing is submitted to the
+     * backend until the payment step itself is confirmed. */
+    function showPaymentStep() {
+        document.getElementById('intercity_step_details').hidden = true;
+        document.getElementById('intercity_step_payment').hidden = false;
+        document.getElementById('intercity-modal-title').textContent = jsT('ic_payment_step_title');
+        // Prefilled with the contact number as a convenience - most of the
+        // time it's the same phone, but it stays fully editable. The
+        // network picker itself only lives on this step (the contact field
+        // isn't charged, so it never needed one) and keeps its own MTN
+        // default regardless of what was typed for the contact number.
+        var paymentField = document.getElementById('intercity_payment_phone_number');
+        if (paymentField.value === '') {
+            paymentField.value = document.getElementById('intercity_phone_number').value.trim();
+        }
+        paymentField.focus();
+    }
+
+    function showDetailsStep() {
+        document.getElementById('intercity_step_payment').hidden = true;
+        document.getElementById('intercity_step_details').hidden = false;
+        document.getElementById('intercity-modal-title').textContent = jsT('ic_modal_title_book');
     }
 
     /** Success confirmation shown after the modal has already closed - unlike
@@ -413,25 +446,68 @@
                 closeModal();
             }
         }
+        if (e.target.closest('#intercity_continue_btn')) {
+            hideBanner();
+            var nameField = document.getElementById('intercity_guest_name');
+            var contactField = document.getElementById('intercity_phone_number');
+            var contactOk = validatePhoneField('intercity_phone_number', 'intercity_phone_error', true);
+            if (!nameField.value.trim()) {
+                nameField.focus();
+                return;
+            }
+            if (!contactOk) {
+                contactField.focus();
+                return;
+            }
+            showPaymentStep();
+        }
+        if (e.target.closest('#intercity_back_btn')) {
+            hideBanner();
+            showDetailsStep();
+        }
+
+        // The client picks MTN or Airtel up front, before typing their
+        // number - ITECPAY detects the operator from the phone prefix
+        // itself (see ItecPayGateway::operatorFor() server-side), so the
+        // picked network is what the typed digits are then checked
+        // against, not a hint computed from them.
+        var pill = e.target.closest('.network-toggle__pill');
+        if (pill) {
+            var toggle = pill.closest('.network-toggle');
+            var network = pill.dataset.network;
+            selectNetwork(toggle.id, network);
+            var fieldEl = toggle.parentElement.querySelector('.phone-input-group__field');
+            if (fieldEl) {
+                var fieldCfg = PHONE_FIELDS[fieldEl.id];
+                if (fieldCfg) validatePhoneField(fieldEl.id, fieldCfg.error, false, network);
+            }
+        }
     });
 
-    
-    function localPhoneError(value) {
+
+    function localPhoneError(value, network) {
         var v = (value || '').trim();
         if (v === '') return jsT('ic_phone_required');
         if (!/^[0-9]+$/.test(v)) return jsT('ic_phone_numbers_only');
         if (v.length < 9) return jsT('ic_phone_too_short');
         if (v.length > 9) return jsT('ic_phone_too_long');
         if (v.charAt(0) !== '7') return jsT('ic_phone_must_start_7');
+        var prefix = v.slice(0, 2);
+        if (network === 'airtel' && prefix !== '72' && prefix !== '73') return jsT('ic_phone_wrong_network_airtel');
+        if (network === 'mtn' && prefix !== '78' && prefix !== '79') return jsT('ic_phone_wrong_network_mtn');
         return null;
     }
 
-    function validatePhoneField(showIfEmpty) {
-        var phoneField = document.getElementById('intercity_phone_number');
-        var phoneError = document.getElementById('intercity_phone_error');
+    /** Shared by the contact-phone field (step 1) and the payment-phone
+     * field (step 2) - same 9-digit local-number rules either way, checked
+     * against whichever network (MTN/Airtel) is currently picked for that
+     * field. */
+    function validatePhoneField(fieldId, errorId, showIfEmpty, network) {
+        var phoneField = document.getElementById(fieldId);
+        var phoneError = document.getElementById(errorId);
         if (!phoneField || !phoneError) return true;
         var value = phoneField.value.trim();
-        var error = localPhoneError(value);
+        var error = localPhoneError(value, network);
         if (error && (value !== '' || showIfEmpty)) {
             phoneError.textContent = error;
             phoneError.hidden = false;
@@ -441,17 +517,41 @@
         return !error;
     }
 
-    // Live validation as the user types/leaves the field, same as the app
-    // login screen's AutovalidateMode.onUserInteraction - errors show up
-    // immediately instead of waiting for submit.
+    /** Which network (MTN/Airtel) is currently picked for a given phone
+     * field's toggle - 'mtn' until the client taps Airtel. */
+    function selectedNetwork(hintId) {
+        var toggle = document.getElementById(hintId);
+        return (toggle && toggle.dataset.selected) || 'mtn';
+    }
+
+    function selectNetwork(hintId, network) {
+        var toggle = document.getElementById(hintId);
+        if (!toggle) return;
+        toggle.dataset.selected = network;
+        toggle.querySelectorAll('.network-toggle__pill').forEach(function (p) {
+            p.classList.toggle('is-active', p.dataset.network === network);
+        });
+    }
+
+    // Live validation as the user types/leaves either phone field, same as
+    // the app login screen's AutovalidateMode.onUserInteraction - errors
+    // show up immediately instead of waiting for submit. Only the payment
+    // field has a network picker (hint) - it's the only one that's
+    // actually charged, so it's the only one checked against a network.
+    var PHONE_FIELDS = {
+        intercity_phone_number: { error: 'intercity_phone_error' },
+        intercity_payment_phone_number: { error: 'intercity_payment_phone_error', hint: 'intercity_payment_phone_network' },
+    };
     document.addEventListener('input', function (e) {
-        if (e.target.id !== 'intercity_phone_number') return;
+        var cfg = PHONE_FIELDS[e.target.id];
+        if (!cfg) return;
         e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 9);
-        validatePhoneField(false);
+        validatePhoneField(e.target.id, cfg.error, false, cfg.hint ? selectedNetwork(cfg.hint) : undefined);
     });
     document.addEventListener('blur', function (e) {
-        if (e.target.id !== 'intercity_phone_number') return;
-        validatePhoneField(true);
+        var cfg = PHONE_FIELDS[e.target.id];
+        if (!cfg) return;
+        validatePhoneField(e.target.id, cfg.error, true, cfg.hint ? selectedNetwork(cfg.hint) : undefined);
     }, true);
 
     document.addEventListener('input', function (e) {
@@ -464,14 +564,14 @@
         e.preventDefault();
         hideBanner();
 
-        var phoneField = document.getElementById('intercity_phone_number');
-        var localPhone = phoneField.value.trim();
-        if (!validatePhoneField(true)) {
-            phoneField.focus();
+        var paymentField = document.getElementById('intercity_payment_phone_number');
+        var localPaymentPhone = paymentField.value.trim();
+        if (!validatePhoneField('intercity_payment_phone_number', 'intercity_payment_phone_error', true, selectedNetwork('intercity_payment_phone_network'))) {
+            paymentField.focus();
             return;
         }
 
-        var submitBtn = e.target.querySelector('.submit-btn-enhanced');
+        var submitBtn = document.getElementById('intercity_pay_btn');
         submitBtn.disabled = true;
 
         var tripId = parseInt(document.getElementById('intercity_trip_id').value, 10);
@@ -479,7 +579,8 @@
             ? parseInt(document.getElementById('intercity_pickup_point').value, 10)
             : null;
         var guestName = document.getElementById('intercity_guest_name').value.trim();
-        var phoneNumber = '+250' + localPhone;
+        var phoneNumber = '+250' + document.getElementById('intercity_phone_number').value.trim();
+        var paymentPhoneNumber = '+250' + localPaymentPhone;
         var seatCount = clampedSeatCount();
 
         var endpoint = SAFELINE_API_BASE + '/intercity-bookings';
@@ -487,7 +588,7 @@
         // header, which doesn't reflect this site's own language switch.
         var body = {
             trip_id: tripId, pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
-            seat_count: seatCount, language: SAFELINE_LANG,
+            payment_phone_number: paymentPhoneNumber, seat_count: seatCount, language: SAFELINE_LANG,
         };
 
         fetch(endpoint, {

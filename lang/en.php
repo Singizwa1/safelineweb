@@ -580,6 +580,16 @@ return [
     'ic_phone_too_short' => 'Too short - enter 9 digits',
     'ic_phone_too_long' => 'Too long - enter exactly 9 digits',
     'ic_phone_must_start_7' => 'Should start with 7, not 0 (the +250 is already added for you)',
+    'ic_network_mtn' => 'MTN MoMo',
+    'ic_network_airtel' => 'Airtel Money',
+    'ic_phone_wrong_network_mtn' => 'MTN numbers start with 078 or 079',
+    'ic_phone_wrong_network_airtel' => 'Airtel numbers start with 072 or 073',
+    'ic_btn_continue' => 'Continue',
+    'ic_btn_back' => 'Back',
+    'ic_payment_step_title' => 'Confirm Payment',
+    'ic_payment_step_intro' => 'Enter the phone number you\'ll pay with. A payment prompt will be sent to it.',
+    'ic_payment_phone_label' => 'Phone number to pay with',
+    'ic_payment_phone_help' => 'Usually the same number, unless someone else is paying for this seat',
 
     // Error codes from the backend (see Response::error's 'code' extra in
     // IntercityBookingController) - mapped here instead of showing its raw

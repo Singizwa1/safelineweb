@@ -24,6 +24,15 @@ include 'includes/header.php';
 .phone-input-group__prefix { display: flex; align-items: center; padding: 0 14px; border: 1px solid rgba(0, 24, 50, 0.12); border-right: none; border-radius: 12px 0 0 12px; background: rgba(0, 24, 50, 0.04); color: #001832; font-weight: 600; font-size: 15px; }
 .phone-input-group__field { border-radius: 0 12px 12px 0 !important; }
 .form-error-text { color: #C62828; font-size: 12.5px; margin: 6px 0 0; }
+.network-toggle { display: flex; gap: 10px; margin: 0 0 8px; }
+.network-toggle__pill { display: flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: 1.5px solid; background: #fff; cursor: pointer; transition: all 0.15s ease; }
+.network-toggle__pill[data-network="mtn"] { color: #C99A00; border-color: #FFCC08; }
+.network-toggle__pill[data-network="airtel"] { color: #ED1C24; border-color: #ED1C24; }
+.network-toggle__pill.is-active[data-network="mtn"] { background: #FFCC08; color: #11161F; }
+.network-toggle__pill.is-active[data-network="airtel"] { background: #ED1C24; color: #fff; }
+.form-help-text { color: var(--color-text-secondary, #5A6577); font-size: 12.5px; margin: 6px 0 0; }
+.payment-step-intro { color: #001832; font-size: 14px; margin: 0 0 16px; }
+.booking-back-btn { display: block; width: 100%; background: none; border: none; color: var(--color-text-secondary, #5A6577); font-size: 14px; font-weight: 600; text-align: center; padding: 12px 0 0; cursor: pointer; }
 </style>
 
     <!-- HERO: full-bleed fleet photos that slide (autoplay, arrows, swipe,
@@ -277,35 +286,58 @@ include 'includes/header.php';
                                             <div class="fare-info-row"><span class="fare-label"><?php te('home_intercity_price_per_seat'); ?></span><span class="fare-value" id="intercity_price_amount">0</span></div>
                                             <div class="fare-info-row"><span class="fare-label" id="intercity_total_label"><?php te('home_intercity_total'); ?></span><span class="fare-value fare-total" id="intercity_total_amount">0 RWF</span></div>
                                         </div>
-                                        <div class="form-row" id="intercity_pickup_row" hidden>
-                                            <div class="form-group-enhanced">
-                                                <label for="intercity_pickup_point"><?php te('home_intercity_pickup_point'); ?></label>
-                                                <select class="form-control-enhanced" id="intercity_pickup_point" name="pickup_point_id"></select>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group-enhanced">
-                                                <label for="intercity_seat_count"><?php te('home_intercity_seat_count'); ?></label>
-                                                <input class="form-control-enhanced" id="intercity_seat_count" name="seat_count" type="number" inputmode="numeric" min="1" value="1" required>
-                                                <p class="form-error-text" id="intercity_seat_count_error" hidden></p>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group-enhanced">
-                                                <label for="intercity_guest_name"><?php te('home_intercity_your_name'); ?></label>
-                                                <input class="form-control-enhanced" id="intercity_guest_name" name="guest_name" type="text" autocomplete="name" placeholder="<?php te('home_intercity_name_placeholder'); ?>" required>
-                                            </div>
-                                            <div class="form-group-enhanced">
-                                                <label for="intercity_phone_number"><?php te('contact_field_phone'); ?></label>
-                                                <div class="phone-input-group">
-                                                    <span class="phone-input-group__prefix">+250</span>
-                                                    <input class="form-control-enhanced phone-input-group__field" id="intercity_phone_number" name="phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="788123456" required>
+                                        <div id="intercity_step_details">
+                                            <div class="form-row" id="intercity_pickup_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_pickup_point"><?php te('home_intercity_pickup_point'); ?></label>
+                                                    <select class="form-control-enhanced" id="intercity_pickup_point" name="pickup_point_id"></select>
                                                 </div>
-                                                <p class="form-error-text" id="intercity_phone_error" hidden><?php te('home_intercity_phone_error'); ?></p>
                                             </div>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_seat_count"><?php te('home_intercity_seat_count'); ?></label>
+                                                    <input class="form-control-enhanced" id="intercity_seat_count" name="seat_count" type="number" inputmode="numeric" min="1" value="1" required>
+                                                    <p class="form-error-text" id="intercity_seat_count_error" hidden></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_guest_name"><?php te('home_intercity_your_name'); ?></label>
+                                                    <input class="form-control-enhanced" id="intercity_guest_name" name="guest_name" type="text" autocomplete="name" placeholder="<?php te('home_intercity_name_placeholder'); ?>" required>
+                                                </div>
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_phone_number"><?php te('contact_field_phone'); ?></label>
+                                                    <div class="phone-input-group">
+                                                        <span class="phone-input-group__prefix">+250</span>
+                                                        <input class="form-control-enhanced phone-input-group__field" id="intercity_phone_number" name="phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="788123456" required>
+                                                    </div>
+                                                    <p class="form-error-text" id="intercity_phone_error" hidden><?php te('home_intercity_phone_error'); ?></p>
+                                                </div>
+                                            </div>
+                                            <button class="submit-btn-enhanced" type="button" id="intercity_continue_btn"><?php te('home_intercity_submit'); ?></button>
+                                            <p class="booking-assurance"><?php te('home_intercity_assurance'); ?></p>
                                         </div>
-                                        <button class="submit-btn-enhanced" type="submit"><?php te('home_intercity_submit'); ?></button>
-                                        <p class="booking-assurance"><?php te('home_intercity_assurance'); ?></p>
+                                        <div id="intercity_step_payment" hidden>
+                                            <p class="payment-step-intro"><?php te('ic_payment_step_intro'); ?></p>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_payment_phone_number"><?php te('ic_payment_phone_label'); ?></label>
+                                                    <div class="network-toggle" id="intercity_payment_phone_network">
+                                                        <button type="button" class="network-toggle__pill is-active" data-network="mtn"><i class="fas fa-credit-card" aria-hidden="true"></i><?php te('ic_network_mtn'); ?></button>
+                                                        <button type="button" class="network-toggle__pill" data-network="airtel"><i class="fas fa-credit-card" aria-hidden="true"></i><?php te('ic_network_airtel'); ?></button>
+                                                    </div>
+                                                    <div class="phone-input-group">
+                                                        <span class="phone-input-group__prefix">+250</span>
+                                                        <input class="form-control-enhanced phone-input-group__field" id="intercity_payment_phone_number" name="payment_phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="788123456" required>
+                                                    </div>
+                                                    <p class="form-help-text"><?php te('ic_payment_phone_help'); ?></p>
+                                                    <p class="form-error-text" id="intercity_payment_phone_error" hidden><?php te('home_intercity_phone_error'); ?></p>
+                                                </div>
+                                            </div>
+                                            <button class="submit-btn-enhanced" type="submit" id="intercity_pay_btn"><?php te('home_intercity_submit'); ?></button>
+                                            <button class="booking-back-btn" type="button" id="intercity_back_btn"><?php te('ic_btn_back'); ?></button>
+                                            <p class="booking-assurance"><?php te('home_intercity_assurance'); ?></p>
+                                        </div>
                                     </form>
                                 </div>
                             </div>

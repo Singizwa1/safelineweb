@@ -487,6 +487,16 @@ return [
     'ic_phone_too_short' => 'Ni mike cyane - andika imibare 9',
     'ic_phone_too_long' => 'Ni nyinshi cyane - andika imibare 9 gusa',
     'ic_phone_must_start_7' => 'Igomba gutangira na 7, ntabwo ari 0 (+250 yarongeweho ubwayo)',
+    'ic_network_mtn' => 'MTN MoMo',
+    'ic_network_airtel' => 'Airtel Money',
+    'ic_phone_wrong_network_mtn' => 'Numero za MTN zitangira na 078 cyangwa 079',
+    'ic_phone_wrong_network_airtel' => 'Numero za Airtel zitangira na 072 cyangwa 073',
+    'ic_btn_continue' => 'Komeza',
+    'ic_btn_back' => 'Subira inyuma',
+    'ic_payment_step_title' => 'Emeza Kwishyura',
+    'ic_payment_step_intro' => 'Andika nimero ya telefoni uzishyuza. Ubutumwa bwo kwishyura buzoherezwa kuri yo.',
+    'ic_payment_phone_label' => 'Nimero ya telefoni uzishyuza',
+    'ic_payment_phone_help' => 'Akenshi ni nimero imwe, keretse hari uwundi uzishyura uyu mwanya',
 
     // Error codes from the backend - see en.php for context.
     'ic_err_code_invalid_seat_count' => 'Hitamo umubare w\'imyanya ukwiye.',
