@@ -48,21 +48,30 @@ include 'includes/header.php';
             <div class="sl-hero__shade" aria-hidden="true"></div>
 
             <div class="container sl-hero__inner">
-                <div class="sl-hero__copy">
-                    <h1 class="sl-hero__title"><?php te('home_hero_title_a'); ?> <em><?php te('home_hero_title_b'); ?></em></h1>
-                    <p class="sl-hero__lead"><?php te('home_hero_lead'); ?></p>
-                    <div class="sl-hero__actions">
-                        <a href="#download-app" class="js-ride-cta cityride-btn cityride-btn--primary sl-hero__btn"><span><?php te('primary_cta_text'); ?></span></a>
-                        <a href="#services" class="sl-hero__link"><?php te('home_see_services'); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                <div class="sl-hero__main">
+                    <div class="sl-hero__copy">
+                        <h1 class="sl-hero__title"><?php te('home_hero_title_a'); ?> <em><?php te('home_hero_title_b'); ?></em></h1>
+                        <p class="sl-hero__lead"><?php te('home_hero_lead'); ?></p>
+                        <div class="sl-hero__actions">
+                            <a href="#download-app" class="js-ride-cta cityride-btn cityride-btn--primary sl-hero__btn"><span><?php te('primary_cta_text'); ?></span></a>
+                            <a href="#services" class="sl-hero__link"><?php te('home_see_services'); ?> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="sl-hero__controls">
+                        <div class="sl-hero__nav">
+                            <button type="button" class="sl-hero__arrow" data-step="-1" aria-label="<?php te('home_hero_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                            <button type="button" class="sl-hero__arrow" data-step="1" aria-label="<?php te('home_hero_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="sl-hero__controls">
-                    <div class="sl-hero__nav">
-                        <button type="button" class="sl-hero__arrow" data-step="-1" aria-label="<?php te('home_hero_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                        <button type="button" class="sl-hero__arrow" data-step="1" aria-label="<?php te('home_hero_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-                    </div>
-                </div>
+                <!-- Static (non-sliding) Private VIP panel - the single
+                     next-departing private car, independent of the shared
+                     trips rotating on the left. Populated/shown by
+                     renderPrivateHeroPanel() in home-intercity.js; stays
+                     hidden while no private VIP trip is published. -->
+                <div class="sl-hero__private" id="intercity-private-hero" hidden></div>
             </div>
         </section>
 
@@ -293,13 +302,15 @@ include 'includes/header.php';
                                                     <select class="form-control-enhanced" id="intercity_pickup_point" name="pickup_point_id"></select>
                                                 </div>
                                             </div>
-                                            <div class="form-row">
+                                            <p class="payment-step-intro" id="intercity_private_pickup_note" hidden></p>
+                                            <div class="form-row" id="intercity_seat_count_row">
                                                 <div class="form-group-enhanced">
                                                     <label for="intercity_seat_count"><?php te('home_intercity_seat_count'); ?></label>
                                                     <input class="form-control-enhanced" id="intercity_seat_count" name="seat_count" type="number" inputmode="numeric" min="1" value="1" required>
                                                     <p class="form-error-text" id="intercity_seat_count_error" hidden></p>
                                                 </div>
                                             </div>
+                                            <p class="payment-step-intro" id="intercity_private_seats_note" hidden></p>
                                             <div class="form-row">
                                                 <div class="form-group-enhanced">
                                                     <label for="intercity_guest_name"><?php te('home_intercity_your_name'); ?></label>

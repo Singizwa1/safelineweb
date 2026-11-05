@@ -24,16 +24,27 @@
                 var trips = (result && result.success && result.data) || [];
                 trips.forEach(function (t) { tripsById[t.id] = t; });
 
+                // Shared VIP keeps the sliding hero carousel (left); Private
+                // VIP gets its own static slot (right) - see
+                // renderPrivateHeroPanel(). The full list below the hero
+                // still shows every trip of both kinds.
+                var sharedTrips = trips.filter(function (t) { return t.trip_type !== 'private_vip'; });
+                var privateTrips = trips.filter(function (t) { return t.trip_type === 'private_vip'; });
+
                 var section = document.getElementById('intercity');
                 var list = document.getElementById('intercity-trip-list');
                 section.hidden = !trips.length;
                 if (trips.length) list.innerHTML = trips.map(renderCard).join('');
 
                 updateRideCtas(trips.length > 0);
-                if (trips.length && !heroInjected) {
-                    injectHeroSlides(trips);
+                // Only when there's at least one shared trip to show - an
+                // empty array here would wipe the hero's default photo
+                // slides down to nothing instead of leaving them alone.
+                if (sharedTrips.length && !heroInjected) {
+                    injectHeroSlides(sharedTrips);
                     heroInjected = true;
                 }
+                renderPrivateHeroPanel(privateTrips);
             })
             .catch(function () {
                 if (attempt < 2) setTimeout(function () { loadTrips(attempt + 1); }, 1200);
@@ -61,6 +72,34 @@
      * the first one is applied immediately so the hero never shows a
      * trip photo under the generic default copy, even for the instant
      * before the first autoplay tick. */
+    /** Shows the single soonest-departing published Private VIP car in the
+     * static (non-sliding) right-hand hero panel - independent of the
+     * shared-trip rotation on the left, see renderPrivateHeroPanel()'s own
+     * call site. Hidden entirely when no private trip is currently
+     * published (trips is already departure-sorted, so [0] is next up). */
+    function renderPrivateHeroPanel(privateTrips) {
+        var panel = document.getElementById('intercity-private-hero');
+        if (!panel) return;
+        if (!privateTrips.length) {
+            panel.hidden = true;
+            panel.innerHTML = '';
+            return;
+        }
+        var trip = privateTrips[0];
+        var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
+        var when = formatWhen(departure);
+        var price = parseFloat(trip.total_price).toLocaleString();
+
+        panel.innerHTML =
+            '<span class="sl-hero__private-badge">' + jsT('ic_private_hero_title') + '</span>' +
+            '<h3 class="sl-hero__private-route">' + trip.origin + ' <i class="fas fa-arrow-right" aria-hidden="true"></i> ' + trip.destination + '</h3>' +
+            '<p class="sl-hero__private-meta">' + jsT('ic_departs', { when: when }) + '</p>' +
+            '<p class="sl-hero__private-meta">' + jsT('ic_private_seats_note', { n: trip.total_seats }) + '</p>' +
+            '<p class="sl-hero__private-price">' + price + ' RWF <small>' + jsT('ic_per_car_suffix') + '</small></p>' +
+            '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn" data-trip-id="' + trip.id + '">' + jsT('ic_private_hero_cta') + '</button>';
+        panel.hidden = false;
+    }
+
     function injectHeroSlides(trips) {
         var slidesBox = document.querySelector('.sl-hero__slides');
         var copyBox = document.querySelector('.sl-hero__copy');
@@ -110,15 +149,21 @@
     }
 
     function renderCard(trip) {
+        var isPrivate = trip.trip_type === 'private_vip';
         var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
         var when = formatWhen(departure);
-        var price = parseFloat(trip.price_per_seat).toLocaleString();
+        var price = isPrivate
+            ? parseFloat(trip.total_price).toLocaleString()
+            : parseFloat(trip.price_per_seat).toLocaleString();
         var pickupPoints = trip.pickup_locations || [];
         var pickupLine = pickupPoints.length
             ? '<li><i class="fas fa-map-marker-alt"></i>' + jsT('ic_pickup', { places: pickupPoints.map(function (p) { return p.location; }).join(', ') }) + '</li>'
             : '';
-        var badgeText = jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
-        var buttonHtml = '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' + jsT('ic_btn_book_seat') + '</button>';
+        var badgeText = isPrivate
+            ? jsT('ic_badge_private_vip', { n: trip.total_seats })
+            : jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
+        var buttonHtml = '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' +
+            (isPrivate ? jsT('ic_btn_book_private') : jsT('ic_btn_book_seat')) + '</button>';
         // Parcel delivery lives on the same trip card, not a separate
         // section - sending a parcel always rides on a published trip, so
         // it only makes sense in context of that trip's own card. There's
@@ -143,7 +188,7 @@
             '</ul>' +
             parcelLine +
             '<div class="intercity-trip-card__footer">' +
-            '<span class="intercity-trip-card__price">' + price + ' RWF<small>' + jsT('ic_per_seat_suffix') + '</small></span>' +
+            '<span class="intercity-trip-card__price">' + price + ' RWF<small>' + jsT(isPrivate ? 'ic_per_car_suffix' : 'ic_per_seat_suffix') + '</small></span>' +
             buttonHtml +
             '</div></div></div>';
     }
@@ -179,6 +224,18 @@
     function updateIntercityTotal() {
         var trip = tripsById[parseInt(document.getElementById('intercity_trip_id').value, 10)];
         if (!trip) return;
+
+        // Private VIP has no per-seat purchase - one flat price for the
+        // whole car, so there's nothing to multiply by a seat count.
+        if (trip.trip_type === 'private_vip') {
+            var total = parseFloat(trip.total_price);
+            document.getElementById('intercity_price_amount').textContent = total.toLocaleString() + ' RWF';
+            document.getElementById('intercity_total_label').textContent = jsT('ic_total_whole_car');
+            document.getElementById('intercity_total_amount').textContent = total.toLocaleString() + ' RWF';
+            document.getElementById('intercity_seat_count_error').hidden = true;
+            return;
+        }
+
         var seats = clampedSeatCount();
         var perSeat = parseFloat(trip.price_per_seat);
         document.getElementById('intercity_price_amount').textContent = perSeat.toLocaleString() + ' RWF';
@@ -213,11 +270,20 @@
         document.getElementById('intercity_trip_id').value = tripId;
         document.getElementById('intercity_dropoff_text').textContent = trip.dropoff_location;
         document.getElementById('intercity-modal-subtitle').textContent = jsT('ic_modal_subtitle', { origin: trip.origin, destination: trip.destination, when: when });
-        document.getElementById('intercity-modal-title').textContent = jsT('ic_modal_title_book');
+        var isPrivate = trip.trip_type === 'private_vip';
+        document.getElementById('intercity-modal-title').textContent = jsT(isPrivate ? 'ic_modal_title_book_private' : 'ic_modal_title_book');
         document.getElementById('intercity_continue_btn').textContent = jsT('ic_btn_continue');
         document.getElementById('intercity_pay_btn').textContent = jsT('ic_modal_submit_book');
         showDetailsStep();
 
+        // No seat picker for Private VIP - the whole car is the booking,
+        // not a chosen number of its seats (see claimSeat() server-side).
+        // The seat count is still shown, just as information rather than a
+        // choice, so the guest knows what they're getting for the price.
+        document.getElementById('intercity_seat_count_row').hidden = isPrivate;
+        var seatsNote = document.getElementById('intercity_private_seats_note');
+        seatsNote.hidden = !isPrivate;
+        if (isPrivate) seatsNote.textContent = jsT('ic_private_seats_note', { n: trip.total_seats });
         var maxSeats = Math.max(1, Math.min(trip.seats_available, MAX_SEATS_PER_BOOKING));
         var seatField = document.getElementById('intercity_seat_count');
         seatField.max = maxSeats;
@@ -231,6 +297,12 @@
         }).join('');
         pickupSelect.required = pickupPoints.length > 0;
         document.getElementById('intercity_pickup_row').hidden = pickupPoints.length === 0;
+
+        // Private VIP has no pickup point list at all - told where they'll
+        // actually be picked up instead of a selector with nothing in it.
+        var pickupNote = document.getElementById('intercity_private_pickup_note');
+        pickupNote.hidden = !isPrivate;
+        if (isPrivate) pickupNote.textContent = jsT('ic_private_pickup_note', { origin: trip.origin });
 
         hideBanner();
         document.getElementById('intercity-modal').classList.add('active');
@@ -629,8 +701,12 @@
                 // modal and confirms via a toast instead of leaving the form
                 // sitting open with an inline banner.
                 closeModal();
+                var bookedTrip = tripsById[tripId];
                 var bookedSeats = res.data.data.seat_count || 1;
-                showToast(jsT(bookedSeats === 1 ? 'ic_toast_booked_title_one' : 'ic_toast_booked_title_many', { n: bookedSeats }), jsT('ic_toast_booked_text', { code: res.data.data.booking_code }));
+                var toastTitle = bookedTrip && bookedTrip.trip_type === 'private_vip'
+                    ? jsT('ic_toast_booked_title_private')
+                    : jsT(bookedSeats === 1 ? 'ic_toast_booked_title_one' : 'ic_toast_booked_title_many', { n: bookedSeats });
+                showToast(toastTitle, jsT('ic_toast_booked_text', { code: res.data.data.booking_code }));
                 loadTrips(0);
             })
             .catch(function () {
