@@ -147,6 +147,7 @@ $nav_items = [
             t('home_step3_title') => '/#hiw-parcel',
         ],
     ],
+    t('nav_car_rental')    => '/#car-rental',
     t('nav_contact')      => '/#contact',
 ];
 

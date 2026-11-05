@@ -1,0 +1,64 @@
+/* Shared by every page with an intercity/car-rental card grid or booking
+   modal (index.php, intercity-trips.php, car-rental.php). Colours here are
+   light-mode defaults; safeline-premium.css overrides them for the theme
+   toggle. */
+
+.intercity-one__lead { text-align: center; max-width: 640px; margin: 0 auto 40px; color: var(--color-text-secondary, #5A6577); font-size: 16px; }
+.intercity-trip-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,24,50,0.08); padding: 22px 24px; height: 100%; display: flex; flex-direction: column; gap: 10px; }
+.intercity-trip-card__badge { align-self: flex-start; background: rgba(99,197,31,0.12); color: #2F6F0C; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
+.intercity-trip-card__route { font-size: 19px; font-weight: 800; color: #001832; margin: 0; }
+.intercity-trip-card__route i { color: #63C51F; margin: 0 4px; font-size: 14px; }
+.intercity-trip-card__meta { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--color-text-secondary, #5A6577); }
+.intercity-trip-card__meta i { width: 16px; color: #63C51F; margin-right: 6px; }
+.intercity-trip-card__footer { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; padding-top: 10px; }
+.intercity-trip-card__price { font-weight: 800; color: #001832; white-space: nowrap; }
+.intercity-trip-card__price small { font-weight: 500; color: var(--color-text-secondary, #5A6577); }
+.intercity-trip-card__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.intercity-trip-card__actions .cityride-btn { flex: 1; }
+
+.car-rental-one__lead { text-align: center; max-width: 640px; margin: 0 auto 40px; color: var(--color-text-secondary, #5A6577); font-size: 16px; }
+.rental-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,24,50,0.08); padding: 22px 24px; height: 100%; display: flex; flex-direction: column; gap: 10px; }
+.rental-card__media { width: 100%; height: 140px; object-fit: cover; border-radius: 12px; margin-bottom: 4px; background: rgba(0,24,50,0.04); }
+.rental-card__title { font-size: 19px; font-weight: 800; color: #001832; margin: 0; }
+.rental-card__modes { display: flex; gap: 6px; padding: 4px; background: rgba(0,24,50,0.04); border-radius: 10px; }
+.rental-card__mode-btn { flex: 1; border: none; background: none; padding: 8px 10px; border-radius: 7px; font-size: 12.5px; font-weight: 700; color: var(--color-text-secondary, #5A6577); cursor: pointer; transition: background-color .2s ease, color .2s ease; }
+.rental-card__mode-btn.is-active { background: #fff; color: #001832; box-shadow: 0 2px 8px rgba(0,24,50,0.1); }
+.rental-card__mode { display: flex; flex-direction: column; flex: 1; }
+.rental-card__rates { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: row; flex-wrap: wrap; gap: 14px 18px; }
+.rental-card__rate { display: flex; flex-direction: column; gap: 2px; font-size: 11.5px; color: var(--color-text-secondary, #5A6577); }
+.rental-card__rate strong { font-size: 15px; font-weight: 800; color: #001832; }
+.rental-card__rate small { font-weight: 500; }
+.rental-card__book-btn { width: 100%; margin-top: 14px; }
+.rental-card__mode:last-child { margin-top: auto; }
+
+.intercity-one__more,
+.car-rental-one__more { text-align: center; margin-top: 30px; }
+
+.photo-gallery { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.photo-gallery[hidden] { display: none; }
+.photo-gallery__backdrop { position: absolute; inset: 0; background: rgba(0,10,20,0.6); }
+.photo-gallery__dialog { position: relative; width: 100%; max-width: 560px; background: #fff; border-radius: 20px; box-shadow: 0 24px 60px rgba(0,24,50,0.28); overflow: hidden; }
+.photo-gallery__card { position: relative; }
+.photo-gallery__image { display: block; width: 100%; height: 320px; object-fit: cover; }
+.photo-gallery__close { position: absolute; top: 12px; right: 14px; background: rgba(0,24,50,0.45); border: none; color: #fff; font-size: 26px; line-height: 1; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 2; }
+.photo-gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.9); border: none; color: #001832; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font-size: 15px; box-shadow: 0 4px 14px rgba(0,24,50,0.2); z-index: 2; }
+.photo-gallery__arrow--prev { left: 14px; }
+.photo-gallery__arrow--next { right: 14px; }
+.photo-gallery__footer { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px; }
+.photo-gallery__dots { display: flex; align-items: center; gap: 7px; }
+.photo-gallery__dot { width: 7px; height: 7px; border-radius: 50%; background: rgba(0,24,50,0.18); border: none; padding: 0; cursor: pointer; }
+.photo-gallery__dot.is-active { background: #63C51F; width: 18px; border-radius: 4px; }
+
+.phone-input-group { display: flex; align-items: stretch; }
+.phone-input-group__prefix { display: flex; align-items: center; padding: 0 14px; border: 1px solid rgba(0, 24, 50, 0.12); border-right: none; border-radius: 12px 0 0 12px; background: rgba(0, 24, 50, 0.04); color: #001832; font-weight: 600; font-size: 15px; }
+.phone-input-group__field { border-radius: 0 12px 12px 0 !important; }
+.form-error-text { color: #C62828; font-size: 12.5px; margin: 6px 0 0; }
+.network-toggle { display: flex; gap: 10px; margin: 0 0 8px; }
+.network-toggle__pill { display: flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: 1.5px solid; background: #fff; cursor: pointer; transition: all 0.15s ease; }
+.network-toggle__pill[data-network="mtn"] { color: #C99A00; border-color: #FFCC08; }
+.network-toggle__pill[data-network="airtel"] { color: #ED1C24; border-color: #ED1C24; }
+.network-toggle__pill.is-active[data-network="mtn"] { background: #FFCC08; color: #11161F; }
+.network-toggle__pill.is-active[data-network="airtel"] { background: #ED1C24; color: #fff; }
+.form-help-text { color: var(--color-text-secondary, #5A6577); font-size: 12.5px; margin: 6px 0 0; }
+.payment-step-intro { color: #001832; font-size: 14px; margin: 0 0 16px; }
+.booking-back-btn { display: block; width: 100%; background: none; border: none; color: var(--color-text-secondary, #5A6577); font-size: 14px; font-weight: 600; text-align: center; padding: 12px 0 0; cursor: pointer; }

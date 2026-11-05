@@ -58,6 +58,9 @@
     <link rel="stylesheet" href="assets/vendors/nouislider/nouislider.pips.css">
     <link rel="stylesheet" href="assets/vendors/tiny-slider/tiny-slider.css">
 <?php endif; ?>
+    <!-- Intercity/car-rental card grids and booking modals - shared by
+         index.php, intercity-trips.php and car-rental.php. -->
+    <link rel="stylesheet" href="<?php echo asset_url('assets/css/safeline-booking.css'); ?>">
     <!-- Premium layer, loaded last (scoped under body.sl-ui) -->
     <link rel="stylesheet" href="<?php echo asset_url('assets/css/safeline-premium.css'); ?>">
     <script>
@@ -100,14 +103,15 @@
         // the Accept-Language header reflects the browser/OS locale, not this
         // site's own language switch, so it can't be relied on for that.
         const SAFELINE_LANG = <?php echo json_encode($current_lang); ?>;
-        // Dynamically-built content (assets/js/home-intercity.js) can't go
-        // through t()/te() since it never runs server-side - only the 'ic_'
-        // subset of the dictionary is sent down, not the whole site, to
-        // keep this small. jsT() mirrors t()'s {placeholder} substitution.
+        // Dynamically-built content (assets/js/home-intercity.js,
+        // home-car-rental.js) can't go through t()/te() since it never runs
+        // server-side - only the 'ic_'/'car_rental_' subsets of the
+        // dictionary are sent down, not the whole site, to keep this small.
+        // jsT() mirrors t()'s {placeholder} substitution.
         const SAFELINE_I18N = <?php
             echo json_encode(array_filter(
                 $GLOBALS['__safeline_strings'],
-                fn($key) => str_starts_with($key, 'ic_'),
+                fn($key) => str_starts_with($key, 'ic_') || str_starts_with($key, 'car_rental_'),
                 ARRAY_FILTER_USE_KEY
             ));
         ?>;
@@ -119,6 +123,8 @@
             return text;
         }
     </script>
+    <!-- Shared by every booking form (home-intercity.js, home-car-rental.js) -->
+    <script src="<?php echo asset_url('assets/js/safeline-phone-validation.js'); ?>"></script>
 </head>
 
 <body class="custom-cursor sl-ui page-<?php echo htmlspecialchars($current_page ?? 'default', ENT_QUOTES, 'UTF-8'); ?>">
@@ -253,6 +259,9 @@
                             <i class="fas fa-moon hp-theme-toggle__moon" aria-hidden="true"></i>
                         </button>
                         <div class="main-header__btn-box">
+                            <a href="#car-rental" class="main-header__btn main-header__btn--secondary cityride-btn cityride-btn--border">
+                                <span><?php te('nav_car_rental'); ?></span>
+                            </a>
                             <a href="<?php echo ($current_page ?? '') === 'home' ? '#download-app' : $primary_cta_link; ?>" class="js-ride-cta main-header__btn cityride-btn cityride-btn--primary">
                                 <span><?php echo $primary_cta_text; ?></span>
                             </a>

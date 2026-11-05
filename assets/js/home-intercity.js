@@ -34,7 +34,16 @@
                 var section = document.getElementById('intercity');
                 var list = document.getElementById('intercity-trip-list');
                 section.hidden = !trips.length;
-                if (trips.length) list.innerHTML = trips.map(renderCard).join('');
+                if (trips.length) {
+                    // The homepage only teases the first few; the full list
+                    // lives on its own page (window.SL_SHOW_ALL_TRIPS, set
+                    // inline by intercity-trips.php before this file loads).
+                    var showAll = window.SL_SHOW_ALL_TRIPS === true;
+                    var visibleTrips = showAll ? trips : trips.slice(0, 3);
+                    list.innerHTML = visibleTrips.map(renderCard).join('');
+                    var viewMoreBox = document.getElementById('intercity-view-more');
+                    if (viewMoreBox) viewMoreBox.hidden = showAll || trips.length <= 3;
+                }
 
                 updateRideCtas(trips.length > 0);
                 // Only when there's at least one shared trip to show - an
@@ -154,7 +163,8 @@
             slide.setAttribute('data-copy-html', copyHtml);
             // Reuses an existing hero photo rather than a dedicated
             // intercity image, so no new asset is needed for this slide.
-            slide.innerHTML = '<img src="assets/images/safeline-road-02.jpg" alt="" decoding="async" draggable="false" style="--focus: 50% 60%">';
+            var heroPhoto = (i % 2 === 0) ? 'safeline-van-01-branded.jpg' : 'safeline-van-02-branded.jpg';
+            slide.innerHTML = '<img src="assets/images/' + heroPhoto + '" alt="" decoding="async" draggable="false" style="--focus: 50% 55%">';
             slidesBox.appendChild(slide);
 
             if (i === 0 && copyBox) copyBox.innerHTML = copyHtml;
@@ -353,7 +363,9 @@
 
     function renderGalleryImage() {
         document.getElementById('intercity-photo-gallery-img').src = galleryPhotos[galleryIndex].url;
-        document.getElementById('intercity-photo-gallery-counter').textContent = (galleryIndex + 1) + ' / ' + galleryPhotos.length;
+        document.querySelectorAll('#intercity-photo-gallery-dots .photo-gallery__dot').forEach(function (dot, i) {
+            dot.classList.toggle('is-active', i === galleryIndex);
+        });
     }
 
     function openPhotoGallery(tripId) {
@@ -361,6 +373,16 @@
         if (!trip || !trip.photos || !trip.photos.length) return;
         galleryPhotos = trip.photos;
         galleryIndex = 0;
+
+        var dotsBox = document.getElementById('intercity-photo-gallery-dots');
+        dotsBox.innerHTML = galleryPhotos.map(function (_, i) {
+            return '<button type="button" class="photo-gallery__dot" data-gallery-dot="' + i + '"></button>';
+        }).join('');
+        dotsBox.hidden = galleryPhotos.length < 2;
+        document.querySelectorAll('#intercity-photo-gallery .photo-gallery__arrow').forEach(function (arrow) {
+            arrow.hidden = galleryPhotos.length < 2;
+        });
+
         renderGalleryImage();
         document.getElementById('intercity-photo-gallery').hidden = false;
     }
@@ -585,6 +607,11 @@
         if (galleryStepBtn) {
             stepGallery(parseInt(galleryStepBtn.dataset.galleryStep, 10));
         }
+        var galleryDotBtn = e.target.closest('[data-gallery-dot]');
+        if (galleryDotBtn) {
+            galleryIndex = parseInt(galleryDotBtn.dataset.galleryDot, 10);
+            renderGalleryImage();
+        }
         if (e.target.closest('[data-intercity-close]') || e.target.closest('.form-banner__close')) {
             if (e.target.closest('.form-banner__close')) {
                 hideBanner();
@@ -648,54 +675,9 @@
         }
     });
 
-
-    function localPhoneError(value, network) {
-        var v = (value || '').trim();
-        if (v === '') return jsT('ic_phone_required');
-        if (!/^[0-9]+$/.test(v)) return jsT('ic_phone_numbers_only');
-        if (v.length < 9) return jsT('ic_phone_too_short');
-        if (v.length > 9) return jsT('ic_phone_too_long');
-        if (v.charAt(0) !== '7') return jsT('ic_phone_must_start_7');
-        var prefix = v.slice(0, 2);
-        if (network === 'airtel' && prefix !== '72' && prefix !== '73') return jsT('ic_phone_wrong_network_airtel');
-        if (network === 'mtn' && prefix !== '78' && prefix !== '79') return jsT('ic_phone_wrong_network_mtn');
-        return null;
-    }
-
-    /** Shared by the contact-phone field (step 1) and the payment-phone
-     * field (step 2) - same 9-digit local-number rules either way, checked
-     * against whichever network (MTN/Airtel) is currently picked for that
-     * field. */
-    function validatePhoneField(fieldId, errorId, showIfEmpty, network) {
-        var phoneField = document.getElementById(fieldId);
-        var phoneError = document.getElementById(errorId);
-        if (!phoneField || !phoneError) return true;
-        var value = phoneField.value.trim();
-        var error = localPhoneError(value, network);
-        if (error && (value !== '' || showIfEmpty)) {
-            phoneError.textContent = error;
-            phoneError.hidden = false;
-            return false;
-        }
-        phoneError.hidden = true;
-        return !error;
-    }
-
-    /** Which network (MTN/Airtel) is currently picked for a given phone
-     * field's toggle - 'mtn' until the client taps Airtel. */
-    function selectedNetwork(hintId) {
-        var toggle = document.getElementById(hintId);
-        return (toggle && toggle.dataset.selected) || 'mtn';
-    }
-
-    function selectNetwork(hintId, network) {
-        var toggle = document.getElementById(hintId);
-        if (!toggle) return;
-        toggle.dataset.selected = network;
-        toggle.querySelectorAll('.network-toggle__pill').forEach(function (p) {
-            p.classList.toggle('is-active', p.dataset.network === network);
-        });
-    }
+    // validatePhoneField/selectNetwork/selectedNetwork: shared with
+    // home-car-rental.js, defined once in safeline-phone-validation.js
+    // (loaded on every page ahead of this file).
 
     // Live validation as the user types/leaves either phone field, same as
     // the app login screen's AutovalidateMode.onUserInteraction - errors

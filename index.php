@@ -8,44 +8,6 @@ include 'includes/header.php';
 /* Hero image sizing lives in safeline-theme.css (rule 15).
    The old transform: scale(1.3) made the image overflow its column
    instead of filling it, so it is intentionally gone. */
-
-.intercity-one__lead { text-align: center; max-width: 640px; margin: 0 auto 40px; color: var(--color-text-secondary, #5A6577); font-size: 16px; }
-.intercity-trip-card { background: #fff; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,24,50,0.08); padding: 22px 24px; height: 100%; display: flex; flex-direction: column; gap: 10px; }
-.intercity-trip-card__badge { align-self: flex-start; background: rgba(99,197,31,0.12); color: #2F6F0C; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
-.intercity-trip-card__route { font-size: 19px; font-weight: 800; color: #001832; margin: 0; }
-.intercity-trip-card__route i { color: #63C51F; margin: 0 4px; font-size: 14px; }
-.intercity-trip-card__meta { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--color-text-secondary, #5A6577); }
-.intercity-trip-card__meta i { width: 16px; color: #63C51F; margin-right: 6px; }
-.intercity-trip-card__footer { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; padding-top: 10px; }
-.intercity-trip-card__price { font-weight: 800; color: #001832; white-space: nowrap; }
-.intercity-trip-card__price small { font-weight: 500; color: var(--color-text-secondary, #5A6577); }
-.intercity-trip-card__actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.intercity-trip-card__actions .cityride-btn { flex: 1; }
-
-.photo-gallery { position: fixed; inset: 0; z-index: 1200; }
-.photo-gallery[hidden] { display: none; }
-.photo-gallery__backdrop { position: absolute; inset: 0; background: rgba(0,10,20,0.88); }
-.photo-gallery__dialog { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
-.photo-gallery__image { max-width: 88vw; max-height: 82vh; object-fit: contain; border-radius: 10px; }
-.photo-gallery__close { position: absolute; top: 18px; right: 22px; background: none; border: none; color: #fff; font-size: 34px; line-height: 1; cursor: pointer; }
-.photo-gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.12); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 16px; }
-.photo-gallery__arrow--prev { left: 18px; }
-.photo-gallery__arrow--next { right: 18px; }
-.photo-gallery__counter { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 13px; opacity: 0.8; }
-
-.phone-input-group { display: flex; align-items: stretch; }
-.phone-input-group__prefix { display: flex; align-items: center; padding: 0 14px; border: 1px solid rgba(0, 24, 50, 0.12); border-right: none; border-radius: 12px 0 0 12px; background: rgba(0, 24, 50, 0.04); color: #001832; font-weight: 600; font-size: 15px; }
-.phone-input-group__field { border-radius: 0 12px 12px 0 !important; }
-.form-error-text { color: #C62828; font-size: 12.5px; margin: 6px 0 0; }
-.network-toggle { display: flex; gap: 10px; margin: 0 0 8px; }
-.network-toggle__pill { display: flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; border: 1.5px solid; background: #fff; cursor: pointer; transition: all 0.15s ease; }
-.network-toggle__pill[data-network="mtn"] { color: #C99A00; border-color: #FFCC08; }
-.network-toggle__pill[data-network="airtel"] { color: #ED1C24; border-color: #ED1C24; }
-.network-toggle__pill.is-active[data-network="mtn"] { background: #FFCC08; color: #11161F; }
-.network-toggle__pill.is-active[data-network="airtel"] { background: #ED1C24; color: #fff; }
-.form-help-text { color: var(--color-text-secondary, #5A6577); font-size: 12.5px; margin: 6px 0 0; }
-.payment-step-intro { color: #001832; font-size: 14px; margin: 0 0 16px; }
-.booking-back-btn { display: block; width: 100%; background: none; border: none; color: var(--color-text-secondary, #5A6577); font-size: 14px; font-weight: 600; text-align: center; padding: 12px 0 0; cursor: pointer; }
 </style>
 
     <!-- HERO: full-bleed fleet photos that slide (autoplay, arrows, swipe,
@@ -53,10 +15,8 @@ include 'includes/header.php';
          (aria-hidden). Carousel logic: assets/js/safeline-premium.js (2). -->
     <section class="sl-hero" id="home">
             <div class="sl-hero__slides" aria-hidden="true">
-                <div class="sl-hero__slide is-active is-first"><img src="assets/images/safeline-fleet-side-branded.jpg" alt="" width="1600" height="1200" fetchpriority="high" decoding="async" draggable="false" style="--focus: 50% 45%"></div>
-                <div class="sl-hero__slide"><img src="assets/images/safeline-road-01.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 80%; --zoom: 1"></div>
-                <div class="sl-hero__slide"><img src="assets/images/fleet-07-branded.jpg" alt="" width="1600" height="1200" decoding="async" draggable="false" style="--focus: 50% 66%"></div>
-                <div class="sl-hero__slide"><img src="assets/images/safeline-road-02.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 50%"></div>
+                <div class="sl-hero__slide is-active is-first"><img src="assets/images/safeline-van-01-branded.jpg" alt="" width="1600" height="900" fetchpriority="high" decoding="async" draggable="false" style="--focus: 50% 55%"></div>
+                <div class="sl-hero__slide"><img src="assets/images/safeline-van-02-branded.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 60%"></div>
             </div>
             <div class="sl-hero__shade" aria-hidden="true"></div>
 
@@ -132,7 +92,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/safeline-fleet-side-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="1200"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-van-01-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service3'); ?></span>
@@ -140,15 +100,15 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-van-02-branded.jpg" alt="" loading="lazy" decoding="async" width="1200" height="900"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service2'); ?></span>
                             <span class="sl-service__text"><?php te('home_service2_text'); ?></span>
                         </span>
                     </a>
-                    <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                    <a class="sl-service" href="#car-rental">
+                        <span class="sl-service__media"><img src="assets/images/safeline-van-01-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-key" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service4'); ?></span>
@@ -270,8 +230,140 @@ include 'includes/header.php';
                 </div>
                 <p class="intercity-one__lead"><?php te('home_intercity_lead'); ?></p>
                 <div class="row gutter-y-30" id="intercity-trip-list"></div>
+                <div class="intercity-one__more" id="intercity-view-more" hidden>
+                    <a href="/intercity-trips" class="cityride-btn cityride-btn--border sl-view-more-btn"><?php te('ic_btn_see_all_trips'); ?></a>
+                </div>
             </div>
         </section>
+
+        <!-- CAR RENTAL: category/mode rate cards, loaded from
+             /public/vehicle-categories + /public/rental-prices. Booking
+             happens right here on the site (POST /public/rentals, no app
+             or account needed) - see openRentalModal() in
+             home-car-rental.js, same self-service spirit as Intercity. -->
+        <section class="car-rental-one section-space" id="car-rental" hidden>
+            <div class="container">
+                <div class="sec-title sec-title--center">
+                    <div class="sec-title__top">
+                        <div class="sec-title__shape"></div>
+                        <h6 class="sec-title__tagline"><?php te('car_rental_tagline'); ?></h6>
+                        <div class="sec-title__shape"></div>
+                    </div>
+                    <h3 class="sec-title__title"><?php te('car_rental_title'); ?></h3>
+                </div>
+                <p class="car-rental-one__lead"><?php te('car_rental_lead'); ?></p>
+                <div class="row gutter-y-30" id="car-rental-list"></div>
+                <div class="car-rental-one__more" id="car-rental-view-more" hidden>
+                    <a href="/car-rental" class="cityride-btn cityride-btn--border sl-view-more-btn"><?php te('car_rental_view_more'); ?></a>
+                </div>
+            </div>
+        </section>
+
+        <div class="booking-modal" id="rental-modal" aria-hidden="true">
+            <div class="booking-modal__backdrop" data-rental-close></div>
+            <div class="booking-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="rental-modal-title">
+                <div class="booking-modal__content">
+                    <header class="booking-modal__header">
+                        <div class="booking-modal__title-box">
+                            <span class="booking-modal__logo">
+                                <img src="images/safelinelogo/safelinelogo.png" alt="SafeLine" width="120" height="120">
+                            </span>
+                            <div>
+                                <h2 class="booking-modal__title" id="rental-modal-title"></h2>
+                                <p class="booking-modal__subtitle" id="rental-modal-title-step"></p>
+                            </div>
+                        </div>
+                        <button class="booking-modal__close" type="button" aria-label="<?php te('home_intercity_close'); ?>" data-rental-close>&times;</button>
+                    </header>
+                    <div class="booking-modal__body">
+                        <section class="booking-form-section">
+                            <div class="container">
+                                <div class="booking-form-container">
+                                    <form id="rental-booking-form" novalidate>
+                                        <div class="form-banner" id="rental-banner" role="status" aria-live="polite" hidden>
+                                            <span class="form-banner__icon" aria-hidden="true"></span>
+                                            <div class="form-banner__body">
+                                                <strong class="form-banner__title"></strong>
+                                                <p class="form-banner__text"></p>
+                                            </div>
+                                            <button type="button" class="form-banner__close" aria-label="<?php te('home_intercity_dismiss'); ?>">&times;</button>
+                                        </div>
+                                        <div class="fare-display-card" id="rental_fare_display" aria-live="polite">
+                                            <div class="fare-info-row"><span class="fare-label"><?php te('car_rental_rate_label'); ?></span><span class="fare-value" id="rental_price_amount">0</span></div>
+                                            <div class="fare-info-row"><span class="fare-label"><?php te('ic_total'); ?></span><span class="fare-value fare-total" id="rental_total_amount">0 RWF</span></div>
+                                        </div>
+                                        <div id="rental_step_details">
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_duration_unit"><?php te('car_rental_duration_unit_label'); ?></label>
+                                                    <select class="form-control-enhanced" id="rental_duration_unit"></select>
+                                                </div>
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_duration_count"><?php te('car_rental_duration_count_label'); ?></label>
+                                                    <input class="form-control-enhanced" id="rental_duration_count" type="number" inputmode="numeric" min="1" value="1">
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_pickup_datetime"><?php te('car_rental_pickup_datetime_label'); ?></label>
+                                                    <input class="form-control-enhanced" id="rental_pickup_datetime" type="datetime-local" required>
+                                                </div>
+                                            </div>
+                                            <div class="form-row" id="rental_pickup_location_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_pickup_location"><?php te('car_rental_pickup_location_label'); ?></label>
+                                                    <input class="form-control-enhanced" id="rental_pickup_location" type="text" maxlength="255" placeholder="<?php te('ic_private_pickup_placeholder'); ?>">
+                                                    <p class="form-error-text" id="rental_pickup_location_error" hidden><?php te('car_rental_pickup_location_required'); ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_guest_name"><?php te('home_intercity_your_name'); ?></label>
+                                                    <input class="form-control-enhanced" id="rental_guest_name" type="text" autocomplete="name" placeholder="<?php te('home_intercity_name_placeholder'); ?>" required>
+                                                </div>
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_phone_number"><?php te('contact_field_phone'); ?></label>
+                                                    <div class="phone-input-group">
+                                                        <span class="phone-input-group__prefix">+250</span>
+                                                        <input class="form-control-enhanced phone-input-group__field" id="rental_phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="788123456" required>
+                                                    </div>
+                                                    <p class="form-error-text" id="rental_phone_error" hidden><?php te('home_intercity_phone_error'); ?></p>
+                                                </div>
+                                            </div>
+                                            <button class="submit-btn-enhanced" type="button" id="rental_continue_btn"><?php te('ic_btn_continue'); ?></button>
+                                            <p class="booking-assurance"><?php te('home_intercity_assurance'); ?></p>
+                                        </div>
+                                        <div id="rental_step_payment" hidden>
+                                            <p class="payment-step-intro"><?php te('ic_payment_step_intro'); ?></p>
+                                            <div class="form-row">
+                                                <div class="form-group-enhanced">
+                                                    <label for="rental_payment_phone_number"><?php te('ic_payment_phone_label'); ?></label>
+                                                    <div class="network-toggle" id="rental_payment_phone_network">
+                                                        <button type="button" class="network-toggle__pill is-active" data-network="mtn"><i class="fas fa-credit-card" aria-hidden="true"></i><?php te('ic_network_mtn'); ?></button>
+                                                        <button type="button" class="network-toggle__pill" data-network="airtel"><i class="fas fa-credit-card" aria-hidden="true"></i><?php te('ic_network_airtel'); ?></button>
+                                                    </div>
+                                                    <div class="phone-input-group">
+                                                        <span class="phone-input-group__prefix">+250</span>
+                                                        <input class="form-control-enhanced phone-input-group__field" id="rental_payment_phone_number" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="9" placeholder="788123456" required>
+                                                    </div>
+                                                    <p class="form-help-text"><?php te('ic_payment_phone_help'); ?></p>
+                                                    <p class="form-error-text" id="rental_payment_phone_error" hidden><?php te('home_intercity_phone_error'); ?></p>
+                                                </div>
+                                            </div>
+                                            <button class="submit-btn-enhanced" type="submit" id="rental_pay_btn"><?php te('home_intercity_submit'); ?></button>
+                                            <button class="booking-back-btn" type="button" id="rental_back_btn"><?php te('ic_btn_back'); ?></button>
+                                            <p class="booking-assurance"><?php te('home_intercity_assurance'); ?></p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="<?php echo asset_url('assets/js/home-car-rental.js'); ?>"></script>
 
         <div class="booking-modal" id="intercity-modal" aria-hidden="true">
             <div class="booking-modal__backdrop" data-intercity-close></div>
@@ -389,11 +481,15 @@ include 'includes/header.php';
         <div class="photo-gallery" id="intercity-photo-gallery" aria-hidden="true" hidden>
             <div class="photo-gallery__backdrop" data-gallery-close></div>
             <div class="photo-gallery__dialog" role="dialog" aria-modal="true">
-                <button class="photo-gallery__close" type="button" aria-label="<?php te('ic_gallery_close'); ?>" data-gallery-close>&times;</button>
-                <button class="photo-gallery__arrow photo-gallery__arrow--prev" type="button" data-gallery-step="-1" aria-label="<?php te('ic_gallery_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
-                <img class="photo-gallery__image" id="intercity-photo-gallery-img" src="" alt="">
-                <button class="photo-gallery__arrow photo-gallery__arrow--next" type="button" data-gallery-step="1" aria-label="<?php te('ic_gallery_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
-                <span class="photo-gallery__counter" id="intercity-photo-gallery-counter"></span>
+                <div class="photo-gallery__card">
+                    <button class="photo-gallery__close" type="button" aria-label="<?php te('ic_gallery_close'); ?>" data-gallery-close>&times;</button>
+                    <button class="photo-gallery__arrow photo-gallery__arrow--prev" type="button" data-gallery-step="-1" aria-label="<?php te('ic_gallery_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                    <img class="photo-gallery__image" id="intercity-photo-gallery-img" src="" alt="">
+                    <button class="photo-gallery__arrow photo-gallery__arrow--next" type="button" data-gallery-step="1" aria-label="<?php te('ic_gallery_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                </div>
+                <div class="photo-gallery__footer">
+                    <div class="photo-gallery__dots" id="intercity-photo-gallery-dots"></div>
+                </div>
             </div>
         </div>
 

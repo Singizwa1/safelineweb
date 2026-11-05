@@ -25,6 +25,7 @@ RewriteRule ^home/?$ index.php [L]
 # Serve /page from page.php (internal rewrite - method and body preserved)
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^([^/]+)$ $1.php [L]
+
 # Block XML-RPC.
 # Both syntaxes: cPanel runs Apache 2.4, where "Order/Deny" only works when
 # mod_access_compat is loaded. Each block is guarded so an unloaded module

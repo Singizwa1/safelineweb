@@ -288,6 +288,14 @@ body.sl-ui .main-header .main-menu__list > li.dropdown:hover .main-menu__caret,
 body.sl-ui .main-header .main-menu__list > li.dropdown:focus-within .main-menu__caret { transform: rotate(180deg); }
 body.sl-ui .mobile-nav__container .main-menu__caret { display: none; }
 body.sl-ui .main-header__btn { min-height: 42px; padding: 10px 18px !important; font-size: 14px !important; }
+body.sl-ui .main-header__btn-box { display: flex; align-items: center; gap: 10px; }
+body.sl-ui .main-header__btn--secondary { color: var(--hp-text) !important; border-color: var(--hp-line-strong) !important; background: transparent !important; }
+body.sl-ui .main-header__btn--secondary:hover { background: var(--hp-inset) !important; }
+/* Two header buttons is tight below ~480px - "Car Rental" is still reachable
+   from the nav menu there, so only the primary "Book a Taxi" stays pinned. */
+@media (max-width: 480px) {
+    body.sl-ui .main-header__btn--secondary { display: none !important; }
+}
 body.sl-ui .mobile-nav__btn span { background: #fff !important; }
 
 /* Theme switch: sun in dark (go light), moon in light (go dark) */
@@ -939,6 +947,39 @@ body.sl-ui .intercity-trip-card__parcel {
     display: block;
 }
 body.sl-ui .intercity-trip-card__parcel i { margin-right: 6px; }
+
+/* 11. CAR RENTAL (rendered by home-car-rental.js) --------------------------- */
+body.sl-ui .car-rental-one { background: var(--hp-bg) !important; }
+body.sl-ui .car-rental-one__lead { color: var(--hp-text-soft) !important; text-wrap: balance; font-size: 15.5px; margin-bottom: 26px !important; }
+body.sl-ui #car-rental-list { justify-content: center; }
+body.sl-ui .rental-card {
+    background: var(--hp-card) !important;
+    border: 1px solid var(--hp-line);
+    border-radius: var(--hp-radius) !important;
+    box-shadow: var(--hp-card-shadow) !important;
+    transition: transform .45s var(--hp-ease), border-color .3s ease;
+    animation: hp-rise .7s var(--hp-ease) both;
+}
+body.sl-ui .rental-card:hover { transform: translateY(-4px); border-color: var(--hp-hover-line); }
+body.sl-ui .rental-card__title { color: var(--hp-text) !important; }
+body.sl-ui .rental-card__modes { background: var(--hp-inset) !important; }
+body.sl-ui .rental-card__mode-btn { color: var(--hp-text-soft) !important; }
+body.sl-ui .rental-card__mode-btn.is-active { background: var(--hp-card) !important; color: var(--hp-text) !important; box-shadow: var(--hp-card-shadow) !important; }
+body.sl-ui .rental-card__rate { color: var(--hp-text-soft) !important; }
+body.sl-ui .rental-card__rate strong { color: var(--hp-text) !important; }
+
+/* "View More" buttons sit directly on the section background (not a
+   card), so they need the theme's own ink instead of the --border
+   button's fixed white (that fixed white is tuned for the always-navy
+   header/hero, not a section that goes white in light mode). */
+body.sl-ui .sl-view-more-btn { color: var(--hp-text) !important; border-color: var(--hp-line-strong) !important; background: transparent !important; }
+body.sl-ui .sl-view-more-btn:hover { background: var(--hp-inset) !important; }
+
+/* 11b. INTERCITY PHOTO GALLERY ("View Car" carousel card) ------------------ */
+body.sl-ui .photo-gallery__dialog { background: var(--hp-card) !important; box-shadow: var(--hp-card-shadow) !important; }
+body.sl-ui .photo-gallery__arrow { background: var(--hp-card) !important; color: var(--hp-text) !important; }
+body.sl-ui .photo-gallery__dot { background: var(--hp-line) !important; }
+body.sl-ui .photo-gallery__dot.is-active { background: var(--hp-accent) !important; }
 
 /* 12. TESTIMONIALS --------------------------------------------------------- */
 body.sl-ui .testimonials-one { background: var(--hp-bg) !important; }
