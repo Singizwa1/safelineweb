@@ -426,7 +426,7 @@ body.sl-ui .sl-hero__private {
     color: var(--hero-ink);
 }
 body.sl-ui .sl-hero__private-badge {
-    display: inline-block; padding: 5px 14px; border-radius: 999px;
+    display: inline-block; padding: 5px 14px; border-radius: 5px;
     font-size: 11.5px; font-weight: 700; letter-spacing: .02em;
     background: var(--hero-accent); color: #001832;
     margin-bottom: 14px;
@@ -442,7 +442,11 @@ body.sl-ui .sl-hero__private-price {
     margin: 0 0 18px; font-size: 24px; font-weight: 800;
 }
 body.sl-ui .sl-hero__private-price small { font-size: 13px; font-weight: 500; color: var(--hero-ink-soft); }
+body.sl-ui .sl-hero__private-actions { display: flex; gap: 10px; }
 body.sl-ui .sl-hero__private .cityride-btn { width: 100%; min-height: 48px; }
+/* Two side-by-side buttons (View Car + book) share the row instead of each
+   claiming the full 100% width above, which only ever had one button to size. */
+body.sl-ui .sl-hero__private-actions .cityride-btn { width: auto; flex: 1 1 0; }
 
 /* copy */
 body.sl-ui .sl-hero__title {
@@ -471,7 +475,7 @@ body.sl-ui .sl-hero__lead {
 body.sl-ui .sl-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; }
 body.sl-ui .sl-hero__btn,
 body.sl-ui .sl-hero__link {
-    min-height: 52px; padding: 0 30px !important; border-radius: 999px !important;
+    min-height: 52px; padding: 0 30px !important; border-radius: 5px !important;
     display: inline-flex; align-items: center; justify-content: center; gap: 10px;
     font-size: 15.5px !important; font-weight: 700 !important;
 }

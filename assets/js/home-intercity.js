@@ -86,17 +86,24 @@
             return;
         }
         var trip = privateTrips[0];
-        var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-        var when = formatWhen(departure);
+        // Not yet booked - a Private VIP car has no departure until the
+        // one client who books it says when they need it (see claimSeat()
+        // server-side), so there's no "when" to show yet.
+        var when = trip.departure_datetime ? formatWhen(new Date(trip.departure_datetime.replace(' ', 'T'))) : null;
         var price = parseFloat(trip.total_price).toLocaleString();
 
         panel.innerHTML =
             '<span class="sl-hero__private-badge">' + jsT('ic_private_hero_title') + '</span>' +
             '<h3 class="sl-hero__private-route">' + trip.origin + ' <i class="fas fa-arrow-right" aria-hidden="true"></i> ' + trip.destination + '</h3>' +
-            '<p class="sl-hero__private-meta">' + jsT('ic_departs', { when: when }) + '</p>' +
+            '<p class="sl-hero__private-meta">' + (when ? jsT('ic_departs', { when: when }) : jsT('ic_departs_flexible')) + '</p>' +
             '<p class="sl-hero__private-meta">' + jsT('ic_private_seats_note', { n: trip.total_seats }) + '</p>' +
             '<p class="sl-hero__private-price">' + price + ' RWF <small>' + jsT('ic_per_car_suffix') + '</small></p>' +
-            '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn" data-trip-id="' + trip.id + '">' + jsT('ic_private_hero_cta') + '</button>';
+            '<div class="sl-hero__private-actions">' +
+            (trip.photos && trip.photos.length
+                ? '<button type="button" class="cityride-btn cityride-btn--border intercity-view-car-btn" data-trip-id="' + trip.id + '">' + jsT('ic_btn_view_car') + '</button>'
+                : '') +
+            '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn" data-trip-id="' + trip.id + '">' + jsT('ic_private_hero_cta') + '</button>' +
+            '</div>';
         panel.hidden = false;
     }
 
@@ -123,7 +130,12 @@
                 ? '<br>' + jsT(trip.parcels_available === 1 ? 'ic_parcel_slots_one' : 'ic_parcel_slots_many', { n: trip.parcels_available })
                 : '';
 
+            var viewCarBtnHtml = (trip.photos && trip.photos.length)
+                ? '<button type="button" class="cityride-btn cityride-btn--border sl-hero__btn intercity-view-car-btn" data-trip-id="' + trip.id + '"><span>' + jsT('ic_btn_view_car') + '</span></button>'
+                : '';
+
             var copyHtml =
+                '<span class="sl-hero__private-badge">' + jsT('ic_shared_hero_badge') + '</span>' +
                 '<h1 class="sl-hero__title">' + trip.origin + ' <em>&rarr; ' + trip.destination + '</em></h1>' +
                 '<p class="sl-hero__lead">' + jsT('ic_departs', { when: when }) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + ' &middot; ' + seatsLine + parcelLine + '</p>' +
                 '<div class="sl-hero__actions">' +
@@ -132,6 +144,7 @@
                 // slide, not a descendant), so the click handler's
                 // closest('[data-trip-id]') needs it right here to find it.
                 '<button type="button" class="cityride-btn cityride-btn--primary sl-hero__btn ' + buttonClass + '" data-trip-id="' + trip.id + '"><span>' + buttonLabel + '</span></button>' +
+                viewCarBtnHtml +
                 '<a href="#intercity" class="sl-hero__link"><span>' + jsT('ic_btn_see_all_trips') + '</span> <i class="fas fa-arrow-right" aria-hidden="true"></i></a>' +
                 '</div>';
 
@@ -150,8 +163,7 @@
 
     function renderCard(trip) {
         var isPrivate = trip.trip_type === 'private_vip';
-        var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-        var when = formatWhen(departure);
+        var when = trip.departure_datetime ? formatWhen(new Date(trip.departure_datetime.replace(' ', 'T'))) : null;
         var price = isPrivate
             ? parseFloat(trip.total_price).toLocaleString()
             : parseFloat(trip.price_per_seat).toLocaleString();
@@ -164,6 +176,12 @@
             : jsT(trip.seats_available === 1 ? 'ic_seats_left_one' : 'ic_seats_left_many', { n: trip.seats_available });
         var buttonHtml = '<button type="button" class="cityride-btn cityride-btn--primary intercity-book-btn">' +
             (isPrivate ? jsT('ic_btn_book_private') : jsT('ic_btn_book_seat')) + '</button>';
+        // Optional - staff may not have attached any photos to this trip
+        // yet (see admin's Vehicle Photos library), so the button only
+        // shows up once there's actually something to view.
+        var viewCarBtnHtml = (trip.photos && trip.photos.length)
+            ? '<button type="button" class="cityride-btn cityride-btn--border intercity-view-car-btn">' + jsT('ic_btn_view_car') + '</button>'
+            : '';
         // Parcel delivery lives on the same trip card, not a separate
         // section - sending a parcel always rides on a published trip, so
         // it only makes sense in context of that trip's own card. There's
@@ -184,12 +202,12 @@
             '<ul class="intercity-trip-card__meta">' +
             pickupLine +
             '<li><i class="fas fa-flag-checkered"></i>' + jsT('ic_dropoff', { location: trip.dropoff_location }) + '</li>' +
-            '<li><i class="fas fa-clock"></i>' + jsT('ic_departs', { when: when }) + '</li>' +
+            '<li><i class="fas fa-clock"></i>' + (when ? jsT('ic_departs', { when: when }) : jsT('ic_departs_flexible')) + '</li>' +
             '</ul>' +
             parcelLine +
             '<div class="intercity-trip-card__footer">' +
             '<span class="intercity-trip-card__price">' + price + ' RWF<small>' + jsT(isPrivate ? 'ic_per_car_suffix' : 'ic_per_seat_suffix') + '</small></span>' +
-            buttonHtml +
+            '<div class="intercity-trip-card__actions">' + viewCarBtnHtml + buttonHtml + '</div>' +
             '</div></div></div>';
     }
 
@@ -257,13 +275,14 @@
     function openModal(tripId) {
         var trip = tripsById[tripId];
         if (!trip) return;
-        var departure = new Date(trip.departure_datetime.replace(' ', 'T'));
-        var when = formatWhen(departure);
+        var when = trip.departure_datetime ? formatWhen(new Date(trip.departure_datetime.replace(' ', 'T'))) : jsT('ic_departs_flexible');
 
         document.getElementById('intercity-booking-form').reset();
         document.getElementById('intercity_phone_error').hidden = true;
         document.getElementById('intercity_payment_phone_error').hidden = true;
         document.getElementById('intercity_seat_count_error').hidden = true;
+        document.getElementById('intercity_private_pickup_error').hidden = true;
+        document.getElementById('intercity_private_departure_error').hidden = true;
         // The form reset above clears the payment phone field, so its
         // network picker reverts to its MTN default here too.
         selectNetwork('intercity_payment_phone_network', 'mtn');
@@ -298,11 +317,28 @@
         pickupSelect.required = pickupPoints.length > 0;
         document.getElementById('intercity_pickup_row').hidden = pickupPoints.length === 0;
 
-        // Private VIP has no pickup point list at all - told where they'll
-        // actually be picked up instead of a selector with nothing in it.
-        var pickupNote = document.getElementById('intercity_private_pickup_note');
-        pickupNote.hidden = !isPrivate;
-        if (isPrivate) pickupNote.textContent = jsT('ic_private_pickup_note', { origin: trip.origin });
+        // Private VIP has no pickup point list at all - the guest types
+        // their own pickup address and the date/time they need the car
+        // instead of picking from a fixed schedule (see claimSeat()
+        // server-side, which fills the trip's departure_datetime in from
+        // whatever's typed here, since this is the trip's only booking).
+        document.getElementById('intercity_private_pickup_row').hidden = !isPrivate;
+        document.getElementById('intercity_private_pickup_text').required = isPrivate;
+        document.getElementById('intercity_private_departure_row').hidden = !isPrivate;
+        var departureField = document.getElementById('intercity_private_departure');
+        departureField.required = isPrivate;
+        if (isPrivate) {
+            // At least an hour out, so there's time to actually dispatch
+            // the car - same spirit as the min a guest could reasonably
+            // expect, nothing the backend itself enforces beyond "future".
+            var minDeparture = new Date(Date.now() + 60 * 60000);
+            var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
+            // A datetime-local input's min/value are the browser's local
+            // wall-clock time with no timezone - toISOString() would give
+            // UTC and silently shift the floor by Kigali's +2h offset.
+            departureField.min = minDeparture.getFullYear() + '-' + pad2(minDeparture.getMonth() + 1) + '-' + pad2(minDeparture.getDate()) +
+                'T' + pad2(minDeparture.getHours()) + ':' + pad2(minDeparture.getMinutes());
+        }
 
         hideBanner();
         document.getElementById('intercity-modal').classList.add('active');
@@ -310,6 +346,32 @@
 
     function closeModal() {
         document.getElementById('intercity-modal').classList.remove('active');
+    }
+
+    var galleryPhotos = [];
+    var galleryIndex = 0;
+
+    function renderGalleryImage() {
+        document.getElementById('intercity-photo-gallery-img').src = galleryPhotos[galleryIndex].url;
+        document.getElementById('intercity-photo-gallery-counter').textContent = (galleryIndex + 1) + ' / ' + galleryPhotos.length;
+    }
+
+    function openPhotoGallery(tripId) {
+        var trip = tripsById[tripId];
+        if (!trip || !trip.photos || !trip.photos.length) return;
+        galleryPhotos = trip.photos;
+        galleryIndex = 0;
+        renderGalleryImage();
+        document.getElementById('intercity-photo-gallery').hidden = false;
+    }
+
+    function closePhotoGallery() {
+        document.getElementById('intercity-photo-gallery').hidden = true;
+    }
+
+    function stepGallery(step) {
+        galleryIndex = (galleryIndex + step + galleryPhotos.length) % galleryPhotos.length;
+        renderGalleryImage();
     }
 
     /** Booking has two steps: who's riding (name/contact phone/seats), then
@@ -511,6 +573,18 @@
             var card = bookBtn.closest('[data-trip-id]');
             openModal(parseInt(card.dataset.tripId, 10));
         }
+        var viewCarBtn = e.target.closest('.intercity-view-car-btn');
+        if (viewCarBtn) {
+            var viewCard = viewCarBtn.closest('[data-trip-id]');
+            openPhotoGallery(parseInt(viewCard.dataset.tripId, 10));
+        }
+        if (e.target.closest('[data-gallery-close]')) {
+            closePhotoGallery();
+        }
+        var galleryStepBtn = e.target.closest('[data-gallery-step]');
+        if (galleryStepBtn) {
+            stepGallery(parseInt(galleryStepBtn.dataset.galleryStep, 10));
+        }
         if (e.target.closest('[data-intercity-close]') || e.target.closest('.form-banner__close')) {
             if (e.target.closest('.form-banner__close')) {
                 hideBanner();
@@ -530,6 +604,24 @@
             if (!contactOk) {
                 contactField.focus();
                 return;
+            }
+            var trip = tripsById[parseInt(document.getElementById('intercity_trip_id').value, 10)];
+            if (trip && trip.trip_type === 'private_vip') {
+                var pickupField = document.getElementById('intercity_private_pickup_text');
+                var pickupError = document.getElementById('intercity_private_pickup_error');
+                pickupError.hidden = !!pickupField.value.trim();
+                if (!pickupField.value.trim()) {
+                    pickupField.focus();
+                    return;
+                }
+                var departureField = document.getElementById('intercity_private_departure');
+                var departureError = document.getElementById('intercity_private_departure_error');
+                var departureOk = departureField.value && new Date(departureField.value).getTime() > Date.now();
+                departureError.hidden = departureOk;
+                if (!departureOk) {
+                    departureField.focus();
+                    return;
+                }
             }
             showPaymentStep();
         }
@@ -654,6 +746,8 @@
         var phoneNumber = '+250' + document.getElementById('intercity_phone_number').value.trim();
         var paymentPhoneNumber = '+250' + localPaymentPhone;
         var seatCount = clampedSeatCount();
+        var bookedTripForSubmit = tripsById[tripId];
+        var isPrivateSubmit = bookedTripForSubmit && bookedTripForSubmit.trip_type === 'private_vip';
 
         var endpoint = SAFELINE_API_BASE + '/intercity-bookings';
         // language: the backend otherwise falls back to the browser/OS Accept-Language
@@ -662,6 +756,15 @@
             trip_id: tripId, pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
             payment_phone_number: paymentPhoneNumber, seat_count: seatCount, language: SAFELINE_LANG,
         };
+        // Private VIP has no fixed pickup list or schedule - the guest's
+        // own typed address and chosen date/time become the trip's actual
+        // pickup and departure_datetime once this (its only) booking lands
+        // (see claimSeat() server-side).
+        if (isPrivateSubmit) {
+            body.pickup_location_text = document.getElementById('intercity_private_pickup_text').value.trim();
+            var departureValue = document.getElementById('intercity_private_departure').value;
+            body.departure_datetime = departureValue ? departureValue.replace('T', ' ') + ':00' : null;
+        }
 
         fetch(endpoint, {
             method: 'POST',

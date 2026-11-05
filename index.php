@@ -19,6 +19,19 @@ include 'includes/header.php';
 .intercity-trip-card__footer { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; padding-top: 10px; }
 .intercity-trip-card__price { font-weight: 800; color: #001832; white-space: nowrap; }
 .intercity-trip-card__price small { font-weight: 500; color: var(--color-text-secondary, #5A6577); }
+.intercity-trip-card__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.intercity-trip-card__actions .cityride-btn { flex: 1; }
+
+.photo-gallery { position: fixed; inset: 0; z-index: 1200; }
+.photo-gallery[hidden] { display: none; }
+.photo-gallery__backdrop { position: absolute; inset: 0; background: rgba(0,10,20,0.88); }
+.photo-gallery__dialog { position: relative; height: 100%; display: flex; align-items: center; justify-content: center; }
+.photo-gallery__image { max-width: 88vw; max-height: 82vh; object-fit: contain; border-radius: 10px; }
+.photo-gallery__close { position: absolute; top: 18px; right: 22px; background: none; border: none; color: #fff; font-size: 34px; line-height: 1; cursor: pointer; }
+.photo-gallery__arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,0.12); border: none; color: #fff; width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 16px; }
+.photo-gallery__arrow--prev { left: 18px; }
+.photo-gallery__arrow--next { right: 18px; }
+.photo-gallery__counter { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 13px; opacity: 0.8; }
 
 .phone-input-group { display: flex; align-items: stretch; }
 .phone-input-group__prefix { display: flex; align-items: center; padding: 0 14px; border: 1px solid rgba(0, 24, 50, 0.12); border-right: none; border-radius: 12px 0 0 12px; background: rgba(0, 24, 50, 0.04); color: #001832; font-weight: 600; font-size: 15px; }
@@ -90,7 +103,7 @@ include 'includes/header.php';
                     </div>
                     <div class="stats-bar__divider"></div>
                     <div class="stats-bar__item">
-                        <div class="stats-bar__number">24/7</div>
+                        <div class="stats-bar__number">24/6</div>
                         <div class="stats-bar__label"><?php te('home_stat_available'); ?></div>
                     </div>
                     <div class="stats-bar__divider"></div>
@@ -302,7 +315,20 @@ include 'includes/header.php';
                                                     <select class="form-control-enhanced" id="intercity_pickup_point" name="pickup_point_id"></select>
                                                 </div>
                                             </div>
-                                            <p class="payment-step-intro" id="intercity_private_pickup_note" hidden></p>
+                                            <div class="form-row" id="intercity_private_pickup_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_private_pickup_text"><?php te('ic_private_pickup_label'); ?></label>
+                                                    <input class="form-control-enhanced" id="intercity_private_pickup_text" name="pickup_location_text" type="text" maxlength="255" placeholder="<?php te('ic_private_pickup_placeholder'); ?>">
+                                                    <p class="form-error-text" id="intercity_private_pickup_error" hidden><?php te('ic_private_pickup_required'); ?></p>
+                                                </div>
+                                            </div>
+                                            <div class="form-row" id="intercity_private_departure_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_private_departure"><?php te('ic_private_departure_label'); ?></label>
+                                                    <input class="form-control-enhanced" id="intercity_private_departure" name="departure_datetime" type="datetime-local">
+                                                    <p class="form-error-text" id="intercity_private_departure_error" hidden><?php te('ic_private_departure_required'); ?></p>
+                                                </div>
+                                            </div>
                                             <div class="form-row" id="intercity_seat_count_row">
                                                 <div class="form-group-enhanced">
                                                     <label for="intercity_seat_count"><?php te('home_intercity_seat_count'); ?></label>
@@ -355,6 +381,19 @@ include 'includes/header.php';
                         </section>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- "View Car" photo gallery - populated/opened by openPhotoGallery()
+             in home-intercity.js; hidden entirely while unused. -->
+        <div class="photo-gallery" id="intercity-photo-gallery" aria-hidden="true" hidden>
+            <div class="photo-gallery__backdrop" data-gallery-close></div>
+            <div class="photo-gallery__dialog" role="dialog" aria-modal="true">
+                <button class="photo-gallery__close" type="button" aria-label="<?php te('ic_gallery_close'); ?>" data-gallery-close>&times;</button>
+                <button class="photo-gallery__arrow photo-gallery__arrow--prev" type="button" data-gallery-step="-1" aria-label="<?php te('ic_gallery_prev'); ?>"><i class="fas fa-chevron-left" aria-hidden="true"></i></button>
+                <img class="photo-gallery__image" id="intercity-photo-gallery-img" src="" alt="">
+                <button class="photo-gallery__arrow photo-gallery__arrow--next" type="button" data-gallery-step="1" aria-label="<?php te('ic_gallery_next'); ?>"><i class="fas fa-chevron-right" aria-hidden="true"></i></button>
+                <span class="photo-gallery__counter" id="intercity-photo-gallery-counter"></span>
             </div>
         </div>
 

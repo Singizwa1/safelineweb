@@ -96,8 +96,8 @@ $form_delivery_email  = getenv('FORM_DELIVERY_EMAIL') ?: '';
 $contact_form_to      = $form_delivery_email;   // contact form -> this inbox
 
 // Contact Information
-$contact_phone = "+250 781 975 570";
-$contact_email = "info@safeline.com";
+$contact_phone = "+250 782 041 630";
+$contact_email = "info@safeline.rw";
 $contact_address = "Kigali, Rwanda";
 $contact_maps_url = "https://www.google.com/maps/place/Kigali/data=!4m2!3m1!1s0x19dca4258ed8e797:0xf32b36a5411d0bc8?sa=X&ved=1t:242&ictx=111";
 
