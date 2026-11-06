@@ -15,8 +15,9 @@ include 'includes/header.php';
          (aria-hidden). Carousel logic: assets/js/safeline-premium.js (2). -->
     <section class="sl-hero" id="home">
             <div class="sl-hero__slides" aria-hidden="true">
-                <div class="sl-hero__slide is-active is-first"><img src="assets/images/safeline-van-01-branded.jpg" alt="" width="1600" height="900" fetchpriority="high" decoding="async" draggable="false" style="--focus: 50% 55%"></div>
-                <div class="sl-hero__slide"><img src="assets/images/safeline-van-02-branded.jpg" alt="" width="1200" height="900" decoding="async" draggable="false" style="--focus: 50% 60%"></div>
+                <div class="sl-hero__slide is-active is-first"><img src="assets/images/safeline-minivan.jpg" alt="" width="1672" height="941" fetchpriority="high" decoding="async" draggable="false" style="--focus: 50% 50%"></div>
+                <div class="sl-hero__slide"><img src="assets/images/safeline-electric-van.jpg" alt="" width="1672" height="941" decoding="async" draggable="false" style="--focus: 50% 50%"></div>
+                <div class="sl-hero__slide"><img src="assets/images/safeline-blue-taxi.jpg" alt="" width="1672" height="941" decoding="async" draggable="false" style="--focus: 50% 50%"></div>
             </div>
             <div class="sl-hero__shade" aria-hidden="true"></div>
 
@@ -84,7 +85,7 @@ include 'includes/header.php';
                 </div>
                 <div class="sl-services__grid">
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/cards/card-city-rides.jpg" alt="" loading="lazy" decoding="async" width="720" height="540"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-electric-taxi.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-car-side" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service1'); ?></span>
@@ -92,7 +93,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/safeline-van-01-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-minivan.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-route" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service3'); ?></span>
@@ -100,7 +101,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#download-app">
-                        <span class="sl-service__media"><img src="assets/images/safeline-van-02-branded.jpg" alt="" loading="lazy" decoding="async" width="1200" height="900"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-blue-taxi.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-box" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service2'); ?></span>
@@ -108,7 +109,7 @@ include 'includes/header.php';
                         </span>
                     </a>
                     <a class="sl-service" href="#car-rental">
-                        <span class="sl-service__media"><img src="assets/images/safeline-van-01-branded.jpg" alt="" loading="lazy" decoding="async" width="1600" height="900"></span>
+                        <span class="sl-service__media"><img src="assets/images/safeline-electric-van.jpg" alt="" loading="lazy" decoding="async" width="1672" height="941"></span>
                         <span class="sl-service__body">
                             <span class="sl-service__icon"><i class="fas fa-key" aria-hidden="true"></i></span>
                             <span class="sl-service__title"><?php te('home_service4'); ?></span>

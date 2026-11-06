@@ -34,6 +34,14 @@
 .intercity-one__more,
 .car-rental-one__more { text-align: center; margin-top: 30px; }
 
+.sl-gallery__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 10px; }
+.sl-gallery__item { border-radius: 12px; overflow: hidden; aspect-ratio: 4 / 3; background: rgba(0,24,50,0.04); }
+.sl-gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s ease; }
+.sl-gallery__item:hover img { transform: scale(1.05); }
+.sl-gallery__empty { text-align: center; color: var(--color-text-secondary, #5A6577); padding: 40px 0; }
+@media (max-width: 991px) { .sl-gallery__grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 575px) { .sl-gallery__grid { grid-template-columns: 1fr; } }
+
 .photo-gallery { position: fixed; inset: 0; z-index: 1200; display: flex; align-items: center; justify-content: center; padding: 24px; }
 .photo-gallery[hidden] { display: none; }
 .photo-gallery__backdrop { position: absolute; inset: 0; background: rgba(0,10,20,0.6); }

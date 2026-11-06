@@ -163,8 +163,9 @@
             slide.setAttribute('data-copy-html', copyHtml);
             // Reuses an existing hero photo rather than a dedicated
             // intercity image, so no new asset is needed for this slide.
-            var heroPhoto = (i % 2 === 0) ? 'safeline-van-01-branded.jpg' : 'safeline-van-02-branded.jpg';
-            slide.innerHTML = '<img src="assets/images/' + heroPhoto + '" alt="" decoding="async" draggable="false" style="--focus: 50% 55%">';
+            var HERO_PHOTOS = ['safeline-minivan.jpg', 'safeline-electric-van.jpg', 'safeline-blue-taxi.jpg'];
+            var heroPhoto = HERO_PHOTOS[i % HERO_PHOTOS.length];
+            slide.innerHTML = '<img src="assets/images/' + heroPhoto + '" alt="" decoding="async" draggable="false" style="--focus: 50% 50%">';
             slidesBox.appendChild(slide);
 
             if (i === 0 && copyBox) copyBox.innerHTML = copyHtml;

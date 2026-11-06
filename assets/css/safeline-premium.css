@@ -918,6 +918,11 @@ body.sl-ui .sl-contact__value { font-size: 15.5px; font-weight: 700; color: var(
 @media (max-width: 991px) { body.sl-ui .sl-contact__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 420px) { body.sl-ui .sl-contact__grid { grid-template-columns: 1fr; } }
 
+/* 9b. GALLERY ---------------------------------------------------------------- */
+body.sl-ui .sl-gallery { background: var(--hp-bg) !important; }
+body.sl-ui .sl-gallery__item { background: var(--hp-card) !important; border: 1px solid var(--hp-line); }
+body.sl-ui .sl-gallery__empty { color: var(--hp-text-soft) !important; }
+
 /* 10. INTERCITY ------------------------------------------------------------ */
 body.sl-ui .intercity-one { background: var(--hp-bg) !important; }
 body.sl-ui .intercity-one__lead { color: var(--hp-text-soft) !important; text-wrap: balance; font-size: 15.5px; margin-bottom: 26px !important; }

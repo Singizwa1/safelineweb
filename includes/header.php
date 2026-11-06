@@ -260,7 +260,7 @@
                         </button>
                         <div class="main-header__btn-box">
                             <a href="#car-rental" class="main-header__btn main-header__btn--secondary cityride-btn cityride-btn--border">
-                                <span><?php te('nav_car_rental'); ?></span>
+                                <span><?php te('nav_rent_car'); ?></span>
                             </a>
                             <a href="<?php echo ($current_page ?? '') === 'home' ? '#download-app' : $primary_cta_link; ?>" class="js-ride-cta main-header__btn cityride-btn cityride-btn--primary">
                                 <span><?php echo $primary_cta_text; ?></span>
