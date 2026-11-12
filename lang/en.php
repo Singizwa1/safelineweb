@@ -622,6 +622,8 @@ return [
     'ic_private_hero_cta' => 'Book this car',
     'ic_private_seats_note' => 'This car has {n} seats - you\'re booking the whole car, not individual seats.',
     'ic_departs_flexible' => 'You choose when to go',
+    'ic_fare_label' => 'Fare',
+    'ic_via_fares_available' => 'Also available: {routes}',
     'ic_private_pickup_label' => 'Where should we pick you up?',
     'ic_private_pickup_placeholder' => 'e.g. Kigali Heights, Kimihurura',
     'ic_private_pickup_required' => 'Please tell us where to pick you up',
@@ -670,6 +672,7 @@ return [
     'ic_err_code_missing_fields' => 'Please fill in your name and phone number.',
     'ic_err_code_duplicate_submission' => 'This booking was already submitted a moment ago - check for your confirmation before trying again.',
     'ic_err_code_payment_failed' => 'The payment failed, so your seat was not reserved. Please try again.',
+    'ic_err_code_insufficient_balance' => 'Your mobile money balance was too low to complete this payment - top up and try again.',
 
     // Post-submit payment status (polled via
     // /public/intercity-bookings/{code}/status after a pay-now booking).

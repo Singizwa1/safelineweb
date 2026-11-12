@@ -57,10 +57,22 @@ include __DIR__ . '/../includes/header.php';
                                             <div class="fare-info-row"><span class="fare-label" id="intercity_total_label"><?php te('home_intercity_total'); ?></span><span class="fare-value fare-total" id="intercity_total_amount">0 RWF</span></div>
                                         </div>
                                         <div id="intercity_step_details">
+                                            <div class="form-row" id="intercity_fare_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label for="intercity_fare_type"><?php te('ic_fare_label'); ?></label>
+                                                    <select class="form-control-enhanced" id="intercity_fare_type" name="fare_type"></select>
+                                                </div>
+                                            </div>
                                             <div class="form-row" id="intercity_pickup_row" hidden>
                                                 <div class="form-group-enhanced">
                                                     <label for="intercity_pickup_point"><?php te('home_intercity_pickup_point'); ?></label>
                                                     <select class="form-control-enhanced" id="intercity_pickup_point" name="pickup_point_id"></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row" id="intercity_via_pickup_row" hidden>
+                                                <div class="form-group-enhanced">
+                                                    <label><?php te('home_intercity_pickup_point'); ?></label>
+                                                    <p class="fare-value" id="intercity_via_pickup_text" style="margin:0;"></p>
                                                 </div>
                                             </div>
                                             <div class="form-row" id="intercity_private_pickup_row" hidden>

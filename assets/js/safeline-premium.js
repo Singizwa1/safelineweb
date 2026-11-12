@@ -91,7 +91,7 @@
     // for a published trip after this script has already run).
     var defaultCopyHtml = copyBox ? copyBox.innerHTML : '';
     var current = 0;
-    var DWELL = 5000;
+    var DWELL = 10000;
     var timer = null;
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var focused = false, onScreen = true;

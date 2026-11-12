@@ -480,6 +480,17 @@ body.sl-ui .sl-hero__lead {
     color: var(--hero-ink-soft);
     text-shadow: 0 1px 16px var(--hero-glow);
 }
+/* A via-stop route (Kigali -> Musanze -> Rubavu) is a longer title than a
+   plain origin-destination one - shrunk a step so it still fits one line. */
+body.sl-ui .sl-hero__title--via { font-size: clamp(26px, 3.2vw, 48px); }
+/* Per-fare price list under the lead paragraph, shown only on a via-stop
+   trip (see migration 0057) - one line per sellable fare. */
+body.sl-ui .sl-hero__fares {
+    margin: -20px 0 26px; max-width: 34ch;
+    font-size: 15px; line-height: 1.7; font-weight: 500;
+    color: var(--hero-ink-soft);
+    text-shadow: 0 1px 16px var(--hero-glow);
+}
 body.sl-ui .sl-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; }
 body.sl-ui .sl-hero__btn,
 body.sl-ui .sl-hero__link {

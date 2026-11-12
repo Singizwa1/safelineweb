@@ -8,6 +8,10 @@
 .intercity-trip-card__badge { align-self: flex-start; background: rgba(99,197,31,0.12); color: #2F6F0C; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
 .intercity-trip-card__route { font-size: 19px; font-weight: 800; color: #001832; margin: 0; }
 .intercity-trip-card__route i { color: #63C51F; margin: 0 4px; font-size: 14px; }
+/* A via-stop route (Kigali-Musanze-Rubavu) is a longer string than a plain
+   origin-destination one - shrunk so it still fits the card on one line. */
+.intercity-trip-card__route--via { font-size: 15px; }
+.intercity-trip-card__route--via i { font-size: 11px; }
 .intercity-trip-card__meta { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; color: var(--color-text-secondary, #5A6577); }
 .intercity-trip-card__meta i { width: 16px; color: #63C51F; margin-right: 6px; }
 .intercity-trip-card__footer { margin-top: auto; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 12px; padding-top: 10px; }

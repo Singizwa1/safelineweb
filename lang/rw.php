@@ -527,6 +527,8 @@ return [
     'ic_private_hero_cta' => 'Fata iyi modoka',
     'ic_private_seats_note' => 'Iyi modoka ifite imyanya {n} - urafata imodoka yose, ntabwo ari imyanya runaka.',
     'ic_departs_flexible' => 'Uhitamo igihe uzagenda',
+    'ic_fare_label' => 'Igiciro',
+    'ic_via_fares_available' => 'Birahari kandi: {routes}',
     'ic_private_pickup_label' => 'Tugufate he?',
     'ic_private_pickup_placeholder' => 'urugero: Kigali Heights, Kimihurura',
     'ic_private_pickup_required' => 'Twandikire aho dukufata',
@@ -573,6 +575,7 @@ return [
     'ic_err_code_missing_fields' => 'Andika amazina yawe na numero ya telefoni.',
     'ic_err_code_duplicate_submission' => 'Iki cyifuzo cyarakoherejwe mbere - reba niba wabonye ubutumwa bwemeza mbere yo kongera kugerageza.',
     'ic_err_code_payment_failed' => "Kwishyura ntibyagenze neza, umwanya wawe ntiwabitswe. Ongera ugerageze.",
+    'ic_err_code_insufficient_balance' => "Amafaranga ugira kuri telefone ntahagije kwishyura. Shyiramo amafaranga hanyuma wongere ugerageze.",
 
     // Imiterere y'uko kwishyura kugenda - see en.php for context.
     'ic_status_waiting_title' => 'Tegereje kwemeza kwawe',

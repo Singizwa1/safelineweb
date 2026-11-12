@@ -2,6 +2,20 @@
     var heroInjected = false;
     var tripsById = {};
 
+    /** Trip fields (origin, destination, dropoff_location, allowed_items,
+     * pickup point names) are staff-entered text with no HTML sanitization
+     * server-side - only trim() (see IntercityTripController::create()).
+     * Every one of them ends up in an innerHTML string below (directly, or
+     * via jsT()'s own unescaped {placeholder} substitution), so each must
+     * be escaped here first or a trip published with e.g.
+     * destination = '<img src=x onerror=...>' would execute for every
+     * visitor loading the homepage. */
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
     /** Departure as "30 Oct, 10:49". Browsers ship no Kinyarwanda date data
      * (they silently fall back to US English), so rw month names are ours. */
     var RW_MONTHS = ['Mut.', 'Gas.', 'Wer.', 'Mat.', 'Gic.', 'Kam.', 'Nya.', 'Kan.', 'Nze.', 'Ukw.', 'Ugu.', 'Uku.'];
@@ -103,7 +117,7 @@
 
         panel.innerHTML =
             '<span class="sl-hero__private-badge">' + jsT('ic_private_hero_title') + '</span>' +
-            '<h3 class="sl-hero__private-route">' + trip.origin + ' <i class="fas fa-arrow-right" aria-hidden="true"></i> ' + trip.destination + '</h3>' +
+            '<h3 class="sl-hero__private-route">' + escapeHtml(trip.origin) + ' <i class="fas fa-arrow-right" aria-hidden="true"></i> ' + escapeHtml(trip.destination) + '</h3>' +
             '<p class="sl-hero__private-meta">' + (when ? jsT('ic_departs', { when: when }) : jsT('ic_departs_flexible')) + '</p>' +
             '<p class="sl-hero__private-meta">' + jsT('ic_private_seats_note', { n: trip.total_seats }) + '</p>' +
             '<p class="sl-hero__private-price">' + price + ' RWF <small>' + jsT('ic_per_car_suffix') + '</small></p>' +
@@ -143,10 +157,46 @@
                 ? '<button type="button" class="cityride-btn cityride-btn--border sl-hero__btn intercity-view-car-btn" data-trip-id="' + trip.id + '"><span>' + jsT('ic_btn_view_car') + '</span></button>'
                 : '';
 
+            // Via-stop fares (see migration 0057) - the title grows a third
+            // city (Kigali -> Musanze -> Rubavu) and each sellable fare gets
+            // its own price line under the lead paragraph, same info as the
+            // trip card's "Also available" line but roomier here.
+            var titleHtml = trip.via_city
+                ? escapeHtml(trip.origin) + ' &rarr; ' + escapeHtml(trip.via_city) + ' <em>&rarr; ' + escapeHtml(trip.destination) + '</em>'
+                : escapeHtml(trip.origin) + ' <em>&rarr; ' + escapeHtml(trip.destination) + '</em>';
+
+            // Each fare shows its OWN departure, not the price again - an
+            // origin_via fare leaves together with the main trip (same
+            // "when"), but a via_destination fare leaves later, once the
+            // vehicle actually reaches the via stop (see resolveFare()
+            // server-side, which computes this same offset).
+            var viaFareRows = [];
+            if (trip.via_city) {
+                viaFareRows.push(escapeHtml(trip.origin) + ' &rarr; ' + escapeHtml(trip.destination) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + ' &middot; ' + jsT('ic_departs', { when: when }));
+                if (trip.origin_via_price_per_seat != null) {
+                    viaFareRows.push(escapeHtml(trip.origin) + ' &rarr; ' + escapeHtml(trip.via_city) + ' &middot; ' + jsT('ic_price_per_seat', { price: parseFloat(trip.origin_via_price_per_seat).toLocaleString() }) + ' &middot; ' + jsT('ic_departs', { when: when }));
+                }
+                if (trip.via_destination_price_per_seat != null) {
+                    var viaDeparture = new Date(departure.getTime() + (trip.via_destination_departure_offset_minutes * 60000));
+                    viaFareRows.push(escapeHtml(trip.via_city) + ' &rarr; ' + escapeHtml(trip.destination) + ' &middot; ' + jsT('ic_price_per_seat', { price: parseFloat(trip.via_destination_price_per_seat).toLocaleString() }) + ' &middot; ' + jsT('ic_departs', { when: formatWhen(viaDeparture) }));
+                }
+            }
+            var viaFaresHtml = viaFareRows.length
+                ? '<div class="sl-hero__fares">' + viaFareRows.map(function (row) { return '<div class="sl-hero__fares-row">' + row + '</div>'; }).join('') + '</div>'
+                : '';
+
+            // The main fare's price already repeats in the breakdown below
+            // when there's a via-stop - showing it again here too is just
+            // noise, so this line drops to departs/seats only in that case.
+            var leadHtml = trip.via_city
+                ? jsT('ic_departs', { when: when }) + ' &middot; ' + seatsLine + parcelLine
+                : jsT('ic_departs', { when: when }) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + ' &middot; ' + seatsLine + parcelLine;
+
             var copyHtml =
                 '<span class="sl-hero__private-badge">' + jsT('ic_shared_hero_badge') + '</span>' +
-                '<h1 class="sl-hero__title">' + trip.origin + ' <em>&rarr; ' + trip.destination + '</em></h1>' +
-                '<p class="sl-hero__lead">' + jsT('ic_departs', { when: when }) + ' &middot; ' + jsT('ic_price_per_seat', { price: price }) + ' &middot; ' + seatsLine + parcelLine + '</p>' +
+                '<h1 class="sl-hero__title' + (trip.via_city ? ' sl-hero__title--via' : '') + '">' + titleHtml + '</h1>' +
+                '<p class="sl-hero__lead">' + leadHtml + '</p>' +
+                viaFaresHtml +
                 '<div class="sl-hero__actions">' +
                 // data-trip-id lives on the button itself, not just the slide -
                 // this HTML ends up inside .sl-hero__copy (a sibling of the
@@ -180,7 +230,7 @@
             : parseFloat(trip.price_per_seat).toLocaleString();
         var pickupPoints = trip.pickup_locations || [];
         var pickupLine = pickupPoints.length
-            ? '<li><i class="fas fa-map-marker-alt"></i>' + jsT('ic_pickup', { places: pickupPoints.map(function (p) { return p.location; }).join(', ') }) + '</li>'
+            ? '<li><i class="fas fa-map-marker-alt"></i>' + jsT('ic_pickup', { places: escapeHtml(pickupPoints.map(function (p) { return p.location; }).join(', ')) }) + '</li>'
             : '';
         var badgeText = isPrivate
             ? jsT('ic_badge_private_vip', { n: trip.total_seats })
@@ -203,17 +253,36 @@
         var parcelLine = (trip.parcels_available > 0)
             ? '<div class="intercity-trip-card__parcel"><i class="fas fa-box" aria-hidden="true"></i>' +
               jsT(trip.parcels_available === 1 ? 'ic_parcel_slots_one' : 'ic_parcel_slots_many', { n: trip.parcels_available }) +
-              (trip.allowed_items ? ' &middot; ' + jsT('ic_parcel_allowed', { items: trip.allowed_items }) : '') +
+              (trip.allowed_items ? ' &middot; ' + jsT('ic_parcel_allowed', { items: escapeHtml(trip.allowed_items) }) : '') +
               '</div>'
             : '';
+        // Via-stop fares (see migration 0057) - shown here so a passenger
+        // who only wants the shorter leg knows it's an option before even
+        // opening the booking modal (where they'd pick it from a dropdown).
+        var viaRoutes = [];
+        if (!isPrivate && trip.via_city) {
+            if (trip.origin_via_price_per_seat != null) viaRoutes.push(escapeHtml(trip.origin) + ' → ' + escapeHtml(trip.via_city));
+            if (trip.via_destination_price_per_seat != null) viaRoutes.push(escapeHtml(trip.via_city) + ' → ' + escapeHtml(trip.destination));
+        }
+        var viaLine = viaRoutes.length
+            ? '<li><i class="fas fa-route"></i>' + jsT('ic_via_fares_available', { routes: viaRoutes.join(', ') }) + '</li>'
+            : '';
+        // A via-stop trip shows its full route (Kigali-Musanze-Rubavu), not
+        // just the endpoints - the via-city sits wherever it actually falls
+        // along the route, regardless of which of its fares are sellable.
+        var routeClass = 'intercity-trip-card__route' + (trip.via_city ? ' intercity-trip-card__route--via' : '');
+        var routeHtml = trip.via_city
+            ? escapeHtml(trip.origin) + ' <i class="fas fa-arrow-right"></i> ' + escapeHtml(trip.via_city) + ' <i class="fas fa-arrow-right"></i> ' + escapeHtml(trip.destination)
+            : escapeHtml(trip.origin) + ' <i class="fas fa-arrow-right"></i> ' + escapeHtml(trip.destination);
         return '<div class="col-lg-4 col-md-6">' +
             '<div class="intercity-trip-card" data-trip-id="' + trip.id + '">' +
             '<span class="intercity-trip-card__badge">' + badgeText + '</span>' +
-            '<h4 class="intercity-trip-card__route">' + trip.origin + ' <i class="fas fa-arrow-right"></i> ' + trip.destination + '</h4>' +
+            '<h4 class="' + routeClass + '">' + routeHtml + '</h4>' +
             '<ul class="intercity-trip-card__meta">' +
             pickupLine +
-            '<li><i class="fas fa-flag-checkered"></i>' + jsT('ic_dropoff', { location: trip.dropoff_location }) + '</li>' +
+            '<li><i class="fas fa-flag-checkered"></i>' + jsT('ic_dropoff', { location: escapeHtml(trip.dropoff_location) }) + '</li>' +
             '<li><i class="fas fa-clock"></i>' + (when ? jsT('ic_departs', { when: when }) : jsT('ic_departs_flexible')) + '</li>' +
+            viaLine +
             '</ul>' +
             parcelLine +
             '<div class="intercity-trip-card__footer">' +
@@ -250,6 +319,45 @@
         return raw;
     }
 
+    /** The (up to 3) fares sellable on a trip - the main origin-to-destination
+     * fare, plus the optional via-stop ones (see migration 0057). Seats are
+     * shared across all of them; only origin/destination/price/departure differ. */
+    function fareOptionsFor(trip) {
+        var options = [{ value: 'main', origin: trip.origin, destination: trip.destination, price: trip.price_per_seat }];
+        if (trip.trip_type !== 'private_vip' && trip.via_city) {
+            if (trip.origin_via_price_per_seat != null) {
+                options.push({ value: 'origin_via', origin: trip.origin, destination: trip.via_city, price: trip.origin_via_price_per_seat });
+            }
+            if (trip.via_destination_price_per_seat != null) {
+                options.push({ value: 'via_destination', origin: trip.via_city, destination: trip.destination, price: trip.via_destination_price_per_seat });
+            }
+        }
+        return options;
+    }
+
+    function selectedFare(trip) {
+        var options = fareOptionsFor(trip);
+        var field = document.getElementById('intercity_fare_type');
+        var chosen = options.find(function (f) { return f.value === field.value; });
+        return chosen || options[0];
+    }
+
+    /** A via_destination fare boards at the trip's own via_stop_location
+     * (see migration 0058), not a choice from the pickup-point list - that
+     * list is for the trip's own origin, a different city entirely. Swaps
+     * the picker for a plain info line, and is re-run whenever the chosen
+     * fare changes, not just once when the modal opens. */
+    function toggleFarePickupUI(trip, fare) {
+        var pickupPoints = trip.pickup_locations || [];
+        var isViaDestination = fare.value === 'via_destination';
+        document.getElementById('intercity_pickup_row').hidden = isViaDestination || pickupPoints.length === 0;
+        document.getElementById('intercity_pickup_point').required = !isViaDestination && pickupPoints.length > 0;
+        document.getElementById('intercity_via_pickup_row').hidden = !isViaDestination;
+        if (isViaDestination) {
+            document.getElementById('intercity_via_pickup_text').textContent = trip.via_stop_location || '';
+        }
+    }
+
     function updateIntercityTotal() {
         var trip = tripsById[parseInt(document.getElementById('intercity_trip_id').value, 10)];
         if (!trip) return;
@@ -265,8 +373,23 @@
             return;
         }
 
+        var fare = selectedFare(trip);
+        document.getElementById('intercity-modal-subtitle').textContent = jsT('ic_modal_subtitle', {
+            origin: fare.origin, destination: fare.destination,
+            when: trip.departure_datetime ? formatWhen(new Date(trip.departure_datetime.replace(' ', 'T'))) : jsT('ic_departs_flexible'),
+        });
+        // via_stop_location (see migration 0058) is the specific address at
+        // the via stop - falls back to the plain city name only if staff
+        // somehow left it blank on an older trip.
+        document.getElementById('intercity_dropoff_text').textContent = fare.destination === trip.destination ? trip.dropoff_location : (trip.via_stop_location || fare.destination);
+
+        // A via_destination fare boards at that same via_stop_location, not
+        // a choice from the trip's own pickup-point list (a different
+        // city's points) - see toggleFarePickupUI().
+        toggleFarePickupUI(trip, fare);
+
         var seats = clampedSeatCount();
-        var perSeat = parseFloat(trip.price_per_seat);
+        var perSeat = parseFloat(fare.price);
         document.getElementById('intercity_price_amount').textContent = perSeat.toLocaleString() + ' RWF';
 
         document.getElementById('intercity_total_label').textContent = seats === 1 ? jsT('ic_total') : jsT('ic_total_n_seats', { n: seats });
@@ -318,15 +441,30 @@
         var seatField = document.getElementById('intercity_seat_count');
         seatField.max = maxSeats;
         seatField.value = '1';
+
+        // Via-stop fares (see migration 0057) - a trip sells its main
+        // origin-to-destination fare, optionally alongside one or two more
+        // pivoting on one intermediate stop. Only shown when there's
+        // actually a choice to make.
+        var fareOptions = fareOptionsFor(trip);
+        var fareSelect = document.getElementById('intercity_fare_type');
+        fareSelect.innerHTML = fareOptions.map(function (f) {
+            return '<option value="' + f.value + '">' + escapeHtml(f.origin) + ' → ' + escapeHtml(f.destination) +
+                ' - ' + parseFloat(f.price).toLocaleString() + ' RWF/seat</option>';
+        }).join('');
+        document.getElementById('intercity_fare_row').hidden = isPrivate || fareOptions.length < 2;
+
         updateIntercityTotal();
 
+        // required/hidden for this (and intercity_via_pickup_row) are set by
+        // toggleFarePickupUI(), called from updateIntercityTotal() above -
+        // whether a pickup point is even relevant depends on which fare is
+        // selected, not just whether the trip has any pickup points at all.
         var pickupPoints = trip.pickup_locations || [];
         var pickupSelect = document.getElementById('intercity_pickup_point');
         pickupSelect.innerHTML = pickupPoints.map(function (p) {
-            return '<option value="' + p.id + '">' + p.location + '</option>';
+            return '<option value="' + p.id + '">' + escapeHtml(p.location) + '</option>';
         }).join('');
-        pickupSelect.required = pickupPoints.length > 0;
-        document.getElementById('intercity_pickup_row').hidden = pickupPoints.length === 0;
 
         // Private VIP has no pickup point list at all - the guest types
         // their own pickup address and the date/time they need the car
@@ -535,8 +673,12 @@
                         return;
                     } else if (booking.status !== 'pending_payment') {
                         // expired, failed, or cancelled - the hold is gone either way.
+                        // failure_reason is the gateway's own stated reason
+                        // (e.g. "Insufficient balance") when settleIfPaid()
+                        // captured one - falls back to the generic text when
+                        // it's an expiry/cancellation with no gateway reason.
                         unlock();
-                        showBanner('error', jsT('ic_status_failed_title'), jsT('ic_status_failed_text'));
+                        showBanner('error', jsT('ic_status_failed_title'), booking.failure_reason || jsT('ic_status_failed_text'));
                         loadTrips(0);
                         return;
                     }
@@ -706,6 +848,11 @@
         updateIntercityTotal();
     });
 
+    document.addEventListener('change', function (e) {
+        if (e.target.id !== 'intercity_fare_type') return;
+        updateIntercityTotal();
+    });
+
     document.addEventListener('submit', function (e) {
         if (e.target.id !== 'intercity-booking-form') return;
         e.preventDefault();
@@ -722,7 +869,11 @@
         submitBtn.disabled = true;
 
         var tripId = parseInt(document.getElementById('intercity_trip_id').value, 10);
-        var pickupPointId = document.getElementById('intercity_pickup_point').value
+        var submittedFareType = document.getElementById('intercity_fare_row').hidden ? 'main' : document.getElementById('intercity_fare_type').value;
+        // A via_destination fare boards at via_stop_location, not a chosen
+        // pickup point - never sent even if a stale value lingers in the
+        // (hidden) select from an earlier fare selection.
+        var pickupPointId = (submittedFareType !== 'via_destination' && document.getElementById('intercity_pickup_point').value)
             ? parseInt(document.getElementById('intercity_pickup_point').value, 10)
             : null;
         var guestName = document.getElementById('intercity_guest_name').value.trim();
@@ -736,7 +887,8 @@
         // language: the backend otherwise falls back to the browser/OS Accept-Language
         // header, which doesn't reflect this site's own language switch.
         var body = {
-            trip_id: tripId, pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
+            trip_id: tripId, fare_type: submittedFareType,
+            pickup_point_id: pickupPointId, guest_name: guestName, phone_number: phoneNumber,
             payment_phone_number: paymentPhoneNumber, seat_count: seatCount, language: SAFELINE_LANG,
         };
         // Private VIP has no fixed pickup list or schedule - the guest's

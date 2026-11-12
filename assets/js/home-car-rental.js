@@ -1,4 +1,13 @@
 (function () {
+    /** category.name is staff-entered text with no HTML sanitization
+     * server-side, and ends up in an innerHTML string in renderCard()
+     * below - same reasoning as escapeHtml() in home-intercity.js. */
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+    }
+
     var categoriesById = {};
     /** ratesByCategory[categoryId][mode] = price row (hour/day/week/month, some null). */
     var ratesByCategory = {};
@@ -91,7 +100,7 @@
         return '<div class="col-lg-4 col-md-6">' +
             '<div class="rental-card">' +
             imageHtml +
-            '<h4 class="rental-card__title">' + category.name + '</h4>' +
+            '<h4 class="rental-card__title">' + escapeHtml(category.name) + '</h4>' +
             togglesHtml +
             panelsHtml +
             '</div></div>';
